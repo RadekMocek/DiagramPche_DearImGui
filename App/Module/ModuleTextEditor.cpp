@@ -1,6 +1,7 @@
 #include "misc/cpp/imgui_stdlib.h"
 
 #include "../App.hpp"
+#include "../Logic/Parser.hpp"
 
 void App::ModuleTextEditor()
 {
@@ -8,6 +9,8 @@ void App::ModuleTextEditor()
 
     constexpr ImGuiInputTextFlags flags = ImGuiInputTextFlags_AllowTabInput;
     ImGui::InputTextMultiline("##source", &m_source, ImVec2(ImGui::GetContentRegionAvail().x * 0.5f, ImGui::GetContentRegionAvail().y), flags);
+
+    Parser::parse(m_source);
 
     ImGui::PopStyleVar();
 }

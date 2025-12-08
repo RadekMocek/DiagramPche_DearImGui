@@ -8,8 +8,9 @@ void App::GLFWErrorCallback(int error, const char* description)
 bool App::Init()
 {
     glfwSetErrorCallback(GLFWErrorCallback);
-    if (!glfwInit())
+    if (!glfwInit()) {
         return false;
+    }
 
     // Decide GL+GLSL versions
 #if defined(IMGUI_IMPL_OPENGL_ES2)
@@ -43,16 +44,22 @@ bool App::Init()
     // Create window with graphics context
     const float main_scale = ImGui_ImplGlfw_GetContentScaleForMonitor(glfwGetPrimaryMonitor());
     // Valid on GLFW 3.3+ only
-    m_window = glfwCreateWindow(static_cast<int>(1280 * main_scale), static_cast<int>(800 * main_scale),
-                                "DearImGui :: HelloCounter :: Offline", nullptr, nullptr);
-    if (m_window == nullptr)
+    m_window = glfwCreateWindow(static_cast<int>(1280 * main_scale),
+                                static_cast<int>(800 * main_scale),
+                                m_window_title,
+                                nullptr,
+                                nullptr);
+    if (m_window == nullptr) {
         return false;
+    }
+
     glfwMakeContextCurrent(m_window);
     glfwSwapInterval(1); // Enable vsync
 
     // Init Glad
-    if (!gladLoaderLoadGL())
+    if (!gladLoaderLoadGL()) {
         return false;
+    }
 
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();

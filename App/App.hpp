@@ -41,7 +41,13 @@ private:
     const bool m_is_dark_mode = false;
 
     // User state
-    std::string m_source = "...";
+    std::string m_source = R"""(
+[[node]]
+id="node_a"
+value="Node A"
+x=10
+y=10
+)""";
 
     // Const
     static constexpr auto c_modal_about_name = "About##modal";
