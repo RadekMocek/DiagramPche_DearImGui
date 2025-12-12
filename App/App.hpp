@@ -25,6 +25,8 @@
 #include "../libs/emscripten/emscripten_mainloop_stub.h"
 #endif
 
+#include "Logic/Parser.hpp"
+
 class App
 {
 public:
@@ -40,6 +42,8 @@ private:
     const char* m_window_title = "Dear ImGui :: Hello Counter";
     const bool m_is_dark_mode = false;
 
+    Parser m_parser{};
+
     // User state
     std::string m_source = R"""(
 [[node]]
@@ -47,6 +51,12 @@ id="node_a"
 value="Node A"
 x=10
 y=10
+
+[[node]]
+id="node_b"
+value="Node B"
+x=40
+y=40
 )""";
 
     // Const
@@ -60,4 +70,5 @@ y=10
     // User functions
     void ModuleMain();
     void ModuleTextEditor();
+    void ModuleCanvas();
 };

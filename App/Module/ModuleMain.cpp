@@ -20,7 +20,7 @@ void App::ModuleMain()
     // Two main columns
     ModuleTextEditor();
     ImGui::SameLine();
-    //ModuleCanvas();
+    ModuleCanvas();
 
     ImGui::End();
 }
