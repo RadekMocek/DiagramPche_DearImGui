@@ -21,7 +21,7 @@ void App::Start()
 
     const ImGuiIO& io = ImGui::GetIO();
 
-    ImFont* font = io.Fonts->AddFontFromFileTTF("./Resource/Inconsolata-Medium.ttf", 20.0f);
+    m_font_inconsolata_medium = io.Fonts->AddFontFromFileTTF("./Resource/Inconsolata-Medium.ttf", 20.0f);
 
     IM_ASSERT(font != nullptr);
 }

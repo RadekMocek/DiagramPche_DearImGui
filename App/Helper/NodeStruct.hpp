@@ -5,7 +5,7 @@
 struct NodeStruct
 {
     std::string id;
-    std::string name;
+    std::string value;
     int x;
     int y;
 };

@@ -27,7 +27,7 @@ void Parser::parse(const std::string& source)
                     // `node_t` is a pointer to the actual table
                     m_result_nodes.push_back(NodeStruct{
                         (*node_t)["id"].value_or(""),
-                        (*node_t)["name"].value_or(""),
+                        (*node_t)["value"].value_or(""),
                         (*node_t)["x"].value_or(0),
                         (*node_t)["y"].value_or(0)
                     });

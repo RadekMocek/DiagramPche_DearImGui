@@ -39,6 +39,8 @@ private:
     GLFWwindow* m_window{};
     ImVec4 m_clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
+    ImFont* m_font_inconsolata_medium = nullptr;
+
     const char* m_window_title = "Dear ImGui :: Hello Counter";
     const bool m_is_dark_mode = false;
 
