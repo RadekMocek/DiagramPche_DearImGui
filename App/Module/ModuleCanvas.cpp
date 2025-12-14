@@ -2,7 +2,7 @@
 #include <cmath>
 
 #include "../App.hpp"
-#include "../Helper/HelperFunctions.hpp"
+#include "../Helper/HelperFunction.hpp"
 
 void App::ModuleCanvas()
 {
@@ -96,6 +96,8 @@ void App::ModuleCanvas()
 
     // Draw nodes on the canvas
     for (const auto& node : m_parser.m_result_nodes) {
+        const auto node_type = node.type;
+
         // Draw text
         const auto label_c_str = node.value.c_str();
         const auto node_x = static_cast<float>(node.x) * zoom_level;
@@ -108,15 +110,17 @@ void App::ModuleCanvas()
                            COLOR_NODE,
                            label_c_str);
 
-        // Draw rectangle around the text
-        const auto label_size = m_font_inconsolata_medium->CalcTextSizeA(FONT_SIZE_BASE * zoom_level,
-                                                                         FLT_MAX,
-                                                                         -1.0f,
-                                                                         label_c_str);
+        if (node_type == RECTANGLE) {
+            // Draw rectangle around the text
+            const auto label_size = m_font_inconsolata_medium->CalcTextSizeA(FONT_SIZE_BASE * zoom_level,
+                                                                             FLT_MAX,
+                                                                             -1.0f,
+                                                                             label_c_str);
 
-        const auto rect_top_left = ImVec2Translation(label_origin, -node_border_offset);
-        const auto rect_bottom_right = ImVec2Translation(ImVec2Sum(label_origin, label_size), node_border_offset);
-        draw_list->AddRect(rect_top_left, rect_bottom_right, COLOR_NODE, 0, 0, zoom_level);
+            const auto rect_top_left = ImVec2Translation(label_origin, -node_border_offset);
+            const auto rect_bottom_right = ImVec2Translation(ImVec2Sum(label_origin, label_size), node_border_offset);
+            draw_list->AddRect(rect_top_left, rect_bottom_right, COLOR_NODE, 0, 0, zoom_level);
+        }
     }
 
     ImGui::EndChild();

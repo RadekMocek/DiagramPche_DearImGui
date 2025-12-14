@@ -52,14 +52,25 @@ private:
 [[node]]
 id    = "node_a"
 value = "Node A"
-x     = 10
-y     = 10
+x     = 20
+y     = 20
 
 [[node]]
 id    = "node_b"
 value = "Node B"
-x     = 40
-y     = 40
+x     = 240
+y     = 240
+
+[[path]]
+[[path.point]]
+x=0
+y=0
+[[path.point]]
+x=10
+y=10
+[[path.point]]
+x=20
+y=10
 )""";
 
     // Const

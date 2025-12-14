@@ -23,6 +23,7 @@ bool Parser::parse(const std::string& source)
                 if (auto* node_t = node.as_table()) {
                     // `node_t` is a pointer to the actual table
                     m_result_nodes.push_back(NodeStruct{
+                        get_node_type((*node_t)["type"].value_or("")),
                         (*node_t)["id"].value_or(""),
                         (*node_t)["value"].value_or(""),
                         (*node_t)["x"].value_or(0),
