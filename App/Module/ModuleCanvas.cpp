@@ -1,8 +1,8 @@
 #include <algorithm>
 #include <cmath>
-#include <iostream>
 
 #include "../App.hpp"
+#include "../Helper/HelperFunctions.hpp"
 
 void App::ModuleCanvas()
 {
@@ -23,20 +23,25 @@ void App::ModuleCanvas()
     constexpr auto COLOR_GRID_LINE = IM_COL32(200, 200, 200, 40);
     constexpr auto COLOR_NODE = IM_COL32(0, 0, 0, 255);
 
+    // Padding of rectangle border around text in canvas
+    constexpr float NODE_BORDER_OFFSET_BASE = 18.0f;
+    const float node_border_offset = NODE_BORDER_OFFSET_BASE * zoom_level;
+
     // .: Prepare ground for the canvas :.
     // .:===============================:.
+    const auto content_region_available = ImGui::GetContentRegionAvail();
+    const ImVec2 canvas_size(content_region_available.x, content_region_available.y - BOTTOM_BAR_HEIGHT);
+
     // Create a parent for our canvas (with zero padding)
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
-    // Half of the main window is occupied by the text editor, so this will take up the rest on the x axis
     ImGui::BeginChild("CanvasParent",
-                      ImVec2(0, ImGui::GetContentRegionAvail().y),
+                      canvas_size,
                       ImGuiChildFlags_Borders,
                       ImGuiWindowFlags_None);
     ImGui::PopStyleVar();
 
     // Determine canvas size
-    const ImVec2 canvas_top_left = ImGui::GetCursorScreenPos(); // ImDrawList API uses screen coordinates!
-    const ImVec2 canvas_size = ImGui::GetContentRegionAvail(); // Resize canvas to what's available
+    const auto canvas_top_left = ImGui::GetCursorScreenPos(); // ImDrawList API uses screen coordinates!
     const auto canvas_bottom_right = ImVec2(canvas_top_left.x + canvas_size.x, canvas_top_left.y + canvas_size.y);
 
     //
@@ -48,7 +53,7 @@ void App::ModuleCanvas()
     ImGui::InvisibleButton("Canvas", canvas_size, ImGuiButtonFlags_MouseButtonLeft | ImGuiButtonFlags_MouseButtonRight);
     const bool is_hovered = ImGui::IsItemHovered(); // Hovered (hot item)
     const bool is_active = ImGui::IsItemActive(); // Held
-    const ImVec2 mouse_pos_in_canvas(io.MousePos.x - origin.x, io.MousePos.y - origin.y);
+    //const ImVec2 mouse_pos_in_canvas(io.MousePos.x - origin.x, io.MousePos.y - origin.y);
 
     // Mousewheel to adjust the zoom level
     if (is_hovered) {
@@ -90,8 +95,6 @@ void App::ModuleCanvas()
     }
 
     // Draw nodes on the canvas
-    m_parser.parse(m_source);
-
     for (const auto& node : m_parser.m_result_nodes) {
         // Draw text
         const auto label_c_str = node.value.c_str();
@@ -104,6 +107,16 @@ void App::ModuleCanvas()
                            label_origin,
                            COLOR_NODE,
                            label_c_str);
+
+        // Draw rectangle around the text
+        const auto label_size = m_font_inconsolata_medium->CalcTextSizeA(FONT_SIZE_BASE * zoom_level,
+                                                                         FLT_MAX,
+                                                                         -1.0f,
+                                                                         label_c_str);
+
+        const auto rect_top_left = ImVec2Translation(label_origin, -node_border_offset);
+        const auto rect_bottom_right = ImVec2Translation(ImVec2Sum(label_origin, label_size), node_border_offset);
+        draw_list->AddRect(rect_top_left, rect_bottom_right, COLOR_NODE, 0, 0, zoom_level);
     }
 
     ImGui::EndChild();

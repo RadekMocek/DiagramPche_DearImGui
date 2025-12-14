@@ -46,30 +46,32 @@ private:
 
     Parser m_parser{};
 
-    // User state
+    bool m_is_parsing_ok;
+
     std::string m_source = R"""(
 [[node]]
-id="node_a"
-value="Node A"
-x=10
-y=10
+id    = "node_a"
+value = "Node A"
+x     = 10
+y     = 10
 
 [[node]]
-id="node_b"
-value="Node B"
-x=40
-y=40
+id    = "node_b"
+value = "Node B"
+x     = 40
+y     = 40
 )""";
 
     // Const
-    static constexpr auto c_modal_about_name = "About##modal";
+    static constexpr auto FONT_SIZE_DEFAULT = 20.0f;
+    static constexpr auto BOTTOM_BAR_HEIGHT = 24.0f;
 
     // = Functions =
+    // Boilerplate
     static void GLFWErrorCallback(int error, const char* description);
     void Start();
     void Update();
-
-    // User functions
+    // App specific
     void ModuleMain();
     void ModuleTextEditor();
     void ModuleCanvas();

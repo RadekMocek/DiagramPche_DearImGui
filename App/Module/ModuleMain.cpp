@@ -18,9 +18,16 @@ void App::ModuleMain()
     ImGui::Begin("Main", nullptr, flags);
 
     // Two main columns
+    m_is_parsing_ok = m_parser.parse(m_source);
     ModuleTextEditor();
     ImGui::SameLine();
     ModuleCanvas();
+
+    if (!m_is_parsing_ok) {
+        ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(211, 1, 2, 255));
+        ImGui::Text(m_parser.m_error_description.data());
+        ImGui::PopStyleColor();
+    }
 
     ImGui::End();
 }

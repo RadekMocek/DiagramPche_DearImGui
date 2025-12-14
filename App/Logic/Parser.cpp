@@ -1,10 +1,6 @@
-#include <iostream>
-
-#include "../../Dependency/toml.hpp"
-
 #include "Parser.hpp"
 
-void Parser::parse(const std::string& source)
+bool Parser::parse(const std::string& source)
 {
     toml::parse_result table;
 
@@ -12,8 +8,9 @@ void Parser::parse(const std::string& source)
         table = toml::parse(source);
     }
     catch (const toml::parse_error& err) {
-        std::cerr << "Parsing failed:\n" << err << "\n";
-        return;
+        m_error_source_region = err.source();
+        m_error_description = err.description();
+        return false;
     }
 
     m_result_nodes.clear();
@@ -36,4 +33,5 @@ void Parser::parse(const std::string& source)
         }
     }
 
+    return true;
 }
