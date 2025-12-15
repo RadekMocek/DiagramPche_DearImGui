@@ -41,7 +41,7 @@ private:
 
     ImFont* m_font_inconsolata_medium = nullptr;
 
-    const char* m_window_title = "Dear ImGui :: Hello Counter";
+    const char* m_window_title = "Untitled – DiagramPche :: Dear ImGui";
     const bool m_is_dark_mode = false;
 
     Parser m_parser{};
@@ -60,6 +60,13 @@ id    = "node_b"
 value = "Node B"
 x     = 240
 y     = 240
+
+[[node]]
+id    = "node_c"
+value = "Node C"
+ref   = "node_a"
+x     = 20
+y     = 20
 
 [[path]]
 [[path.point]]

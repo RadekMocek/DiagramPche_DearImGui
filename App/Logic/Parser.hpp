@@ -10,12 +10,16 @@
 class Parser
 {
 public:
-    std::vector<NodeStruct> m_result_nodes;
+    std::unordered_map<std::string, NodeStruct> m_result_nodes_map;
     std::vector<PathStruct> m_result_paths;
 
+    // Errors and warnings:
     toml::source_region m_error_source_region;
-    std::string_view m_error_description;
+    std::string m_error_description;
+    bool m_has_warning;
+    std::string m_warning_description;
 
+    // Methods
     bool parse(const std::string& source);
 
 private:

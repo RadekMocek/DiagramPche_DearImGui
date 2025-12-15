@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <cmath>
+#include <ranges>
 
 #include "../App.hpp"
 #include "../Helper/HelperFunction.hpp"
@@ -95,7 +96,7 @@ void App::ModuleCanvas()
     }
 
     // Draw nodes on the canvas
-    for (const auto& node : m_parser.m_result_nodes) {
+    for (const auto& node : m_parser.m_result_nodes_map | std::views::values) {
         const auto node_type = node.type;
 
         // Draw text
