@@ -131,14 +131,14 @@ void App::ModuleCanvas()
         float prev_point_y{};
 
         for (const auto& point : path.points) {
-            float point_x = origin.x + static_cast<float>(point.x);
-            float point_y = origin.y + static_cast<float>(point.y);
+            float point_x = origin.x + static_cast<float>(point.x) * zoom_level;
+            float point_y = origin.y + static_cast<float>(point.y) * zoom_level;
 
             if (is_first_iter) {
                 is_first_iter = false;
             }
             else {
-                draw_list->AddLine({prev_point_x, prev_point_y}, {point_x, point_y}, COLOR_NODE);
+                draw_list->AddLine({prev_point_x, prev_point_y}, {point_x, point_y}, COLOR_NODE, zoom_level);
             }
 
             prev_point_x = point_x;
