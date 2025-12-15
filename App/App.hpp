@@ -66,11 +66,25 @@ y     = 240
 x=0
 y=0
 [[path.point]]
-x=10
-y=10
+x=0
+y=100
 [[path.point]]
-x=20
-y=10
+x=150
+y=100
+
+[[path]]
+[[path.point]]
+x=50
+y=50
+[[path.point]]
+x=30
+y=70
+[[path.point]]
+x=70
+y=70
+[[path.point]]
+x=50
+y=50
 )""";
 
     // Const

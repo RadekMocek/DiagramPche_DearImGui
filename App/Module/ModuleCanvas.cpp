@@ -123,5 +123,28 @@ void App::ModuleCanvas()
         }
     }
 
+    // Draw paths on the canvas
+    for (const auto& path : m_parser.m_result_paths) {
+        bool is_first_iter = true;
+
+        float prev_point_x{};
+        float prev_point_y{};
+
+        for (const auto& point : path.points) {
+            float point_x = origin.x + static_cast<float>(point.x);
+            float point_y = origin.y + static_cast<float>(point.y);
+
+            if (is_first_iter) {
+                is_first_iter = false;
+            }
+            else {
+                draw_list->AddLine({prev_point_x, prev_point_y}, {point_x, point_y}, COLOR_NODE);
+            }
+
+            prev_point_x = point_x;
+            prev_point_y = point_y;
+        }
+    }
+
     ImGui::EndChild();
 }

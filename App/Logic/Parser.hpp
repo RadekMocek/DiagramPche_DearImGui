@@ -5,11 +5,13 @@
 
 #include "../../Dependency/toml.hpp"
 #include "../Helper/NodeStruct.hpp"
+#include "../Helper/PathStruct.hpp"
 
 class Parser
 {
 public:
     std::vector<NodeStruct> m_result_nodes;
+    std::vector<PathStruct> m_result_paths;
 
     toml::source_region m_error_source_region;
     std::string_view m_error_description;
@@ -19,7 +21,7 @@ public:
 private:
     const NodeType DEFAULT_DRAW_ITEM_TYPE = RECTANGLE;
 
-    const std::unordered_map<std::string, NodeType> string_to_node_type = {
+    const std::unordered_map<std::string, NodeType> STRING_TO_NODE_TYPE = {
         {"ref", REF},
         {"text", TEXT},
         {"rectangle", RECTANGLE}
@@ -27,7 +29,7 @@ private:
 
     NodeType get_node_type(const std::string& type_str) const
     {
-        const auto it = string_to_node_type.find(type_str);
-        return it != string_to_node_type.end() ? it->second : DEFAULT_DRAW_ITEM_TYPE;
+        const auto it = STRING_TO_NODE_TYPE.find(type_str);
+        return it != STRING_TO_NODE_TYPE.end() ? it->second : DEFAULT_DRAW_ITEM_TYPE;
     }
 };
