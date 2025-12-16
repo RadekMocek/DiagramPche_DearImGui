@@ -147,7 +147,7 @@ bool Parser::parse(const std::string& source)
 
     if (const auto paths = table["path"]; !!paths && paths.type() == toml::node_type::array) {
         if (toml::array* paths_array = paths.as_array()) {
-            paths_array->for_each([this](auto&& path) {
+            for (auto&& path : *paths_array) {
                 if (auto* path_t = path.as_table()) {
                     //
                     m_result_paths.emplace_back();
@@ -157,18 +157,18 @@ bool Parser::parse(const std::string& source)
                         if (toml::array* points_array = points.as_array()) {
                             current_path_struct.points.reserve(points_array->size());
 
-                            points_array->for_each([&current_path_struct](auto&& point) {
+                            for (auto&& point : *points_array) {
                                 if (auto* point_t = point.as_table()) {
                                     current_path_struct.points.emplace_back(
                                         (*point_t)["x"].value_or(0),
                                         (*point_t)["y"].value_or(0)
                                     );
                                 }
-                            });
+                            }
                         }
                     }
                 }
-            });
+            }
         }
     }
 
