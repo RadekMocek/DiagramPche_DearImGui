@@ -20,7 +20,7 @@ public:
     std::string m_warning_description;
 
     // Methods
-    bool parse(const std::string& source);
+    bool Parse(const std::string& source);
 
 private:
     const NodeType DEFAULT_DRAW_ITEM_TYPE = RECTANGLE;
@@ -31,7 +31,7 @@ private:
         {"rectangle", RECTANGLE}
     };
 
-    NodeType get_node_type(const std::string& type_str) const
+    NodeType GetNodeType(const std::string& type_str) const
     {
         const auto it = STRING_TO_NODE_TYPE.find(type_str);
         return it != STRING_TO_NODE_TYPE.end() ? it->second : DEFAULT_DRAW_ITEM_TYPE;

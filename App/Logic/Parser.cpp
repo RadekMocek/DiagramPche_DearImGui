@@ -6,7 +6,7 @@
 
 #include "../Helper/HelperFunction.hpp"
 
-bool Parser::parse(const std::string& source)
+bool Parser::Parse(const std::string& source)
 {
     // Reset warning message
     m_has_warning = false;
@@ -80,7 +80,7 @@ bool Parser::parse(const std::string& source)
 
                     // Get other values
                     const std::string r_ref = (*node_t)["ref"].value_or("");
-                    const auto r_type = get_node_type((*node_t)["type"].value_or(""));
+                    const auto r_type = GetNodeType((*node_t)["type"].value_or(""));
                     const auto r_x = (*node_t)["x"].value_or(0);
                     const auto r_y = (*node_t)["y"].value_or(0);
                     const auto r_value = (*node_t)["value"].value_or("");

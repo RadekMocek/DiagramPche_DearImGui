@@ -30,4 +30,18 @@ void App::Start()
 
     m_do_show_demo_window = false;
     m_is_about_popup_queued = false;
+
+    m_source = R"""([[node]]
+id    = "node_a"
+value = "Node A"
+x     = 20
+y     = 20
+
+[[node]]
+id    = "node_b"
+value = "Node B"
+ref   = "node_a"
+x     = 240
+y     = 240
+)""";
 }

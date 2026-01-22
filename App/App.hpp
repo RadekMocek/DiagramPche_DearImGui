@@ -51,51 +51,7 @@ private:
     bool m_do_show_demo_window{};
     bool m_is_about_popup_queued{};
 
-    std::string m_source = R"""(
-[[node]]
-id    = "node_a"
-value = "Node A"
-x     = 20
-y     = 20
-
-[[node]]
-id    = "node_b"
-value = "Node B"
-x     = 240
-y     = 240
-
-[[node]]
-id    = "node_c"
-value = "Node C"
-ref   = "node_a"
-x     = 20
-y     = 20
-
-[[path]]
-[[path.point]]
-x=0
-y=0
-[[path.point]]
-x=0
-y=100
-[[path.point]]
-x=150
-y=100
-
-[[path]]
-[[path.point]]
-x=50
-y=50
-[[path.point]]
-x=30
-y=70
-[[path.point]]
-x=70
-y=70
-[[path.point]]
-x=50
-y=50
-)""";
+    std::string m_source{};
 
     // Const
     static constexpr auto FONT_SIZE_DEFAULT = 20.0f;
@@ -106,9 +62,12 @@ y=50
     static void GLFWErrorCallback(int error, const char* description);
     void Start();
     void Update();
+
     // App specific
     void ModuleMainMenuBar();
     void ModuleBody();
     void ModuleTextEditor();
     void ModuleCanvas();
+
+    void LoadSourceFromFile(const char* filename);
 };

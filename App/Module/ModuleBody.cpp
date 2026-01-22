@@ -18,7 +18,7 @@ void App::ModuleBody()
     ImGui::Begin("Main", nullptr, flags);
 
     // Two main columns
-    m_is_parsing_ok = m_parser.parse(m_source);
+    m_is_parsing_ok = m_parser.Parse(m_source);
     ModuleTextEditor();
     ImGui::SameLine();
     ModuleCanvas();
