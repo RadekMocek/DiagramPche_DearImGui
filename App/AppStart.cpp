@@ -2,7 +2,7 @@
 
 void App::Start()
 {
-    // Load Fonts
+    // = Load Fonts =
     // - If no fonts are loaded, dear imgui will use the default font. You can also load multiple fonts and use ImGui::PushFont()/PopFont() to select them.
     // - AddFontFromFileTTF() will return the ImFont* so you can store it if you need to select the font among multiple.
     // - If the file cannot be loaded, the function will return a nullptr. Please handle those errors in your application (e.g. use an assertion, or display an error and quit).
@@ -21,7 +21,13 @@ void App::Start()
 
     const ImGuiIO& io = ImGui::GetIO();
 
-    m_font_inconsolata_medium = io.Fonts->AddFontFromFileTTF("./Resource/Inconsolata-Medium.ttf", FONT_SIZE_DEFAULT);
+    m_font_inconsolata_medium = io.Fonts->AddFontFromFileTTF("./Resource/Font/Inconsolata-Medium.ttf",
+                                                             FONT_SIZE_DEFAULT);
 
-    IM_ASSERT(font != nullptr);
+    IM_ASSERT(m_font_inconsolata_medium != nullptr);
+
+    // = Initialize all non-font members =
+
+    m_do_show_demo_window = false;
+    m_is_about_popup_queued = false;
 }

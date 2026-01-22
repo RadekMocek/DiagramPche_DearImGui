@@ -30,15 +30,18 @@ bool Parser::parse(const std::string& source)
 
     // Each node can have its coordinates defined absolutely (x=10 y=10) or relatively (ref="some_id" x=10 y=10).
     // For the relative option, we first need to know coordinates of the parent node with id "some_id".
-    // But what if it wasn't parsed yet? Or it does not exists? Or it's relative aswell? Or there is a circular import?
+    // But what if it wasn't parsed yet? Or it does not exist? Or it's relative aswell? Or there is a circular import?
 
     // For this to work, every node has to have some id. If not defined by the user, implicit ids are given: @Node0, @Node1, etc.
     // Character '@' is therefore reserved for internal purposes and cannot be used in custom ids.
-    // First we traverse the TOML and set the coordinates regardless of references; but we remember all the references and update dependant nodes later.
+    // First we traverse the TOML and set the coordinates regardless of references;
+    // but we remember all the references and we will update dependant nodes later.
 
-    std::unordered_map<std::string, std::string> refs{}; // Pairs dependant→refered (node ids)
-    std::set<std::string> stable_nodes{};
+    // Pairs dependant→refered (node ids)
+    std::unordered_map<std::string, std::string> refs{};
+
     // Ids of nodes that are not dependant on any other node ("stable node": its position is final)
+    std::set<std::string> stable_nodes{};
 
     // Start traversing the TOML
     // Parse the nodes first
@@ -102,7 +105,8 @@ bool Parser::parse(const std::string& source)
     // Don't stop until there is a whole iteration, where we don't do this action ↑
     // (So if we have dependecies (C→B) (B→A), first iter makes B stable, second iter makes C stable, third iter does nothing => break)
 
-    bool did_anything_change = !refs.empty(); // Have we done such action in this iteration?
+    // Have we done such action in this iteration (adding coordinates and marking as stable)?
+    bool did_anything_change = !refs.empty();
 
     while (did_anything_change) {
         did_anything_change = false;
@@ -147,6 +151,7 @@ bool Parser::parse(const std::string& source)
 
     if (const auto paths = table["path"]; !!paths && paths.type() == toml::node_type::array) {
         if (toml::array* paths_array = paths.as_array()) {
+            // `paths_array` is an array of tables labeled as `[[path]]`
             for (auto&& path : *paths_array) {
                 if (auto* path_t = path.as_table()) {
                     //
@@ -155,6 +160,7 @@ bool Parser::parse(const std::string& source)
 
                     if (const auto points = (*path_t)["point"]; !!points && points.type() == toml::node_type::array) {
                         if (toml::array* points_array = points.as_array()) {
+                            // `points_array` is an nested array of tables labeled as `[[path.point]]`
                             current_path_struct.points.reserve(points_array->size());
 
                             for (auto&& point : *points_array) {

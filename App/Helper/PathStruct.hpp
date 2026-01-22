@@ -33,7 +33,7 @@ struct PathStruct
      * thickness
      * color
 
-     path ends (arrows etc)
+     path ends (arrows etc.)
 
      curves?
     */

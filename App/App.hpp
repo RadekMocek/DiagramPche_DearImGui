@@ -37,7 +37,7 @@ public:
 private:
     // = Members =
     GLFWwindow* m_window{};
-    ImVec4 m_clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+    const ImVec4 m_clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
     ImFont* m_font_inconsolata_medium = nullptr;
 
@@ -46,7 +46,10 @@ private:
 
     Parser m_parser{};
 
-    bool m_is_parsing_ok;
+    bool m_is_parsing_ok{};
+
+    bool m_do_show_demo_window{};
+    bool m_is_about_popup_queued{};
 
     std::string m_source = R"""(
 [[node]]
@@ -104,7 +107,8 @@ y=50
     void Start();
     void Update();
     // App specific
-    void ModuleMain();
+    void ModuleMainMenuBar();
+    void ModuleBody();
     void ModuleTextEditor();
     void ModuleCanvas();
 };

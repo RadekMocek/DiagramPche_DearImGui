@@ -1,6 +1,6 @@
 #include "../App.hpp"
 
-void App::ModuleMain()
+void App::ModuleBody()
 {
     // Full-viewport window setup
     constexpr ImGuiWindowFlags flags

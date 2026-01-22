@@ -2,58 +2,27 @@
 
 void App::Update()
 {
-    // .: Update state :.
-    static bool do_show_demo_window = false;
-    static bool is_about_popup_queued = false;
-
     // .: Main menu bar :.
-    ImGui::PushFont(nullptr, 16.0f);
-    ImGui::BeginMainMenuBar();
-    // . File .
-    if (ImGui::BeginMenu("File")) {
-        if (ImGui::MenuItem("Exit", "Alt+F4")) {
-            glfwSetWindowShouldClose(m_window, GLFW_TRUE);
-        }
-        //
-        ImGui::EndMenu();
-    }
-    // . View .
-    if (ImGui::BeginMenu("View")) {
-        if (ImGui::MenuItem("Dear ImGui demo window", nullptr, do_show_demo_window)) {
-            do_show_demo_window = !do_show_demo_window;
-        }
-        //
-        ImGui::EndMenu();
-    }
-    // . Help .
-    if (ImGui::BeginMenu("Help")) {
-        if (ImGui::MenuItem("About")) {
-            is_about_popup_queued = true;
-        }
-        //
-        ImGui::EndMenu();
-    }
-    ImGui::EndMainMenuBar();
-    ImGui::PopFont();
+    ModuleMainMenuBar();
 
     // .: Main "full-viewport" window :.
-    ModuleMain();
+    ModuleBody();
 
     // .: Show the big demo window if enabled :.
-    if (do_show_demo_window) {
+    if (m_do_show_demo_window) {
         ImGui::PushFont(nullptr, 16.0f);
-        ImGui::ShowDemoWindow(&do_show_demo_window); // Putting the bool here will add close button to the demo window
+        ImGui::ShowDemoWindow(&m_do_show_demo_window); // Putting the bool here will add close button to the demo window
         ImGui::PopFont();
     }
 
     // .: About modal :.
     constexpr auto MODAL_ABOUT_NAME = "About##modal";
 
-    if (is_about_popup_queued) {
-        is_about_popup_queued = false;
+    if (m_is_about_popup_queued) {
+        m_is_about_popup_queued = false;
         ImGui::OpenPopup(MODAL_ABOUT_NAME);
     }
-    // Always center this window when appearing
+    // (Always center this window when appearing)
     const ImVec2 center = ImGui::GetMainViewport()->GetCenter();
     ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
     if (ImGui::BeginPopupModal(MODAL_ABOUT_NAME, nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
