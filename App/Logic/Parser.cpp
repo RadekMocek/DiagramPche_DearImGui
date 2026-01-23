@@ -4,7 +4,7 @@
 
 #include "Parser.hpp"
 
-#include "../Helper/HelperFunction.hpp"
+#include "../HelperFunction.hpp"
 
 bool Parser::Parse(const std::string& source)
 {
@@ -46,13 +46,13 @@ bool Parser::Parse(const std::string& source)
     // Start traversing the TOML
     // Parse the nodes first
     if (const auto nodes = table["node"]; !!nodes && nodes.type() == toml::node_type::array) {
-        // `nodes` is an array of tables labeled as `[[node]]`
-        // Conversion chore and table iteration:
         if (toml::array* nodes_array = nodes.as_array()) {
+            // `nodes_array` is an array of tables labeled as `[[node]]`
+
             int node_index = -1; // This is for the implicit id creation if custom id is not provided
 
             for (auto&& node : *nodes_array) {
-                if (auto* node_t = node.as_table()) {
+                if (const auto* node_t = node.as_table()) {
                     // `node_t` is a pointer to the actual [[node]] table
                     node_index++; // @Node0, @Node1, ...
 

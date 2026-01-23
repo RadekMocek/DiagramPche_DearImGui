@@ -4,8 +4,8 @@
 #include <vector>
 
 #include "../../Dependency/toml.hpp"
-#include "../Helper/NodeStruct.hpp"
-#include "../Helper/PathStruct.hpp"
+#include "../Model/NodeStruct.hpp"
+#include "../Model/PathStruct.hpp"
 
 class Parser
 {

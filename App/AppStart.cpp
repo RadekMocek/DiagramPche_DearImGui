@@ -34,14 +34,12 @@ void App::Start()
     m_source = R"""([[node]]
 id    = "node_a"
 value = "Node A"
-x     = 20
-y     = 20
+xy    = [20, 20]
 
 [[node]]
 id    = "node_b"
 value = "Node B"
-ref   = "node_a"
-x     = 240
-y     = 240
+base  = ["node_a", "right"]
+xy    = [240, 240, "left"]
 )""";
 }

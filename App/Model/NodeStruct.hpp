@@ -11,12 +11,12 @@ enum NodeType
 
 struct NodeStruct
 {
-    NodeType type;
+    NodeType type = NodeType::RECTANGLE;
 
-    std::string id;
-    std::string value;
-    int x;
-    int y;
+    std::string id{};
+    std::string value{};
+    int x{};
+    int y{};
 
     /*
     text color

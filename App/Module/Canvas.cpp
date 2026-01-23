@@ -3,7 +3,7 @@
 #include <ranges>
 
 #include "../App.hpp"
-#include "../Helper/HelperFunction.hpp"
+#include "../HelperFunction.hpp"
 
 void App::ModuleCanvas()
 {

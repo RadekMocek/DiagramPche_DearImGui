@@ -1,7 +1,7 @@
 #include "misc/cpp/imgui_stdlib.h"
 
 #include "../App.hpp"
-#include "../Helper/HelperFunction.hpp"
+#include "../HelperFunction.hpp"
 
 void App::ModuleTextEditor()
 {
