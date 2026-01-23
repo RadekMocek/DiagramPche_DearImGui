@@ -21,6 +21,7 @@ bool Parser::Parse(const std::string& source)
         m_error_source_region = err.source();
         m_error_description = err.description();
         // By returning here, last valid TOML will be drawn
+        //TODO It would be nice if the errors further down also would not clear the whole canvas
         return false;
     }
 
@@ -28,19 +29,24 @@ bool Parser::Parse(const std::string& source)
     // It is `map` and not `vector` simply because it's better for the "node reference" implementation
     m_result_nodes_map.clear();
 
-    // Each node can have its coordinates defined absolutely (x=10 y=10) or relatively (ref="some_id" x=10 y=10).
-    // For the relative option, we first need to know coordinates of the parent node with id "some_id".
-    // But what if it wasn't parsed yet? Or it does not exist? Or it's relative aswell? Or there is a circular import?
+    // Each node can have its coordinates defined absolutely (xy=[10,10]) or relatively (base=["some_id","center"] xy=[10,10]).
+    // For the relative option, `base` takes two parameters: parent node's id and parent node's pivot.
+
+    // Dependand node will be drawn relative to parent node's pivot; to know the pivot's location, the parent node must be drawn first!
+    // This means we have to tell the canvas which nodes must be drawn earlier and which later – we set their `draw_batch_number`.
+
+    // So we set parent's batch number to 0 and dependant's to 1? But how do we know that the parent node is not also dependant on some other node?
+    // What if the parent node wasn't parsed yet? Or it does not exist? Or there is a circular dependency?
 
     // For this to work, every node has to have some id. If not defined by the user, implicit ids are given: @Node0, @Node1, etc.
     // Character '@' is therefore reserved for internal purposes and cannot be used in custom ids.
-    // First we traverse the TOML and set the coordinates regardless of references;
-    // but we remember all the references and we will update dependant nodes later.
+    // First we traverse the TOML and set `draw_batch_number` to 0 regardless of references,
+    // but we remember all the references and we will update this member of dependant nodes later.
 
-    // Pairs dependant→refered (node ids)
+    // Pairs dependant→parent
     std::unordered_map<std::string, std::string> refs{};
 
-    // Ids of nodes that are not dependant on any other node ("stable node": its position is final)
+    // Ids of nodes that are not dependant on any other node ("stable node" == its batch number is final)
     std::set<std::string> stable_nodes{};
 
     // Start traversing the TOML
@@ -52,60 +58,40 @@ bool Parser::Parse(const std::string& source)
             int node_index = -1; // This is for the implicit id creation if custom id is not provided
 
             for (auto&& node : *nodes_array) {
-                if (const auto* node_t = node.as_table()) {
-                    // `node_t` is a pointer to the actual [[node]] table
-                    node_index++; // @Node0, @Node1, ...
+                if (const auto* node_t = node.as_table()) { // `node_t` is a pointer to the actual [[node]] table
+                    // Currently processed Node == "cn"
+                    NodeStruct cn;
 
-                    // Try to get the id and check whether it contains "@"; or give it an implicit id
-                    const auto r_id_node_view = (*node_t)["id"];
-                    std::string r_id;
-                    if (r_id_node_view) {
-                        r_id = r_id_node_view.value<std::string>().value();
-                        if (r_id.find('@') != std::string::npos) {
-                            m_error_source_region = r_id_node_view.node()->source();
-                            m_error_description = "Character '@' is reserved: it can't be used in node ids";
-                            return false;
-                        }
-                    }
-                    else {
-                        r_id = std::format("@Node{}", node_index);
+                    // Parse `node_t` data and set `cn` members; or set error message and return false
+                    if (!ParseNode(node_t, cn)) return false;
+
+                    // Implicit id if not set by the user
+                    if (cn.id.empty()) {
+                        node_index++; // @Node0, @Node1, ...
+                        cn.id = std::format("@Node{}", node_index);
                     }
 
-                    // Check for id duplicates
-                    if (m_result_nodes_map.contains(r_id)) {
-                        m_error_source_region = r_id_node_view.node()->source();
-                        m_error_description = std::format("Duplicate node id: '{}'", r_id);
-                        return false;
-                    }
-
-                    // Get other values
-                    const std::string r_ref = (*node_t)["ref"].value_or("");
-                    const auto r_type = GetNodeType((*node_t)["type"].value_or(""));
-                    const auto r_x = (*node_t)["x"].value_or(0);
-                    const auto r_y = (*node_t)["y"].value_or(0);
-                    const auto r_value = (*node_t)["value"].value_or("");
-
-                    // Add node to the result ccollection
-                    m_result_nodes_map.emplace(r_id, NodeStruct{r_type, r_id, r_value, r_x, r_y});
+                    // Add node to the result collection
+                    m_result_nodes_map.insert({cn.id, cn}); //TODO
 
                     // Empty `ref` means stable node; otherwise dependant node
-                    if (!r_ref.empty()) {
-                        refs.insert({r_id, r_ref});
+                    if (!cn.base_id.empty()) {
+                        refs.insert({cn.id, cn.base_id});
                     }
                     else {
-                        stable_nodes.insert(r_id);
+                        stable_nodes.insert(cn.id);
                     }
                 }
             }
         }
     }
 
-    // Now we irate over `refs` (pairs dependant→refered – p1→p2 for short):
-    // If p2 is stable and p1 is unstable, then add p2's coordinates to p1's coordinates and mark p1 as stable.
+    // Now we irate over `refs` (pairs dependant→parent – p1→p2 for short):
+    // If p2 is stable and p1 is unstable, the make p1's batch number one greater than p2's batch number and mark p1 as stable.
     // Don't stop until there is a whole iteration, where we don't do this action ↑
     // (So if we have dependecies (C→B) (B→A), first iter makes B stable, second iter makes C stable, third iter does nothing => break)
 
-    // Have we done such action in this iteration (adding coordinates and marking as stable)?
+    // Have we done such action in this iteration (updating the batch number and marking node as stable)?
     bool did_anything_change = !refs.empty();
 
     while (did_anything_change) {
@@ -123,11 +109,11 @@ bool Parser::Parse(const std::string& source)
                 // These two should always be true, but just in case:
                 && m_result_nodes_map.contains(key)
                 && m_result_nodes_map.contains(value)
-            ) { // Add coordinates and mark as stable
+            ) { // Update the batch number and mark as stable
                 const auto& refered_node = m_result_nodes_map.at(value);
                 auto& dependant_node = m_result_nodes_map.at(key);
-                dependant_node.x += refered_node.x;
-                dependant_node.y += refered_node.y;
+                dependant_node.draw_batch_number = refered_node.draw_batch_number + 1;
+
                 stable_nodes.insert(key);
                 did_anything_change = true; // We did the action in this iteration, so this deserves another iteration
             }

@@ -32,6 +32,12 @@ void App::Start()
     m_is_about_popup_queued = false;
 
     m_source = R"""([[node]]
+id    = "node_d"
+value = "Node D"
+base  = ["node_b", "top-left"]
+xy    = [-20, -20]
+
+[[node]]
 id    = "node_a"
 value = "Node A"
 xy    = [20, 20]
@@ -40,6 +46,13 @@ xy    = [20, 20]
 id    = "node_b"
 value = "Node B"
 base  = ["node_a", "right"]
-xy    = [240, 240, "left"]
+xy    = [240, 240]
+pivot = "left"
+
+[[node]]
+id    = "node_c"
+value = "Node C"
+base  = ["node_b", "bottom"]
+xy    = [300,300]
 )""";
 }

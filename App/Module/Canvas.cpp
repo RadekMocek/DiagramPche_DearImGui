@@ -97,6 +97,8 @@ void App::ModuleCanvas()
 
     // Draw nodes on the canvas
     for (const auto& node : m_parser.m_result_nodes_map | std::views::values) {
+        print(node.id << " " << node.draw_batch_number);
+
         const auto node_type = node.type;
 
         // Draw text

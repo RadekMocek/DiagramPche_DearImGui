@@ -23,6 +23,9 @@ public:
     bool Parse(const std::string& source);
 
 private:
+    bool ParseNode(const toml::table* node_t, NodeStruct& cn);
+
+    //TODO revize
     const NodeType DEFAULT_DRAW_ITEM_TYPE = RECTANGLE;
 
     const std::unordered_map<std::string, NodeType> STRING_TO_NODE_TYPE = {

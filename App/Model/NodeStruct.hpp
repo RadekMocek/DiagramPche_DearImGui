@@ -2,21 +2,24 @@
 
 #include <string>
 
-enum NodeType
-{
-    REF,
-    TEXT,
-    RECTANGLE
-};
+#include "NodeTypeEnum.hpp"
+#include "PivotEnum.hpp"
 
 struct NodeStruct
 {
-    NodeType type = NodeType::RECTANGLE;
+    int draw_batch_number = 0;
+
+    NodeType type = RECTANGLE;
 
     std::string id{};
     std::string value{};
     int x{};
     int y{};
+
+    Pivot pivot = CENTER;
+
+    std::string base_id{};
+    Pivot base_pivot{};
 
     /*
     text color
