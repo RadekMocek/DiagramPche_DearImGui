@@ -8,10 +8,6 @@
 
 bool Parser::Parse(const std::string& source)
 {
-    // Reset warning message
-    m_has_warning = false;
-    m_warning_description = "";
-
     // Try to parse the TOML input
     toml::parse_result table;
     try {
@@ -107,17 +103,15 @@ bool Parser::Parse(const std::string& source)
         did_anything_change = false;
 
         for (const auto& [key, value] : refs) {
-            // Issue a warning if the refered id does not exist
+            // Check if the refered ID does exist
             if (!m_result_nodes_map.contains(value)) {
-                m_warning_description = std::format("Node '{}' is referencing non existant id: '{}'", key, value);
-                m_has_warning = true;
+                m_error_source_region = m_result_nodes_map[key].base_id_source_region;
+                m_error_description = std::format("Node '{}' is referencing non existant id: '{}'", key, value);
+                return false;
             }
 
             if (!stable_nodes.contains(key) // Is p1 unstable and
                 && stable_nodes.contains(value) // is p2 stable?
-                // These two should always be true, but just in case:
-                && m_result_nodes_map.contains(key)
-                && m_result_nodes_map.contains(value)
             ) { // Update the batch number and mark as stable
                 const auto& refered_node = m_result_nodes_map.at(value);
                 auto& dependant_node = m_result_nodes_map.at(key);
@@ -130,15 +124,16 @@ bool Parser::Parse(const std::string& source)
     }
 
     // At this point, if there are still some unresolved references, that means we have a circular reference
-    // Pinpointing the exact loop would need aditional logic so we'll just issue a warning with all unstable node IDs
-    if (!m_has_warning && stable_nodes.size() < m_result_nodes_map.size()) {
-        m_warning_description = "Circular reference somewhere among:";
+    // Pinpointing the exact loop would need aditional logic so we'll just fill the error message with all unstable node IDs
+    if (stable_nodes.size() < m_result_nodes_map.size()) {
+        m_error_source_region = {};
+        m_error_description = "Circular reference somewhere among:";
         for (const auto& key : m_result_nodes_map | std::views::keys) {
             if (!stable_nodes.contains(key)) {
-                m_warning_description += std::format(" '{}'", key);
+                m_error_description += std::format(" '{}'", key);
             }
         }
-        m_has_warning = true;
+        return false;
     }
 
     // == Paths ==

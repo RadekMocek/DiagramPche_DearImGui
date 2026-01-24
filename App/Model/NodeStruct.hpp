@@ -21,6 +21,9 @@ struct NodeStruct
     std::string base_id{};
     Pivot base_pivot{};
 
+    // Better error reporting for better diagram developer experience :)
+    toml::source_region base_id_source_region{};
+
     /*
     text color
     text size

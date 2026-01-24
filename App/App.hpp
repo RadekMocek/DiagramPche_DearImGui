@@ -67,7 +67,9 @@ private:
     void ModuleMainMenuBar();
     void ModuleBody();
     void ModuleTextEditor();
+
     void ModuleCanvas();
+    void ModuleCanvasDrawNodes(ImDrawList* draw_list, ImVec2 origin, float zoom_level);
 
     void LoadSourceFromFile(const char* filename);
 };

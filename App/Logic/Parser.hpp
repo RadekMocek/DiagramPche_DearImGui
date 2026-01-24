@@ -13,11 +13,9 @@ public:
     std::unordered_map<std::string, NodeStruct> m_result_nodes_map;
     std::vector<PathStruct> m_result_paths;
 
-    // Errors and warnings:
+    // Error report
     toml::source_region m_error_source_region;
     std::string m_error_description;
-    bool m_has_warning;
-    std::string m_warning_description;
 
     // Methods
     bool Parse(const std::string& source);

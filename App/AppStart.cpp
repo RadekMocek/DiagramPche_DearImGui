@@ -38,6 +38,7 @@ xy    = [100, 100]
 pivot = "center"
 
 [[node]]
+id    = "n2"
 value = "relative node"
 pivot = "top"
 base  = ["hello", "bottom"]

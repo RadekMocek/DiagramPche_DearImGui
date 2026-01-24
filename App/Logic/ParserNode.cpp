@@ -79,6 +79,8 @@ bool Parser::ParseNode(const toml::table* node_t, NodeStruct& cn)
             if (auto* value_arr_ptr = value.as_array(); value_arr_ptr &&
                 value_arr_ptr->size() == 2 && value_arr_ptr->is_homogeneous(toml::node_type::string)) {
                 cn.base_id = value_arr_ptr->at(0).value_or("");
+                // Better error reporting for better diagram developer experience :)
+                cn.base_id_source_region = value_arr_ptr->at(0).source();
 
                 const auto pivot = GetPivot(value_arr_ptr->at(1).value_or(""));
                 if (pivot == UNKNOWN) {
