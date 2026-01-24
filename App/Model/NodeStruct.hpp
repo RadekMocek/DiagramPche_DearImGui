@@ -16,7 +16,7 @@ struct NodeStruct
     int x{};
     int y{};
 
-    Pivot pivot = CENTER;
+    Pivot pivot = TOPLEFT;
 
     std::string base_id{};
     Pivot base_pivot{};

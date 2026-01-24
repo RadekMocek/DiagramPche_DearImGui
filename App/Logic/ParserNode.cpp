@@ -8,11 +8,11 @@ bool Parser::ParseNode(const toml::table* node_t, NodeStruct& cn)
     // Foreach `key` = `value` in current [[node]]
     for (const auto& [key, value] : *node_t) {
         // Logic is branched according to the key.str() content:
-        // == id ==> single string, that cannot contain @ (reserved character) and must be unique
+        // == id ==> single string, that cannot contain '@' (reserved character) and must be unique
         if (const auto key_str = key.str(); key_str == "id") {
             if (auto* value_str_ptr = value.as_string()) {
                 const auto value_str = value_str_ptr->get();
-                // Check for @
+                // Check for '@'
                 if (value_str.find('@') != std::string::npos) {
                     m_error_source_region = value.source();
                     m_error_description = "Character '@' is reserved and it can't be used in node ids";

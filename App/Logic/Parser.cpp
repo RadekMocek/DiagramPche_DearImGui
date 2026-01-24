@@ -20,17 +20,18 @@ bool Parser::Parse(const std::string& source)
     catch (const toml::parse_error& err) {
         m_error_source_region = err.source();
         m_error_description = err.description();
-        // By returning here, last valid TOML will be drawn
-        //TODO It would be nice if the errors further down also would not clear the whole canvas
+        // By returning here, last valid TOML will be drawn (result collections weren't cleared yet)
         return false;
     }
+
+    // == Nodes ==
 
     // This map is used by canvas logic to make draw commands
     // It is `map` and not `vector` simply because it's better for the "node reference" implementation
     m_result_nodes_map.clear();
 
     // Each node can have its coordinates defined absolutely (xy=[10,10]) or relatively (base=["some_id","center"] xy=[10,10]).
-    // For the relative option, `base` takes two parameters: parent node's id and parent node's pivot.
+    // For the relative option, `base` takes two parameters: parent node's ID and parent node's pivot.
 
     // Dependand node will be drawn relative to parent node's pivot; to know the pivot's location, the parent node must be drawn first!
     // This means we have to tell the canvas which nodes must be drawn earlier and which later – we set their `draw_batch_number`.
@@ -38,26 +39,27 @@ bool Parser::Parse(const std::string& source)
     // So we set parent's batch number to 0 and dependant's to 1? But how do we know that the parent node is not also dependant on some other node?
     // What if the parent node wasn't parsed yet? Or it does not exist? Or there is a circular dependency?
 
-    // For this to work, every node has to have some id. If not defined by the user, implicit ids are given: @Node0, @Node1, etc.
-    // Character '@' is therefore reserved for internal purposes and cannot be used in custom ids.
+    // For this to work, every node has to have some ID. If not defined by the user, implicit IDs are given: @Node0, @Node1, etc.
+    // Character '@' is therefore reserved for internal purposes and cannot be used in explicit IDs.
     // First we traverse the TOML and set `draw_batch_number` to 0 regardless of references,
-    // but we remember all the references and we will update this member of dependant nodes later.
+    // but we remember all the references and we will update batch number of dependant nodes later.
 
     // Pairs dependant→parent
     std::unordered_map<std::string, std::string> refs{};
 
-    // Ids of nodes that are not dependant on any other node ("stable node" == its batch number is final)
+    // IDs of nodes that are not dependant on any other node ("stable node" == its batch number is final)
     std::set<std::string> stable_nodes{};
 
     // Start traversing the TOML
-    // Parse the nodes first
-    if (const auto nodes = table["node"]; !!nodes && nodes.type() == toml::node_type::array) {
+
+    // Parse the nodes
+    if (const auto nodes = table["node"]; !!nodes && nodes.is_array_of_tables()) {
         if (toml::array* nodes_array = nodes.as_array()) {
             // `nodes_array` is an array of tables labeled as `[[node]]`
 
-            int node_index = -1; // This is for the implicit id creation if custom id is not provided
+            int node_index = -1; // This is for the implicit ID creation if explicit ID is not provided
 
-            for (auto&& node : *nodes_array) {
+            for (const auto& node : *nodes_array) {
                 if (const auto* node_t = node.as_table()) { // `node_t` is a pointer to the actual [[node]] table
                     // Currently processed Node == "cn"
                     NodeStruct cn;
@@ -65,29 +67,36 @@ bool Parser::Parse(const std::string& source)
                     // Parse `node_t` data and set `cn` members; or set error message and return false
                     if (!ParseNode(node_t, cn)) return false;
 
-                    // Implicit id if not set by the user
+                    // Set implicit ID if explicit ID wasn't set by the user
                     if (cn.id.empty()) {
                         node_index++; // @Node0, @Node1, ...
                         cn.id = std::format("@Node{}", node_index);
                     }
 
-                    // Add node to the result collection
-                    m_result_nodes_map.insert({cn.id, cn}); //TODO
+                    // Check if the node is not referencing itself
+                    if (cn.id == cn.base_id) {
+                        m_error_source_region = node_t->source();
+                        m_error_description = std::format("Node with id '{}' is referencing itself", cn.id);
+                        return false;
+                    }
 
-                    // Empty `ref` means stable node; otherwise dependant node
+                    // Empty `base` means stable node; otherwise dependant node
                     if (!cn.base_id.empty()) {
                         refs.insert({cn.id, cn.base_id});
                     }
                     else {
                         stable_nodes.insert(cn.id);
                     }
+
+                    // Add node to the result collection
+                    m_result_nodes_map.emplace(cn.id, std::move(cn)); // Duplicate ID check was done in `ParseNode()`
                 }
             }
         }
     }
 
     // Now we irate over `refs` (pairs dependant→parent – p1→p2 for short):
-    // If p2 is stable and p1 is unstable, the make p1's batch number one greater than p2's batch number and mark p1 as stable.
+    // If p2 is stable and p1 is unstable, we make p1's batch number one greater than p2's batch number and mark p1 as stable.
     // Don't stop until there is a whole iteration, where we don't do this action ↑
     // (So if we have dependecies (C→B) (B→A), first iter makes B stable, second iter makes C stable, third iter does nothing => break)
 
@@ -115,13 +124,13 @@ bool Parser::Parse(const std::string& source)
                 dependant_node.draw_batch_number = refered_node.draw_batch_number + 1;
 
                 stable_nodes.insert(key);
-                did_anything_change = true; // We did the action in this iteration, so this deserves another iteration
+                did_anything_change = true; // We did the action in this iteration, so there will be another iteration
             }
         }
     }
 
     // At this point, if there are still some unresolved references, that means we have a circular reference
-    // Pinpointing the exact loop would need aditional logic so we'll just issue a warning with all unstable node ids
+    // Pinpointing the exact loop would need aditional logic so we'll just issue a warning with all unstable node IDs
     if (!m_has_warning && stable_nodes.size() < m_result_nodes_map.size()) {
         m_warning_description = "Circular reference somewhere among:";
         for (const auto& key : m_result_nodes_map | std::views::keys) {
@@ -132,13 +141,15 @@ bool Parser::Parse(const std::string& source)
         m_has_warning = true;
     }
 
+    // == Paths ==
+
     // Parse the paths
     m_result_paths.clear();
 
-    if (const auto paths = table["path"]; !!paths && paths.type() == toml::node_type::array) {
+    if (const auto paths = table["path"]; !!paths && paths.is_array_of_tables()) {
         if (toml::array* paths_array = paths.as_array()) {
             // `paths_array` is an array of tables labeled as `[[path]]`
-            for (auto&& path : *paths_array) {
+            for (auto& path : *paths_array) {
                 if (auto* path_t = path.as_table()) {
                     //
                     m_result_paths.emplace_back();

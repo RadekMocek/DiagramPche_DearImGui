@@ -32,27 +32,14 @@ void App::Start()
     m_is_about_popup_queued = false;
 
     m_source = R"""([[node]]
-id    = "node_d"
-value = "Node D"
-base  = ["node_b", "top-left"]
-xy    = [-20, -20]
+id    = "hello"
+value = "Hello world!"
+xy    = [100, 100]
+pivot = "center"
 
 [[node]]
-id    = "node_a"
-value = "Node A"
-xy    = [20, 20]
-
-[[node]]
-id    = "node_b"
-value = "Node B"
-base  = ["node_a", "right"]
-xy    = [240, 240]
-pivot = "left"
-
-[[node]]
-id    = "node_c"
-value = "Node C"
-base  = ["node_b", "bottom"]
-xy    = [300,300]
+value = "relative node"
+pivot = "top"
+base  = ["hello", "bottom"]
 )""";
 }
