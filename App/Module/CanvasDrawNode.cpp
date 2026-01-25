@@ -10,11 +10,18 @@ void App::ModuleCanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, cons
     constexpr auto COLOR_NODE = IM_COL32(0, 0, 0, 255);
     constexpr auto FONT_SIZE_BASE = 18;
 
-    // Default padding of rectangle border around text in canvas, if user doesn't set custom width/height
-    constexpr float NODE_BORDER_OFFSET_BASE = 18.0f;
-    const float node_border_offset = NODE_BORDER_OFFSET_BASE * zoom_level;
-
     // AABR = axis aligned bounding rectangle :)
+
+    // This is used because of "the width issue"
+    // basically: if we use a font of size 10 and 20 to draw the same text, that does not mean the 2latters AABR will be twice as big as the former one (?)
+    // (This precalculated value cannot be used for everything because of strings like "abcd\nefgh")
+    const auto char_width_x = m_font_inconsolata_medium->CalcTextSizeA(
+        FONT_SIZE_BASE * zoom_level, FLT_MAX, -1.0f, "A").x;
+    // Default padding of rectangle border around the label in canvas, if user doesn't set custom width/height
+    const float node_padding = char_width_x * 2;
+    // Used for custom width/height
+    const float size_unit = char_width_x / 10;
+
     // This map is used to store some additional info about nodes and also to keep track about which nodes were already drawn.
     // One thing we need to store is node's AABR so relative nodes (which are drawn later) can use it to determine their position.
     std::unordered_map<std::string, CanvasNode> canvas_nodes{};
@@ -30,7 +37,7 @@ void App::ModuleCanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, cons
                 // Dear ImGui text functions take `const char*`
                 const auto label_c_str = node.value.c_str();
 
-                // This gives us the size of text if we draw it; it's used for implicit (AAB)Rectangle size
+                // This gives us the size of label if we draw it; it's used for implicit (AAB)Rectangle size
                 const auto label_size = m_font_inconsolata_medium->CalcTextSizeA(
                     FONT_SIZE_BASE * zoom_level, FLT_MAX, -1.0f, label_c_str
                 );
@@ -79,8 +86,8 @@ void App::ModuleCanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, cons
                     }
                 }
 
-                const auto node_width = (node.width > 0) ? node.width * zoom_level : label_size.x + 2 * node_border_offset;
-                const auto node_height = (node.height > 0) ? node.height * zoom_level : label_size.y + 2 * node_border_offset;
+                const auto node_width = (node.width > 0) ? node.width * size_unit : label_size.x + 2 * node_padding;
+                const auto node_height = (node.height > 0) ? node.height * size_unit : label_size.y + 2 * node_padding;
 
                 // Move node according to its `pivot`, if user have set some
                 ImVec2 pivot_offset(0, 0);
@@ -136,18 +143,63 @@ void App::ModuleCanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, cons
 
                 // By adding origin (canvas position in window + scrolling) to AABR we get proper drawing coordinates
                 const ImVec2 draw_top_left = ImVec2Sum(origin, aabr_top_left);
-                const ImVec2 draw_top_right = ImVec2Sum(origin, aabr_bottom_right);
+                const ImVec2 draw_bottom_right = ImVec2Sum(origin, aabr_bottom_right);
 
-                // Do the actual drawing
-                draw_list->AddRectFilled(draw_top_left, draw_top_right,
-                                         IM_COL32(node.color_r, node.color_g, node.color_b, node.color_a), 0, 0);
+                // Do the actual drawing of the rectangle
+                draw_list->AddRectFilled(draw_top_left,
+                                         draw_bottom_right,
+                                         IM_COL32(node.color_r, node.color_g, node.color_b, node.color_a),
+                                         0,
+                                         0);
 
-                draw_list->AddRect(draw_top_left, draw_top_right, COLOR_NODE, 0, 0, zoom_level);
+                draw_list->AddRect(draw_top_left, draw_bottom_right, COLOR_NODE, 0, 0, zoom_level);
 
-                const ImVec2 pad(node_border_offset, node_border_offset);
+                // Draw label
+                const auto label_left_x = draw_top_left.x + node_padding;
+                const auto label_top_y = draw_top_left.y + node_padding;
+                ImVec2 draw_label_position(label_left_x, label_top_y);
+
+                if (node.width > 0 || node.height > 0) {
+                    // Custom width/height => `text_pos` makes sense
+                    // Helper vars:
+                    const ImVec2 draw_center = ImVec2Sum(origin, canvas_node.center);
+                    switch (node.label_position) {
+                    case UNKNOWN:
+                        printerr("Node '" << node.id << "' has unknown `text_position` pivot");
+                        break;
+                    case TOPLEFT:
+                        // Nothing to do
+                        break;
+                    case TOP:
+                        draw_label_position = {draw_center.x - label_size.x / 2, label_top_y};
+                        break;
+                    case TOPRIGHT:
+                        draw_label_position = {draw_bottom_right.x - label_size.x - node_padding, label_top_y};
+                        break;
+                    case RIGHT:
+                        draw_label_position = {draw_bottom_right.x - label_size.x - node_padding, draw_center.y - label_size.y / 2};
+                        break;
+                    case BOTTOMRIGHT:
+                        draw_label_position = {draw_bottom_right.x - label_size.x - node_padding, draw_bottom_right.y - label_size.y - node_padding};
+                        break;
+                    case BOTTOM:
+                        draw_label_position = {draw_center.x - label_size.x / 2, draw_bottom_right.y - label_size.y - node_padding};
+                        break;
+                    case BOTTOMLEFT:
+                        draw_label_position = {label_left_x, draw_bottom_right.y - label_size.y - node_padding};
+                        break;
+                    case LEFT:
+                        draw_label_position = {label_left_x, draw_center.y - label_size.y / 2};
+                        break;
+                    case CENTER:
+                        draw_label_position = {draw_center.x - label_size.x / 2, draw_center.y - label_size.y / 2};
+                        break;
+                    }
+                }
+
                 draw_list->AddText(m_font_inconsolata_medium,
                                    FONT_SIZE_BASE * zoom_level,
-                                   ImVec2Sum(draw_top_left, pad),
+                                   draw_label_position,
                                    COLOR_NODE,
                                    label_c_str);
             }

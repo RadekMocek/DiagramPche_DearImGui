@@ -32,10 +32,11 @@ void App::Start()
     m_is_about_popup_queued = false;
 
     m_source = R"""([[node]]
-id    = "big"
-value = "příliš žluťoučký kůň úpěl ďábelské ódy"
-xy    = [10, 350]
-size  = [500, 500]
+id        = "big"
+value     = "příliš žluťoučký kůň úpěl ďábelské ódy"
+xy        = [50, 150]
+size      = [560, 560]
+label_pos = "bottom"
 
 [[node]]
 id    = "small"

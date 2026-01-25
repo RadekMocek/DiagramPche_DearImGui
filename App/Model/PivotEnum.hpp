@@ -29,7 +29,7 @@ const std::unordered_map<std::string, Pivot> STRING_TO_PIVOT = {
     {"center", CENTER},
 };
 
-inline Pivot GetPivot(const std::string& type_str)
+inline Pivot GetPivotFromString(const std::string& type_str)
 {
     const auto it = STRING_TO_PIVOT.find(type_str);
     return it != STRING_TO_PIVOT.end() ? it->second : UNKNOWN;

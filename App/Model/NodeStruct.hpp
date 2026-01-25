@@ -33,6 +33,8 @@ struct NodeStruct
     int width{};
     int height{};
 
+    Pivot label_position = CENTER;
+
     // Better error reporting for better diagram developer experience :)
     toml::source_region base_id_source_region{};
 

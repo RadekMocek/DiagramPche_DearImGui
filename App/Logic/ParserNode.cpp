@@ -60,13 +60,7 @@ bool Parser::ParseNode(const toml::table* node_t, NodeStruct& cn)
         // == pivot ==> single string
         else if (key_str == "pivot") {
             if (auto* value_str_ptr = value.as_string()) {
-                const auto pivot = GetPivot(value_str_ptr->get());
-                if (pivot == UNKNOWN) {
-                    m_error_source_region = value.source();
-                    m_error_description = PIVOT_ERROR_MESSAGE;
-                    return false;
-                }
-                cn.pivot = pivot;
+                if (!SetPivot(value_str_ptr, cn.pivot)) return false;
             }
             else {
                 m_error_source_region = value.source();
@@ -81,14 +75,7 @@ bool Parser::ParseNode(const toml::table* node_t, NodeStruct& cn)
                 cn.base_id = value_arr_ptr->at(0).value_or("");
                 // Better error reporting for better diagram developer experience :)
                 cn.base_id_source_region = value_arr_ptr->at(0).source();
-
-                const auto pivot = GetPivot(value_arr_ptr->at(1).value_or(""));
-                if (pivot == UNKNOWN) {
-                    m_error_source_region = value_arr_ptr->at(1).source();
-                    m_error_description = PIVOT_ERROR_MESSAGE;
-                    return false;
-                }
-                cn.base_pivot = pivot;
+                if (!SetPivot(value_arr_ptr->at(1).as_string(), cn.base_pivot)) return false;
             }
             else {
                 m_error_source_region = value.source();
@@ -113,7 +100,7 @@ bool Parser::ParseNode(const toml::table* node_t, NodeStruct& cn)
         }
         // == size ==> collection of two items [width, height], where each is specified either by integer or a string with variable name
         else if (key_str == "size") {
-            if (auto* value_arr_ptr = value.as_array(); value_arr_ptr &&value_arr_ptr->size() == 2) {
+            if (auto* value_arr_ptr = value.as_array(); value_arr_ptr && value_arr_ptr->size() == 2) {
                 // Width
                 if (auto* width_int_ptr = value_arr_ptr->at(0).as_integer()) {
                     cn.width = width_int_ptr->value_or(0);
@@ -141,7 +128,19 @@ bool Parser::ParseNode(const toml::table* node_t, NodeStruct& cn)
             }
             else {
                 m_error_source_region = value.source();
-                m_error_description = "An array of two integers and/or strings of variable names must follow after 'size='";
+                m_error_description =
+                    "An array of two integers and/or strings of variable names must follow after 'size='";
+                return false;
+            }
+        }
+        // == label_pos ==> pivot string
+        else if (key_str == "label_pos") {
+            if (auto* value_str_ptr = value.as_string()) {
+                if (!SetPivot(value_str_ptr, cn.label_position)) return false;
+            }
+            else {
+                m_error_source_region = value.source();
+                m_error_description = "A string must follow after 'label_pos='";
                 return false;
             }
         }
@@ -152,5 +151,17 @@ bool Parser::ParseNode(const toml::table* node_t, NodeStruct& cn)
         }
     }
 
+    return true;
+}
+
+bool Parser::SetPivot(const toml::value<std::string>* value_str_ptr, Pivot& to_set)
+{
+    const auto pivot = GetPivotFromString(value_str_ptr->get());
+    if (pivot == UNKNOWN) {
+        m_error_source_region = value_str_ptr->source();
+        m_error_description = PIVOT_ERROR_MESSAGE;
+        return false;
+    }
+    to_set = pivot;
     return true;
 }

@@ -22,6 +22,7 @@ public:
 
 private:
     bool ParseNode(const toml::table* node_t, NodeStruct& cn);
+    bool SetPivot(const toml::value<std::string>* value_str_ptr, Pivot& to_set);
 
     //TODO revize
     const NodeType DEFAULT_DRAW_ITEM_TYPE = RECTANGLE;
