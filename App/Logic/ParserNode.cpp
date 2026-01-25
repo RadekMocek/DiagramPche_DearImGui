@@ -96,6 +96,55 @@ bool Parser::ParseNode(const toml::table* node_t, NodeStruct& cn)
                 return false;
             }
         }
+        // == color ==> array of four u8s (rgba)
+        else if (key_str == "color") {
+            if (auto* value_arr_ptr = value.as_array(); value_arr_ptr &&
+                value_arr_ptr->size() == 4 && value_arr_ptr->is_homogeneous(toml::node_type::integer)) {
+                cn.color_r = value_arr_ptr->at(0).value_or(0);
+                cn.color_g = value_arr_ptr->at(1).value_or(0);
+                cn.color_b = value_arr_ptr->at(2).value_or(0);
+                cn.color_a = value_arr_ptr->at(3).value_or(0);
+            }
+            else {
+                m_error_source_region = value.source();
+                m_error_description = "An array of four uchars (0–255) must follow after 'color='";
+                return false;
+            }
+        }
+        // == size ==> collection of two items [width, height], where each is specified either by integer or a string with variable name
+        else if (key_str == "size") {
+            if (auto* value_arr_ptr = value.as_array(); value_arr_ptr &&value_arr_ptr->size() == 2) {
+                // Width
+                if (auto* width_int_ptr = value_arr_ptr->at(0).as_integer()) {
+                    cn.width = width_int_ptr->value_or(0);
+                }
+                else if (auto* width_str_ptr = value_arr_ptr->at(0).as_string()) {
+                    //TODO variable
+                }
+                else {
+                    m_error_source_region = value_arr_ptr->at(0).source();
+                    m_error_description = "Width must be specified with integer or string with variable name";
+                    return false;
+                }
+                // Height
+                if (auto* height_int_ptr = value_arr_ptr->at(1).as_integer()) {
+                    cn.height = height_int_ptr->value_or(1);
+                }
+                else if (auto* height_str_ptr = value_arr_ptr->at(1).as_string()) {
+                    //TODO variable
+                }
+                else {
+                    m_error_source_region = value_arr_ptr->at(1).source();
+                    m_error_description = "Height must be specified with integer or string with variable name";
+                    return false;
+                }
+            }
+            else {
+                m_error_source_region = value.source();
+                m_error_description = "An array of two integers and/or strings of variable names must follow after 'size='";
+                return false;
+            }
+        }
         else {
             m_error_source_region = key.source();
             m_error_description = std::format("Unknown key '{}'", key_str);

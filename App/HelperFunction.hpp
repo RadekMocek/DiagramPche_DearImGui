@@ -1,5 +1,6 @@
 #pragma once
 
+// == Dear ImGui ImVec helper functions ==
 #include "imgui.h"
 
 constexpr ImVec2 ImVec2Sum(const ImVec2 v1, const ImVec2 v2)
@@ -22,8 +23,7 @@ constexpr ImVec2 ImVec2TranslationY(const ImVec2 v, const float c)
     return {v.x, v.y + c};
 }
 
-// Prasárna, ale ušetří hodiny
-//*
+// == A huge time saver :) ==
 #include <iostream>
-#define print(x) std::cout << x << "\n"
-/**/
+#define print(x) std::cout << x << '\n'
+#define printerr(x) std::cerr << "[ERR] " << x << '\n'

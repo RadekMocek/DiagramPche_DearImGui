@@ -32,15 +32,20 @@ void App::Start()
     m_is_about_popup_queued = false;
 
     m_source = R"""([[node]]
-id    = "hello"
-value = "Hello world!"
-xy    = [100, 100]
-pivot = "center"
+id    = "big"
+value = "příliš žluťoučký kůň úpěl ďábelské ódy"
+xy    = [10, 350]
+size  = [500, 500]
 
 [[node]]
-id    = "n2"
-value = "relative node"
-pivot = "top"
-base  = ["hello", "bottom"]
+id    = "small"
+value = "příliš žluťoučký kůň úpěl ďábelské ódy"
+pivot = "bottom-left"
+base  = ["big","top-left"]
+
+[[node]]
+value = "abcdefghii"
+pivot = "left"
+base  = ["small", "right"]
 )""";
 }
