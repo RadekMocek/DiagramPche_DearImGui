@@ -12,14 +12,17 @@ void App::ModuleCanvas()
     // .:===================:.
     static ImVec2 scrolling(0.0f, 0.0f); // Scrolling means moving the canvas in this context
     static bool is_grid_enabled = true;
-    static float zoom_level = 1.0f;
-
-    constexpr auto ZOOM_STEP = 0.2f;
-    constexpr auto ZOOM_LEVEL_MIN = 0.1f;
-    constexpr auto ZOOM_LEVEL_MAX = 2.0f;
 
     constexpr auto COLOR_GRID_LINE = IM_COL32(200, 200, 200, 40);
     constexpr auto COLOR_PATH = IM_COL32(0, 0, 0, 255);
+
+    constexpr int FONT_SIZE_BASE = 18;
+    constexpr int FONT_SIZE_STEP = 4;
+    constexpr int FONT_SIZE_MIN = 8;
+    constexpr int FONT_SIZE_MAX = 28;
+
+    static int font_size = FONT_SIZE_BASE;
+    static float zoom_level = 1.0f;
 
     // .: Prepare ground for the canvas :.
     // .:===============================:.
@@ -51,9 +54,9 @@ void App::ModuleCanvas()
 
     // Mousewheel to adjust the zoom level
     if (is_hovered) {
-        const float new_zoom_level = zoom_level + io.MouseWheel * ZOOM_STEP;
-        zoom_level = std::clamp(new_zoom_level, ZOOM_LEVEL_MIN, ZOOM_LEVEL_MAX);
-        //IMGUI_DEBUG_LOG("%f\n", zoom_level);
+        const int new_font_size = font_size + io.MouseWheel * FONT_SIZE_STEP;
+        font_size = std::clamp(new_font_size, FONT_SIZE_MIN, FONT_SIZE_MAX);
+        zoom_level = font_size / static_cast<float>(FONT_SIZE_BASE);
     }
 
     // RMB drag to move the canvas ("scrolling")
@@ -89,7 +92,7 @@ void App::ModuleCanvas()
     }
 
     // Draw nodes on the canvas
-    ModuleCanvasDrawNodes(draw_list, origin, zoom_level);
+    ModuleCanvasDrawNodes(draw_list, origin, zoom_level, font_size);
 
     // Draw paths on the canvas
     for (const auto& path : m_parser.m_result_paths) {

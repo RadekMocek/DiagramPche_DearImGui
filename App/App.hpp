@@ -67,7 +67,7 @@ private:
     void ModuleTextEditor();
 
     void ModuleCanvas();
-    void ModuleCanvasDrawNodes(ImDrawList* draw_list, ImVec2 origin, float zoom_level);
+    void ModuleCanvasDrawNodes(ImDrawList* draw_list, ImVec2 origin, float zoom_level, int font_size);
 
     void LoadSourceFromFile(const char* filename);
 };
