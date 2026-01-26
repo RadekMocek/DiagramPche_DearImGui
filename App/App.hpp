@@ -51,10 +51,6 @@ private:
 
     std::string m_source{};
 
-    // Const
-    static constexpr auto FONT_SIZE_DEFAULT = 20.0f;
-    static constexpr auto BOTTOM_BAR_HEIGHT = 24.0f;
-
     // = Functions =
     // Boilerplate
     static void GLFWErrorCallback(int error, const char* description);

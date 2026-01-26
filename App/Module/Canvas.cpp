@@ -2,6 +2,7 @@
 #include <cmath>
 
 #include "../App.hpp"
+#include "../Config.hpp"
 #include "../HelperFunction.hpp"
 
 void App::ModuleCanvas()
@@ -78,21 +79,26 @@ void App::ModuleCanvas()
         constexpr float GRID_STEP_BASE = 100.0f;
         const float GRID_STEP = GRID_STEP_BASE * zoom_level;
 
-        for (float x = fmodf(scrolling.x, GRID_STEP); x < canvas_size.x; x += GRID_STEP) {
+        for (float x = fmodf(scrolling.x, GRID_STEP); x < canvas_size.x; x += GRID_STEP) { // NOLINT(*-flp30-c)
             draw_list->AddLine(ImVec2(canvas_top_left.x + x, canvas_top_left.y),
                                ImVec2(canvas_top_left.x + x, canvas_bottom_right.y),
                                COLOR_GRID_LINE);
         }
 
-        for (float y = fmodf(scrolling.y, GRID_STEP); y < canvas_size.y; y += GRID_STEP) {
+        for (float y = fmodf(scrolling.y, GRID_STEP); y < canvas_size.y; y += GRID_STEP) { // NOLINT(*-flp30-c)
             draw_list->AddLine(ImVec2(canvas_top_left.x, canvas_top_left.y + y),
                                ImVec2(canvas_bottom_right.x, canvas_top_left.y + y),
                                COLOR_GRID_LINE);
         }
     }
 
+    //
+    draw_list->ChannelsSplit(N_DRAW_LIST_CHANNELS);
+
     // Draw nodes on the canvas
     ModuleCanvasDrawNodes(draw_list, origin, zoom_level, font_size);
+
+    draw_list->ChannelsMerge();
 
     // Draw paths on the canvas
     for (const auto& path : m_parser.m_result_paths) {

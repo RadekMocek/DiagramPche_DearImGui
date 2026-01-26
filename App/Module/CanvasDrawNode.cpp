@@ -1,6 +1,7 @@
 #include <ranges>
 
 #include "../App.hpp"
+#include "../Config.hpp"
 #include "../Model/CanvasNodeStruct.hpp"
 #include "../HelperFunction.hpp"
 
@@ -72,6 +73,7 @@ void App::ModuleCanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, cons
                             break;
                         }
                     }
+                    //else printerr("Node '"<<node.id<<"' is referencing '"<<node.base_id<<"', which wasn't drawn yet!");
                 }
 
                 const auto node_width = (node.width > 0) ? node.width * zoom_level : label_size.x + 2 * node_padding;
@@ -82,8 +84,8 @@ void App::ModuleCanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, cons
 
                 switch (node.pivot) {
                 case UNKNOWN:
-                    // Undefined, do nothing
-                    break;
+                // Undefined, do nothing
+                //break; // Fallthrough
                 case TOPLEFT:
                     // Nothing to do
                     break;
@@ -134,6 +136,8 @@ void App::ModuleCanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, cons
                 const ImVec2 draw_bottom_right = ImVec2Sum(origin, aabr_bottom_right);
 
                 // Do the actual drawing of the rectangle
+                draw_list->ChannelsSetCurrent(node.z + Z_DEPTH_ABS_MAX);
+
                 constexpr auto COLOR_NODE = IM_COL32(0, 0, 0, 255);
 
                 draw_list->AddRectFilled(draw_top_left,
@@ -155,8 +159,8 @@ void App::ModuleCanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, cons
                     const ImVec2 draw_center = ImVec2Sum(origin, canvas_node.center);
                     switch (node.label_position) {
                     case UNKNOWN:
-                        // Undefined, do nothing
-                        break;
+                    // Undefined, do nothing
+                    //break; // Fallthrough
                     case TOPLEFT:
                         // Nothing to do
                         break;
@@ -211,7 +215,11 @@ void App::ModuleCanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, cons
                     }
                 }
 
-                draw_list->AddText(m_font_inconsolata_medium, font_size, draw_label_position, COLOR_NODE, label_c_str);
+                draw_list->AddText(m_font_inconsolata_medium,
+                                   font_size,
+                                   draw_label_position,
+                                   COLOR_NODE,
+                                   label_c_str);
             }
         }
     }

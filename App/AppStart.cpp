@@ -1,4 +1,5 @@
 #include "App.hpp"
+#include "Config.hpp"
 
 void App::Start()
 {
@@ -33,24 +34,48 @@ void App::Start()
 
     m_source = R"""(
 [variables]
-x=5
+w = 110
+h = 72
+bg_h = 360
+io_w = 130
 
 [[node]]
-id        = "big"
-value     = "příliš žluťoučký kůň úpěl ďábelské ódy"
-xy        = [50, 150]
-size      = [560, 560]
-label_pos = "bottom"
+id = "cache"
+value = "Cache"
+base = ["bg_cpu", "top-left"]
+xy = [20, 20]
+size = ["w", "h"]
 
 [[node]]
-id    = "small"
-value = "příliš žluťoučký kůň úpěl ďábelské ódy"
-pivot = "bottom-left"
-base  = ["big", "top-left"]
+id = "alu"
+value = "ALU"
+pivot = "top"
+base = ["cache", "bottom"]
+xy = [0, 35]
+size = ["w", "h"]
 
 [[node]]
-value = "abcdefghii"
+id = "cu"
+value = "Řídící\njednotka"
+pivot = "top"
+base = ["alu", "bottom"]
+xy = [0, 35]
+size = ["w", "h"]
+
+[[node]]
+id = "datareg"
+value = "Datové\nregistry"
 pivot = "left"
-base  = ["small", "right"]
+base = ["alu", "right"]
+xy = [35, 0]
+size = ["w", "h"]
+
+[[node]]
+id = "statusreg"
+value = "Stavové\nregistry"
+pivot = "left"
+base = ["cu", "right"]
+xy = [35, 0]
+size = ["w", "h"]
 )""";
 }

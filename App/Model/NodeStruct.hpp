@@ -35,6 +35,8 @@ struct NodeStruct
 
     Pivot label_position = CENTER;
 
+    int z = 1;
+
     // Better error reporting for better diagram developer experience :)
     toml::source_region base_id_source_region{};
 

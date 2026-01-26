@@ -1,6 +1,8 @@
+#include <algorithm>
 #include <format>
 
 #include "Parser.hpp"
+#include "../Config.hpp"
 #include "../HelperFunction.hpp"
 
 void Parser::ParseNode(const toml::table* node_t, NodeStruct& cn)
@@ -81,8 +83,10 @@ void Parser::ParseNode(const toml::table* node_t, NodeStruct& cn)
                 SetIntFromVariable(value_arr_ptr->at(0), cn.width);
                 SetIntFromVariable(value_arr_ptr->at(1), cn.height);
             }
-            else ReportError(value.source(),
-                             "An array of two integers/strings of variable names must follow after 'size='");
+            else {
+                ReportError(value.source(),
+                            "An array of two integers/strings of variable names must follow after 'size='");
+            }
         }
         // == label_pos ==> pivot string
         else if (key_str == "label_pos") {
@@ -90,6 +94,16 @@ void Parser::ParseNode(const toml::table* node_t, NodeStruct& cn)
                 SetPivotFromString(value_str_ptr, cn.label_position);
             }
             else ReportError(value.source(), "A string must follow after 'label_pos='");
+        }
+        // == z ==> number from -4 to +4
+        else if (key_str == "z") {
+            if (const auto* value_int_ptr = value.as_integer()) {
+                cn.z = std::clamp(value_int_ptr->value_or(0), -Z_DEPTH_ABS_MAX, Z_DEPTH_ABS_MAX);
+            }
+            else {
+                ReportError(value.source(), std::format("An integer between {} and {} must follow after 'z='",
+                                                        -Z_DEPTH_ABS_MAX, Z_DEPTH_ABS_MAX));
+            }
         }
         else ReportError(key.source(), std::format("Unknown key '{}'", key_str));
     }
