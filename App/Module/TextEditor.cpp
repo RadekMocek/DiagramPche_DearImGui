@@ -6,29 +6,29 @@
 
 void App::ModuleTextEditor()
 {
-    //
+    // Same ID for textedit and drawing error highlights
     constexpr auto TEXTEDIT_ID = "##Source";
-    constexpr auto COLOR_ERROR_HIGHLIGHT = IM_COL32(211, 1, 2, 80);
 
-    const auto text_line_height = ImGui::GetTextLineHeight();
-
-    // Inconsolata is monospace so should be ok
-    // this could be moved into AppStart if font size is not changing at runtime (or update member var on every change)
-    const auto char_width_x = m_font_inconsolata_medium->CalcTextSizeA(FONT_SIZE_DEFAULT, FLT_MAX, -1.0f, "A").x;
-
-    //
-    ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1.0f);
-
+    // Text editor must be put in a child window for resizing (moving the divider between textedit and canvas) to work (we can use a special flag)
     const auto textedit_top_left = ImGui::GetCursorScreenPos();
     const auto content_region_available = ImGui::GetContentRegionAvail();
     const ImVec2 textedit_size(content_region_available.x * 0.5f, content_region_available.y - BOTTOM_BAR_HEIGHT);
 
-    constexpr ImGuiInputTextFlags flags = ImGuiInputTextFlags_AllowTabInput;
-    ImGui::InputTextMultiline(TEXTEDIT_ID, &m_source, textedit_size, flags);
-
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
+    ImGui::BeginChild("SourceParent", textedit_size, ImGuiChildFlags_Borders | ImGuiChildFlags_ResizeX);
     ImGui::PopStyleVar();
 
+    constexpr ImGuiInputTextFlags flags = ImGuiInputTextFlags_AllowTabInput;
+    ImGui::InputTextMultiline(TEXTEDIT_ID, &m_source, ImGui::GetContentRegionAvail(), flags);
+
+    // == ERROR HIGHLIGHT ==
     if (m_parser.m_is_error) {
+        // Inconsolata is monospace so should be ok
+        // this could be moved into AppStart if font size is not changing at runtime (or update member var on every change)
+        const auto char_width_x = m_font_inconsolata_medium->CalcTextSizeA(FONT_SIZE_DEFAULT, FLT_MAX, -1.0f, "A").x;
+        const auto text_line_height = ImGui::GetTextLineHeight();
+        constexpr auto COLOR_ERROR_HIGHLIGHT = IM_COL32(211, 1, 2, 80);
+
         // Using the same id to get scroll value of the InputTextMultiline and to not draw outside the text edit
         ImGui::BeginChild(TEXTEDIT_ID);
         const auto textedit_scroll_offset = ImGui::GetScrollY();
@@ -49,4 +49,6 @@ void App::ModuleTextEditor()
         draw_list->AddRectFilled(EH_top_left, EH_bottom_right, COLOR_ERROR_HIGHLIGHT);
         ImGui::EndChild();
     }
+
+    ImGui::EndChild();
 }
