@@ -6,8 +6,10 @@
 
 #include "../HelperFunction.hpp"
 
-bool Parser::Parse(const std::string& source)
+void Parser::Parse(const std::string& source)
 {
+    m_is_error = false;
+
     // Try to parse the TOML input
     toml::parse_result table;
     try {
@@ -16,8 +18,9 @@ bool Parser::Parse(const std::string& source)
     catch (const toml::parse_error& err) {
         m_error_source_region = err.source();
         m_error_description = err.description();
+        m_is_error = true;
         // By returning here, last valid TOML will be drawn (result collections weren't cleared yet)
-        return false;
+        return;
     }
 
     // == Nodes ==
@@ -60,8 +63,8 @@ bool Parser::Parse(const std::string& source)
                     // Currently processed Node == "cn"
                     NodeStruct cn;
 
-                    // Parse `node_t` data and set `cn` members; or set error message and return false
-                    if (!ParseNode(node_t, cn)) return false;
+                    // Parse `node_t` data and set `cn` members; or set error message
+                    ParseNode(node_t, cn);
 
                     // Set implicit ID if explicit ID wasn't set by the user
                     if (cn.id.empty()) {
@@ -70,10 +73,10 @@ bool Parser::Parse(const std::string& source)
                     }
 
                     // Check if the node is not referencing itself
-                    if (cn.id == cn.base_id) {
-                        m_error_source_region = node_t->source();
+                    if (cn.id == cn.base_id && !m_is_error) {
+                        m_error_source_region = cn.base_id_source_region;
                         m_error_description = std::format("Node with id '{}' is referencing itself", cn.id);
-                        return false;
+                        m_is_error = true;
                     }
 
                     // Empty `base` means stable node; otherwise dependant node
@@ -104,10 +107,10 @@ bool Parser::Parse(const std::string& source)
 
         for (const auto& [key, value] : refs) {
             // Check if the refered ID does exist
-            if (!m_result_nodes_map.contains(value)) {
+            if (!m_result_nodes_map.contains(value) && !m_is_error) {
                 m_error_source_region = m_result_nodes_map[key].base_id_source_region;
                 m_error_description = std::format("Node '{}' is referencing non existant id: '{}'", key, value);
-                return false;
+                m_is_error = true;
             }
 
             if (!stable_nodes.contains(key) // Is p1 unstable and
@@ -125,7 +128,7 @@ bool Parser::Parse(const std::string& source)
 
     // At this point, if there are still some unresolved references, that means we have a circular reference
     // Pinpointing the exact loop would need aditional logic so we'll just fill the error message with all unstable node IDs
-    if (stable_nodes.size() < m_result_nodes_map.size()) {
+    if (stable_nodes.size() < m_result_nodes_map.size() && !m_is_error) {
         m_error_source_region = {};
         m_error_description = "Circular reference somewhere among:";
         for (const auto& key : m_result_nodes_map | std::views::keys) {
@@ -133,7 +136,7 @@ bool Parser::Parse(const std::string& source)
                 m_error_description += std::format(" '{}'", key);
             }
         }
-        return false;
+        m_is_error = true;
     }
 
     // == Paths ==
@@ -169,6 +172,4 @@ bool Parser::Parse(const std::string& source)
             }
         }
     }
-
-    return true;
 }

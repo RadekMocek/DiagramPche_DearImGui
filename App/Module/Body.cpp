@@ -18,7 +18,7 @@ void App::ModuleBody()
     ImGui::Begin("Main", nullptr, flags);
 
     // Two main columns
-    m_is_parsing_ok = m_parser.Parse(m_source);
+    m_parser.Parse(m_source);
     ModuleTextEditor();
     ImGui::SameLine();
     ModuleCanvas();
@@ -26,7 +26,7 @@ void App::ModuleBody()
     // "Status bar"
     constexpr auto COLOR_ERROR = IM_COL32(211, 1, 2, 255);
     //constexpr auto COLOR_WARNING = IM_COL32(176, 66, 19, 255);
-    if (!m_is_parsing_ok) {
+    if (m_parser.m_is_error) {
         ImGui::PushStyleColor(ImGuiCol_Text, COLOR_ERROR);
         ImGui::Text(m_parser.m_error_description.c_str());
         ImGui::PopStyleColor();

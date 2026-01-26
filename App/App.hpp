@@ -46,8 +46,6 @@ private:
 
     Parser m_parser{};
 
-    bool m_is_parsing_ok{};
-
     bool m_do_show_demo_window{};
     bool m_is_about_popup_queued{};
 

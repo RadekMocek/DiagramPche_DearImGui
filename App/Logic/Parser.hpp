@@ -14,15 +14,16 @@ public:
     std::vector<PathStruct> m_result_paths;
 
     // Error report
+    bool m_is_error;
     toml::source_region m_error_source_region;
     std::string m_error_description;
 
     // Methods
-    bool Parse(const std::string& source);
+    void Parse(const std::string& source);
 
 private:
-    bool ParseNode(const toml::table* node_t, NodeStruct& cn);
-    bool SetPivot(const toml::value<std::string>* value_str_ptr, Pivot& to_set);
+    void ParseNode(const toml::table* node_t, NodeStruct& cn);
+    void SetPivot(const toml::value<std::string>* value_str_ptr, Pivot& to_set);
 
     //TODO revize
     const NodeType DEFAULT_DRAW_ITEM_TYPE = RECTANGLE;

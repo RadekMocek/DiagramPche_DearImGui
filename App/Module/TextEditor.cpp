@@ -27,7 +27,7 @@ void App::ModuleTextEditor()
 
     ImGui::PopStyleVar();
 
-    if (!m_is_parsing_ok) {
+    if (m_parser.m_is_error) {
         // Using the same id to get scroll value of the InputTextMultiline and to not draw outside the text edit
         ImGui::BeginChild(TEXTEDIT_ID);
         const auto textedit_scroll_offset = ImGui::GetScrollY();
