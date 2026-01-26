@@ -24,6 +24,8 @@ public:
 private:
     std::unordered_map<std::string, int> m_variables;
 
+    void ReportError(const toml::source_region& error_source_region, const std::string& error_description);
+
     void ParseNode(const toml::table* node_t, NodeStruct& cn);
     void SetPivotFromString(const toml::value<std::string>* value_str_ptr, Pivot& to_set);
     void SetIntFromVariable(const toml::node& value, int& to_set);

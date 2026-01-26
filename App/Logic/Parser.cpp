@@ -16,9 +16,7 @@ void Parser::Parse(const std::string& source)
         toml_parsed = toml::parse(source);
     }
     catch (const toml::parse_error& err) {
-        m_error_source_region = err.source();
-        m_error_description = err.description();
-        m_is_error = true;
+        ReportError(err.source(), std::string(err.description()));
         // By returning here, last valid TOML will be drawn (result collections weren't cleared yet)
         return;
     }
@@ -32,11 +30,7 @@ void Parser::Parse(const std::string& source)
                 if (const auto* value_int_ptr = value.as_integer()) {
                     m_variables.insert_or_assign(std::string(key.str()), value_int_ptr->value_or(0));
                 }
-                else if (!m_is_error) {
-                    m_error_source_region = value.source();
-                    m_error_description = "Only integer variables are allowed";
-                    m_is_error = true;
-                }
+                else ReportError(value.source(), "Only integer variables are allowed");
             }
         }
     }
@@ -91,10 +85,9 @@ void Parser::Parse(const std::string& source)
                     }
 
                     // Check if the node is not referencing itself
-                    if (cn.id == cn.base_id && !m_is_error) {
-                        m_error_source_region = cn.base_id_source_region;
-                        m_error_description = std::format("Node with id '{}' is referencing itself", cn.id);
-                        m_is_error = true;
+                    if (cn.id == cn.base_id) {
+                        ReportError(cn.base_id_source_region,
+                                    std::format("Node with id '{}' is referencing itself", cn.id));
                     }
 
                     // Empty `base` means stable node; otherwise dependant node
@@ -125,10 +118,9 @@ void Parser::Parse(const std::string& source)
 
         for (const auto& [key, value] : refs) {
             // Check if the refered ID does exist
-            if (!m_result_nodes_map.contains(value) && !m_is_error) {
-                m_error_source_region = m_result_nodes_map[key].base_id_source_region;
-                m_error_description = std::format("Node '{}' is referencing non existant id: '{}'", key, value);
-                m_is_error = true;
+            if (!m_is_error && !m_result_nodes_map.contains(value)) {
+                ReportError(m_result_nodes_map[key].base_id_source_region,
+                            std::format("Node '{}' is referencing non existant id: '{}'", key, value));
             }
 
             if (!stable_nodes.contains(key) // Is p1 unstable and
@@ -146,7 +138,7 @@ void Parser::Parse(const std::string& source)
 
     // At this point, if there are still some unresolved references, that means we have a circular reference
     // Pinpointing the exact loop would need aditional logic so we'll just fill the error message with all unstable node IDs
-    if (stable_nodes.size() < m_result_nodes_map.size() && !m_is_error) {
+    if (!m_is_error && stable_nodes.size() < m_result_nodes_map.size()) {
         m_error_source_region = {};
         m_error_description = "Circular reference somewhere among:";
         for (const auto& key : m_result_nodes_map | std::views::keys) {
@@ -189,5 +181,14 @@ void Parser::Parse(const std::string& source)
                 }
             }
         }
+    }
+}
+
+void Parser::ReportError(const toml::source_region& error_source_region, const std::string& error_description)
+{
+    if (!m_is_error) {
+        m_error_source_region = error_source_region;
+        m_error_description = error_description;
+        m_is_error = true;
     }
 }
