@@ -41,12 +41,14 @@ void Parser::ParseNode(const toml::table* node_t, NodeStruct& cn)
         }
         // == xy ==> array of two integers: x and y coordinates
         else if (key_str == "xy") {
-            if (const auto* value_arr_ptr = value.as_array(); value_arr_ptr &&
-                value_arr_ptr->size() == 2 && value_arr_ptr->is_homogeneous(toml::node_type::integer)) {
-                cn.x = value_arr_ptr->at(0).value_or(0);
-                cn.y = value_arr_ptr->at(1).value_or(0);
+            if (const auto* value_arr_ptr = value.as_array(); value_arr_ptr && value_arr_ptr->size() == 2) {
+                SetIntFromIntOrVariable(value_arr_ptr->at(0), cn.x);
+                SetIntFromIntOrVariable(value_arr_ptr->at(1), cn.y);
             }
-            else ReportError(value.source(), "An array of two integers must follow after 'xy='");
+            else {
+                ReportError(value.source(),
+                            "An array of two integers/strings of variable names must follow after 'xy='");
+            }
         }
         // == pivot ==> single string
         else if (key_str == "pivot") {
@@ -80,8 +82,8 @@ void Parser::ParseNode(const toml::table* node_t, NodeStruct& cn)
         // == size ==> collection of two items [width, height], where each is specified either by integer or a string with variable name
         else if (key_str == "size") {
             if (const auto* value_arr_ptr = value.as_array(); value_arr_ptr && value_arr_ptr->size() == 2) {
-                SetIntFromVariable(value_arr_ptr->at(0), cn.width);
-                SetIntFromVariable(value_arr_ptr->at(1), cn.height);
+                SetIntFromIntOrVariable(value_arr_ptr->at(0), cn.width);
+                SetIntFromIntOrVariable(value_arr_ptr->at(1), cn.height);
             }
             else {
                 ReportError(value.source(),
@@ -118,7 +120,7 @@ void Parser::SetPivotFromString(const toml::value<std::string>* value_str_ptr, P
     to_set = pivot;
 }
 
-void Parser::SetIntFromVariable(const toml::node& value, int& to_set)
+void Parser::SetIntFromIntOrVariable(const toml::node& value, int& to_set)
 {
     if (const auto* value_int_ptr = value.as_integer()) {
         to_set = value_int_ptr->value_or(0);

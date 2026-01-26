@@ -3,6 +3,7 @@ w = 110
 h = 72
 bg_h = 360
 io_w = 130
+space = 35
 
 [[node]]
 id = "bg_cpu"
@@ -34,7 +35,7 @@ id = "alu"
 value = "ALU"
 pivot = "top"
 base = ["cache", "bottom"]
-xy = [0, 35]
+xy = [0, "space"]
 size = ["w", "h"]
 
 [[node]]
@@ -42,7 +43,7 @@ id = "cu"
 value = "Řídící\njednotka"
 pivot = "top"
 base = ["alu", "bottom"]
-xy = [0, 35]
+xy = [0, "space"]
 size = ["w", "h"]
 
 [[node]]
@@ -50,7 +51,7 @@ id = "datareg"
 value = "Datové\nregistry"
 pivot = "left"
 base = ["alu", "right"]
-xy = [35, 0]
+xy = ["space", 0]
 size = ["w", "h"]
 
 [[node]]
@@ -58,7 +59,7 @@ id = "statusreg"
 value = "Stavové\nregistry"
 pivot = "left"
 base = ["cu", "right"]
-xy = [35, 0]
+xy = ["space", 0]
 size = ["w", "h"]
 
 [[node]]

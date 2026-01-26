@@ -18,8 +18,10 @@ void App::ModuleTextEditor()
     ImGui::BeginChild("SourceParent", textedit_size, ImGuiChildFlags_Borders | ImGuiChildFlags_ResizeX);
     ImGui::PopStyleVar();
 
-    constexpr ImGuiInputTextFlags flags = ImGuiInputTextFlags_AllowTabInput;
-    ImGui::InputTextMultiline(TEXTEDIT_ID, &m_source, ImGui::GetContentRegionAvail(), flags);
+    ImGui::InputTextMultiline(TEXTEDIT_ID,
+                              &m_source,
+                              ImGui::GetContentRegionAvail(),
+                              ImGuiInputTextFlags_AllowTabInput);
 
     // == ERROR HIGHLIGHT ==
     if (m_parser.m_is_error) {

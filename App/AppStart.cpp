@@ -36,13 +36,10 @@ void App::Start()
 [variables]
 w = 110
 h = 72
-bg_h = 360
-io_w = 130
 
 [[node]]
 id = "cache"
 value = "Cache"
-base = ["bg_cpu", "top-left"]
 xy = [20, 20]
 size = ["w", "h"]
 

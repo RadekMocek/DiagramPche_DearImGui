@@ -28,7 +28,7 @@ private:
 
     void ParseNode(const toml::table* node_t, NodeStruct& cn);
     void SetPivotFromString(const toml::value<std::string>* value_str_ptr, Pivot& to_set);
-    void SetIntFromVariable(const toml::node& value, int& to_set);
+    void SetIntFromIntOrVariable(const toml::node& value, int& to_set);
 
     //TODO revize
     const NodeType DEFAULT_DRAW_ITEM_TYPE = RECTANGLE;
