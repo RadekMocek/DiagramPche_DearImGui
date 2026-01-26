@@ -54,8 +54,8 @@ void App::ModuleCanvas()
 
     // Mousewheel to adjust the zoom level
     if (is_hovered) {
-        const int new_font_size = font_size + io.MouseWheel * FONT_SIZE_STEP;
-        font_size = std::clamp(new_font_size, FONT_SIZE_MIN, FONT_SIZE_MAX);
+        const int font_size_unclamped = font_size + io.MouseWheel * FONT_SIZE_STEP;
+        font_size = std::clamp(font_size_unclamped, FONT_SIZE_MIN, FONT_SIZE_MAX);
         zoom_level = font_size / static_cast<float>(FONT_SIZE_BASE);
     }
 

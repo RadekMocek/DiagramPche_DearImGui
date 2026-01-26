@@ -1,31 +1,45 @@
-[[node]]
-id="cache"
-value="Cache"
+[variables]
+w = 110
+h = 72
 
 [[node]]
-id="alu"
-value="ALU"
-pivot="top"
-base=["cache","bottom"]
-xy=[0,35]
+id = "bg_cpu"
+value = "????"
+xy = [0, 10]
 
 [[node]]
-id="cu"
-value="Řídící\njednotka"
-pivot="top"
-base=["alu","bottom"]
-xy=[0,35]
+id = "cache"
+value = "Cache"
+size = ["w", "h"]
 
 [[node]]
-id="datareg"
-value="Datové\nregistry"
-pivot="left"
-base=["alu","right"]
-xy=[35,0]
+id = "alu"
+value = "ALU"
+pivot = "top"
+base = ["cache", "bottom"]
+xy = [0, 35]
+size = ["w", "h"]
 
 [[node]]
-id="statusreg"
-value="Stavové\nregistry"
-pivot="left"
-base=["cu","right"]
-xy=[35,0]
+id = "cu"
+value = "Řídící\njednotka"
+pivot = "top"
+base = ["alu", "bottom"]
+xy = [0, 35]
+size = ["w", "h"]
+
+[[node]]
+id = "datareg"
+value = "Datové\nregistry"
+pivot = "left"
+base = ["alu", "right"]
+xy = [35, 0]
+size = ["w", "h"]
+
+[[node]]
+id = "statusreg"
+value = "Stavové\nregistry"
+pivot = "left"
+base = ["cu", "right"]
+xy = [35, 0]
+size = ["w", "h"]

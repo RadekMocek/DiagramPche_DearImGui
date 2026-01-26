@@ -31,7 +31,11 @@ void App::Start()
     m_do_show_demo_window = false;
     m_is_about_popup_queued = false;
 
-    m_source = R"""([[node]]
+    m_source = R"""(
+[variables]
+x=5
+
+[[node]]
 id        = "big"
 value     = "příliš žluťoučký kůň úpěl ďábelské ódy"
 xy        = [50, 150]
@@ -42,7 +46,7 @@ label_pos = "bottom"
 id    = "small"
 value = "příliš žluťoučký kůň úpěl ďábelské ódy"
 pivot = "bottom-left"
-base  = ["big","top-left"]
+base  = ["big", "top-left"]
 
 [[node]]
 value = "abcdefghii"

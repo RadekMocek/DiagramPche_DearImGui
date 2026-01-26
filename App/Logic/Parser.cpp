@@ -11,9 +11,9 @@ void Parser::Parse(const std::string& source)
     m_is_error = false;
 
     // Try to parse the TOML input
-    toml::parse_result table;
+    toml::parse_result toml_parsed;
     try {
-        table = toml::parse(source);
+        toml_parsed = toml::parse(source);
     }
     catch (const toml::parse_error& err) {
         m_error_source_region = err.source();
@@ -21,6 +21,24 @@ void Parser::Parse(const std::string& source)
         m_is_error = true;
         // By returning here, last valid TOML will be drawn (result collections weren't cleared yet)
         return;
+    }
+
+    // == Variables ==
+    m_variables.clear();
+
+    if (const auto vars = toml_parsed["variables"]; !!vars && vars.is_table()) {
+        if (const auto* vars_t = vars.as_table()) {
+            for (const auto& [key, value] : *vars_t) {
+                if (const auto* value_int_ptr = value.as_integer()) {
+                    m_variables.insert_or_assign(std::string(key.str()), value_int_ptr->value_or(0));
+                }
+                else if (!m_is_error) {
+                    m_error_source_region = value.source();
+                    m_error_description = "Only integer variables are allowed";
+                    m_is_error = true;
+                }
+            }
+        }
     }
 
     // == Nodes ==
@@ -52,7 +70,7 @@ void Parser::Parse(const std::string& source)
     // Start traversing the TOML
 
     // Parse the nodes
-    if (const auto nodes = table["node"]; !!nodes && nodes.is_array_of_tables()) {
+    if (const auto nodes = toml_parsed["node"]; !!nodes && nodes.is_array_of_tables()) {
         if (toml::array* nodes_array = nodes.as_array()) {
             // `nodes_array` is an array of tables labeled as `[[node]]`
 
@@ -144,7 +162,7 @@ void Parser::Parse(const std::string& source)
     // Parse the paths
     m_result_paths.clear();
 
-    if (const auto paths = table["path"]; !!paths && paths.is_array_of_tables()) {
+    if (const auto paths = toml_parsed["path"]; !!paths && paths.is_array_of_tables()) {
         if (toml::array* paths_array = paths.as_array()) {
             // `paths_array` is an array of tables labeled as `[[path]]`
             for (auto& path : *paths_array) {

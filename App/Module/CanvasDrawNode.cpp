@@ -161,14 +161,21 @@ void App::ModuleCanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, cons
                         // Nothing to do
                         break;
                     case TOP:
-                        draw_label_position = {draw_center.x - label_size.x / 2, label_top_y};
+                        draw_label_position = {
+                            draw_center.x - label_size.x / 2,
+                            label_top_y
+                        };
                         break;
                     case TOPRIGHT:
-                        draw_label_position = {draw_bottom_right.x - label_size.x - node_padding, label_top_y};
+                        draw_label_position = {
+                            draw_bottom_right.x - label_size.x - node_padding,
+                            label_top_y
+                        };
                         break;
                     case RIGHT:
                         draw_label_position = {
-                            draw_bottom_right.x - label_size.x - node_padding, draw_center.y - label_size.y / 2
+                            draw_bottom_right.x - label_size.x - node_padding,
+                            draw_center.y - label_size.y / 2
                         };
                         break;
                     case BOTTOMRIGHT:
@@ -179,26 +186,32 @@ void App::ModuleCanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, cons
                         break;
                     case BOTTOM:
                         draw_label_position = {
-                            draw_center.x - label_size.x / 2, draw_bottom_right.y - label_size.y - node_padding
+                            draw_center.x - label_size.x / 2,
+                            draw_bottom_right.y - label_size.y - node_padding
                         };
                         break;
                     case BOTTOMLEFT:
-                        draw_label_position = {label_left_x, draw_bottom_right.y - label_size.y - node_padding};
+                        draw_label_position = {
+                            label_left_x,
+                            draw_bottom_right.y - label_size.y - node_padding
+                        };
                         break;
                     case LEFT:
-                        draw_label_position = {label_left_x, draw_center.y - label_size.y / 2};
+                        draw_label_position = {
+                            label_left_x,
+                            draw_center.y - label_size.y / 2
+                        };
                         break;
                     case CENTER:
-                        draw_label_position = {draw_center.x - label_size.x / 2, draw_center.y - label_size.y / 2};
+                        draw_label_position = {
+                            draw_center.x - label_size.x / 2,
+                            draw_center.y - label_size.y / 2
+                        };
                         break;
                     }
                 }
 
-                draw_list->AddText(m_font_inconsolata_medium,
-                                   font_size,
-                                   draw_label_position,
-                                   COLOR_NODE,
-                                   label_c_str);
+                draw_list->AddText(m_font_inconsolata_medium, font_size, draw_label_position, COLOR_NODE, label_c_str);
             }
         }
     }
