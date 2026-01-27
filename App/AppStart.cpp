@@ -62,11 +62,11 @@ xy = ["Řídící\njednotka", "right", 35, 0]
 size = ["w", "h"]
 
 [[path]]
-start=["cache","left"]
-end=["alu","left"]
+start=["Cache", "left", 0, 0]
+end=["ALU", "left", 0, 0]
 points=[
-	["@start", -10,"@start",0],
-	["@prev", "@end"]
+	["@", "start", -10, "@", "start", 0],
+    ["@", "prev", 0, "@", "end", 0]
 ]
 )""";
 }

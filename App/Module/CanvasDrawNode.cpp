@@ -39,39 +39,7 @@ void App::ModuleCanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, cons
                 ImVec2 parent_offset(0, 0);
                 if (!node.parent_id.empty()) {
                     if (const auto it = canvas_nodes.find(node.parent_id); it != canvas_nodes.end()) {
-                        const auto& parent = it->second;
-                        switch (node.parent_pivot) {
-                        case UNKNOWN:
-                            // Undefined, do nothing
-                            break;
-                        case TOPLEFT:
-                            parent_offset = parent.top_left;
-                            break;
-                        case TOP:
-                            parent_offset = {parent.center.x, parent.top_left.y};
-                            break;
-                        case TOPRIGHT:
-                            parent_offset = {parent.bottom_right.x, parent.top_left.y};
-                            break;
-                        case RIGHT:
-                            parent_offset = {parent.bottom_right.x, parent.center.y};
-                            break;
-                        case BOTTOMRIGHT:
-                            parent_offset = parent.bottom_right;
-                            break;
-                        case BOTTOM:
-                            parent_offset = {parent.center.x, parent.bottom_right.y};
-                            break;
-                        case BOTTOMLEFT:
-                            parent_offset = {parent.top_left.x, parent.bottom_right.y};
-                            break;
-                        case LEFT:
-                            parent_offset = {parent.top_left.x, parent.center.y};
-                            break;
-                        case CENTER:
-                            parent_offset = parent.center;
-                            break;
-                        }
+                        parent_offset = it->second.GetAnchor(node.parent_pivot);
                     }
                 }
 
@@ -82,11 +50,7 @@ void App::ModuleCanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, cons
                 ImVec2 pivot_offset(0, 0);
 
                 switch (node.pivot) {
-                case UNKNOWN:
-                // Undefined, do nothing
-                //break; // Fallthrough
-                case TOPLEFT:
-                    // Nothing to do
+                default: // UNKNOWN (undefined) + TOPLEFT (nothing to do)
                     break;
                 case TOP:
                     pivot_offset.x -= node_width / 2;
@@ -157,11 +121,7 @@ void App::ModuleCanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, cons
                     // Helper vars:
                     const ImVec2 draw_center = ImVec2Sum(origin, canvas_node.center);
                     switch (node.label_position) {
-                    case UNKNOWN:
-                    // Undefined, do nothing
-                    //break; // Fallthrough
-                    case TOPLEFT:
-                        // Nothing to do
+                    default: // UNKNOWN (undefined) + TOPLEFT (nothing to do)
                         break;
                     case TOP:
                         draw_label_position = {

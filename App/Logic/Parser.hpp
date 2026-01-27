@@ -30,6 +30,8 @@ private:
     void SetPivotFromString(const toml::value<std::string>* value_str_ptr, Pivot& to_set);
     void SetIntFromIntOrVariable(const toml::node& value, int& to_set);
 
+    void ParsePath(const toml::table* path_t);
+
     //TODO revize
     const NodeType DEFAULT_DRAW_ITEM_TYPE = RECTANGLE;
 

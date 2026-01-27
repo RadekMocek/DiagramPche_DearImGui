@@ -10,35 +10,43 @@
 
 struct NodeStruct
 {
-    int draw_batch_number = 0;
-
+    // todo
     NodeType type = RECTANGLE;
 
+    // = ID =
     std::string id{};
 
+    // = Value =
     std::string value{};
     bool is_value_explicitly_set = false;
 
+    // = XY =
+    std::string parent_id{};
+    Pivot parent_pivot{};
     int x{};
     int y{};
 
+    // = Pivot =
     Pivot pivot = TOPLEFT;
 
-    std::string parent_id{};
-    Pivot parent_pivot{};
-
+    // = Color =
     unsigned char color_r = 255;
     unsigned char color_g = 255;
     unsigned char color_b = 255;
     unsigned char color_a = 255;
 
+    // = Size =
     int width{};
     int height{};
 
+    // = Label pos =
     Pivot label_position = CENTER;
 
+    // = Z =
     int z = 1;
 
+    // = Other internal =
+    int draw_batch_number = 0;
     // Better error reporting (self reference/non existing reference) for better diagram developer experience :)
     toml::source_region parent_id_source_region{};
 

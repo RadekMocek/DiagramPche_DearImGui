@@ -33,7 +33,9 @@ void Parser::ParseNode(const toml::table* node_t, NodeStruct& cn)
                     // Parent
                     if (const auto* value_arr_0_str_ptr = value_arr_ptr->at(0).as_string()) {
                         cn.parent_id = value_arr_0_str_ptr->value_or("");
-                        if (cn.parent_id.empty()) ReportError(parent_id_source_region, "Parent reference can't be empty");
+                        if (cn.parent_id.empty()) {
+                            ReportError(parent_id_source_region, "Parent reference can't be empty");
+                        }
                         // Better error reporting (self reference/non existing reference) for better diagram developer experience :)
                         cn.parent_id_source_region = parent_id_source_region;
                     }
@@ -42,7 +44,10 @@ void Parser::ParseNode(const toml::table* node_t, NodeStruct& cn)
                     if (const auto* value_arr_1_str_ptr = value_arr_ptr->at(1).as_string()) {
                         SetPivotFromString(value_arr_1_str_ptr, cn.parent_pivot);
                     }
-                    else ReportError(value_arr_ptr->at(1).source(), "In [Parent, Pivot, X, Y], 'Pivot' must be a string");
+                    else {
+                        ReportError(value_arr_ptr->at(1).source(),
+                                    "In [Parent, Pivot, X, Y], 'Pivot' must be a string");
+                    }
                     // X
                     SetIntFromIntOrVariable(value_arr_ptr->at(2), cn.x);
                     // Y
@@ -105,7 +110,7 @@ void Parser::ParseNode(const toml::table* node_t, NodeStruct& cn)
 void Parser::SetPivotFromString(const toml::value<std::string>* value_str_ptr, Pivot& to_set)
 {
     const auto pivot = GetPivotFromString(value_str_ptr->get());
-    if (pivot == UNKNOWN) {
+    if (pivot == UNKNOWN_PIVOT) {
         ReportError(value_str_ptr->source(), PIVOT_ERROR_MESSAGE);
     }
     to_set = pivot;

@@ -5,7 +5,7 @@
 
 enum Pivot
 {
-    UNKNOWN,
+    UNKNOWN_PIVOT,
     TOPLEFT,
     TOP,
     TOPRIGHT,
@@ -32,8 +32,8 @@ const std::unordered_map<std::string, Pivot> STRING_TO_PIVOT = {
 inline Pivot GetPivotFromString(const std::string& type_str)
 {
     const auto it = STRING_TO_PIVOT.find(type_str);
-    return it != STRING_TO_PIVOT.end() ? it->second : UNKNOWN;
+    return it != STRING_TO_PIVOT.end() ? it->second : UNKNOWN_PIVOT;
 }
 
 const std::string PIVOT_ERROR_MESSAGE =
-        "Allowed pivot values are: 'top-left', 'top', 'top-right', 'right', 'bottom-right', 'bottom', 'bottom-left', 'left', 'center'";
+    "Allowed pivot values are: 'top-left', 'top', 'top-right', 'right', 'bottom-right', 'bottom', 'bottom-left', 'left', 'center'";

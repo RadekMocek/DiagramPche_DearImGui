@@ -2,26 +2,7 @@
 
 #include <vector>
 
-struct PathPointStruct
-{
-    int x;
-    int y;
-
-    /*
-    ref
-    ref_x
-    ref_y
-    x
-    y
-
-    id?
-    text between two last points?
-
-    can do eg:
-    ref="@prev"
-    ref_y="some_node_od@left"
-    */
-};
+#include "PointStruct.hpp"
 
 struct PathStruct
 {

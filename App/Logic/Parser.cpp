@@ -70,6 +70,9 @@ void Parser::Parse(const std::string& source)
                     if (node_id.empty()) {
                         ReportError(node_key.source(), "Node id cannot be empty");
                     }
+                    else if (node_id == "@") {
+                        ReportError(node_key.source(), "Id '@' is reserved for special purposes");
+                    }
 
                     // Currently processed Node == "cn"
                     NodeStruct cn;
@@ -156,27 +159,9 @@ void Parser::Parse(const std::string& source)
     if (const auto paths = toml_parsed["path"]; !!paths && paths.is_array_of_tables()) {
         if (toml::array* paths_array = paths.as_array()) {
             // `paths_array` is an array of tables labeled as `[[path]]`
-            for (auto& path : *paths_array) {
-                if (auto* path_t = path.as_table()) {
-                    //
-                    m_result_paths.emplace_back();
-                    auto& current_path_struct = m_result_paths.back();
-
-                    if (const auto points = (*path_t)["point"]; !!points && points.type() == toml::node_type::array) {
-                        if (toml::array* points_array = points.as_array()) {
-                            // `points_array` is an nested array of tables labeled as `[[path.point]]`
-                            current_path_struct.points.reserve(points_array->size());
-
-                            for (auto&& point : *points_array) {
-                                if (auto* point_t = point.as_table()) {
-                                    current_path_struct.points.emplace_back(
-                                        (*point_t)["x"].value_or(0),
-                                        (*point_t)["y"].value_or(0)
-                                    );
-                                }
-                            }
-                        }
-                    }
+            for (const auto& path : *paths_array) {
+                if (const auto* path_t = path.as_table()) {
+                    ParsePath(path_t);
                 }
             }
         }
