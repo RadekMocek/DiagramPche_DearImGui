@@ -15,15 +15,17 @@ struct NodeStruct
     NodeType type = RECTANGLE;
 
     std::string id{};
+
     std::string value{};
+    bool is_value_explicitly_set = false;
 
     int x{};
     int y{};
 
     Pivot pivot = TOPLEFT;
 
-    std::string base_id{};
-    Pivot base_pivot{};
+    std::string parent_id{};
+    Pivot parent_pivot{};
 
     unsigned char color_r = 255;
     unsigned char color_g = 255;
@@ -37,8 +39,8 @@ struct NodeStruct
 
     int z = 1;
 
-    // Better error reporting for better diagram developer experience :)
-    toml::source_region base_id_source_region{};
+    // Better error reporting (self reference/non existing reference) for better diagram developer experience :)
+    toml::source_region parent_id_source_region{};
 
     /*
     text color

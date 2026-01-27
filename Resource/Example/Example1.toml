@@ -5,8 +5,7 @@ bg_h = 360
 io_w = 130
 space = 35
 
-[[node]]
-id = "bg_cpu"
+[node.bg_cpu]
 value = "Procesor"
 z = -1
 xy = [20, 20]
@@ -14,82 +13,63 @@ size = [300, "bg_h"]
 label_pos = "bottom-left"
 color = [183, 183, 183, 255]
 
-[[node]]
-id = "bg_mb"
+[node.bg_mb]
 value = "Základní deska"
 pivot = "left"
-base = ["bg_cpu", "right"]
+xy = ["bg_cpu", "right", 0, 0]
 size = [300, "bg_h"]
 label_pos = "bottom-left"
 color = [238, 238, 238, 255]
 
-[[node]]
-id = "cache"
+[node.cache]
 value = "Cache"
-base = ["bg_cpu", "top-left"]
-xy = [20, 20]
+xy = ["bg_cpu", "top-left", 20, 20]
 size = ["w", "h"]
 
-[[node]]
-id = "alu"
+[node.alu]
 value = "ALU"
 pivot = "top"
-base = ["cache", "bottom"]
-xy = [0, "space"]
+xy = ["cache", "bottom", 0, "space"]
 size = ["w", "h"]
 
-[[node]]
-id = "cu"
+[node.cu]
 value = "Řídící\njednotka"
 pivot = "top"
-base = ["alu", "bottom"]
-xy = [0, "space"]
+xy = ["alu", "bottom", 0, "space"]
 size = ["w", "h"]
 
-[[node]]
-id = "datareg"
+[node.datareg]
 value = "Datové\nregistry"
 pivot = "left"
-base = ["alu", "right"]
-xy = ["space", 0]
+xy = ["alu", "right", "space", 0]
 size = ["w", "h"]
 
-[[node]]
-id = "statusreg"
+[node.statusreg]
 value = "Stavové\nregistry"
 pivot = "left"
-base = ["cu", "right"]
-xy = ["space", 0]
+xy = ["cu", "right", "space", 0]
 size = ["w", "h"]
 
-[[node]]
-id = "ram"
+[node.ram]
 value = "Operační paměť"
 pivot = "top-left"
-base = ["bg_mb", "top-left"]
-xy = [20, 20]
+xy = ["bg_mb", "top-left", 20, 20]
 size = [0, "h"]
 
-[[node]]
-id = "buses"
+[node.buses]
 value = "Sběrnice\n(USB, …)"
 pivot = "top"
-base = ["bg_mb", "top-right"]
-xy = [0, 20]
+xy = ["bg_mb", "top-right", 0, 20]
 size = ["io_w", "h"]
 
-[[node]]
-id = "ins"
+[node.ins]
 value = "Vstupy\n(klávesnice,\nmyš, …)"
 pivot = "top"
-base = ["buses", "bottom"]
-xy = [0, 20]
+xy = ["buses", "bottom", 0, 20]
 size = ["io_w", "h"]
 
-[[node]]
-id = "outs"
+[node.outs]
 value = "Výstupy\n(obrazovka,\nzvuk, …)"
 pivot = "top"
-base = ["ins", "bottom"]
-xy = [0, 20]
+xy = ["ins", "bottom", 0, 20]
 size = ["io_w", "h"]

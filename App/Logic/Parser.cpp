@@ -41,8 +41,8 @@ void Parser::Parse(const std::string& source)
     // It is `map` and not `vector` simply because it's better for the "node reference" implementation
     m_result_nodes_map.clear();
 
-    // Each node can have its coordinates defined absolutely (xy=[10,10]) or relatively (base=["some_id","center"] xy=[10,10]).
-    // For the relative option, `base` takes two parameters: parent node's ID and parent node's pivot.
+    // Each node can have its coordinates defined absolutely (xy=[10,10]) or relatively (xy=["some_id","center",10,10]).
+    // For the relative option, `xy`'s first two parameters are parent node's ID and parent node's pivot.
 
     // Dependand node will be drawn relative to parent node's pivot; to know the pivot's location, the parent node must be drawn first!
     // This means we have to tell the canvas which nodes must be drawn earlier and which later – we set their `draw_batch_number`.
@@ -61,38 +61,37 @@ void Parser::Parse(const std::string& source)
     // IDs of nodes that are not dependant on any other node ("stable node" == its batch number is final)
     std::set<std::string> stable_nodes{};
 
-    // Start traversing the TOML
-
-    // Parse the nodes
-    if (const auto nodes = toml_parsed["node"]; !!nodes && nodes.is_array_of_tables()) {
-        if (toml::array* nodes_array = nodes.as_array()) {
-            // `nodes_array` is an array of tables labeled as `[[node]]`
-
-            int node_index = -1; // This is for the implicit ID creation if explicit ID is not provided
-
-            for (const auto& node : *nodes_array) {
-                if (const auto* node_t = node.as_table()) { // `node_t` is a pointer to the actual [[node]] table
-                    // Currently processed Node == "cn"
-                    NodeStruct cn;
-
-                    // Parse `node_t` data and set `cn` members; or set error message
-                    ParseNode(node_t, cn);
-
-                    // Set implicit ID if explicit ID wasn't set by the user
-                    if (cn.id.empty()) {
-                        node_index++; // @Node0, @Node1, ...
-                        cn.id = std::format("@Node{}", node_index);
+    if (const auto node = toml_parsed["node"]; !!node && node.is_table()) {
+        if (const auto* node_t = node.as_table()) {
+            for (const auto& [node_key, node_value] : *node_t) {
+                if (const auto* node_value_t = node_value.as_table()) {
+                    // Key exists and is unique (TOML won't parse if duplicate), but it could be empty string (not ideal)
+                    const auto node_id = node_key.str();
+                    if (node_id.empty()) {
+                        ReportError(node_key.source(), "Node id cannot be empty");
                     }
 
+                    // Currently processed Node == "cn"
+                    NodeStruct cn;
+                    cn.id = node_id;
+
+                    // Parse `node_value_t` data and set `cn` members; or set error message
+                    ParseNode(node_value_t, cn);
+
                     // Check if the node is not referencing itself
-                    if (cn.id == cn.base_id) {
-                        ReportError(cn.base_id_source_region,
+                    if (cn.id == cn.parent_id) {
+                        ReportError(cn.parent_id_source_region,
                                     std::format("Node with id '{}' is referencing itself", cn.id));
                     }
 
-                    // Empty `base` means stable node; otherwise dependant node
-                    if (!cn.base_id.empty()) {
-                        refs.insert({cn.id, cn.base_id});
+                    //
+                    if (!cn.is_value_explicitly_set) {
+                        cn.value = cn.id;
+                    }
+
+                    // Empty parent means stable node; otherwise dependant node
+                    if (!cn.parent_id.empty()) {
+                        refs.insert({cn.id, cn.parent_id});
                     }
                     else {
                         stable_nodes.insert(cn.id);
@@ -119,7 +118,7 @@ void Parser::Parse(const std::string& source)
         for (const auto& [key, value] : refs) {
             // Check if the refered ID does exist
             if (!m_is_error && !m_result_nodes_map.contains(value)) {
-                ReportError(m_result_nodes_map[key].base_id_source_region,
+                ReportError(m_result_nodes_map[key].parent_id_source_region,
                             std::format("Node '{}' is referencing non existant id: '{}'", key, value));
             }
 

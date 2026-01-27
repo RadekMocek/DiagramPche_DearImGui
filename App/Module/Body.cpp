@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "../App.hpp"
 
 void App::ModuleBody()
@@ -28,7 +30,8 @@ void App::ModuleBody()
     //constexpr auto COLOR_WARNING = IM_COL32(176, 66, 19, 255);
     if (m_parser.m_is_error) {
         ImGui::PushStyleColor(ImGuiCol_Text, COLOR_ERROR);
-        ImGui::Text("%s", m_parser.m_error_description.c_str());
+        std::ranges::replace(m_parser.m_error_description, '\n', ' ');
+        ImGui::TextUnformatted(m_parser.m_error_description.c_str());
         ImGui::PopStyleColor();
     }
 

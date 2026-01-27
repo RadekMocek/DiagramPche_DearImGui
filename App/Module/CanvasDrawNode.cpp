@@ -35,45 +35,44 @@ void App::ModuleCanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, cons
                 const auto node_x = static_cast<float>(node.x) * zoom_level;
                 const auto node_y = static_cast<float>(node.y) * zoom_level;
 
-                // Move node according to its `base`, if user have set some; this is where we use stored AABR from `canvas_nodes`
-                ImVec2 base_offset(0, 0);
-                if (!node.base_id.empty()) {
-                    if (const auto it = canvas_nodes.find(node.base_id); it != canvas_nodes.end()) {
+                // Move node according to its parent, if user have set some; this is where we use stored AABR from `canvas_nodes`
+                ImVec2 parent_offset(0, 0);
+                if (!node.parent_id.empty()) {
+                    if (const auto it = canvas_nodes.find(node.parent_id); it != canvas_nodes.end()) {
                         const auto& parent = it->second;
-                        switch (node.base_pivot) {
+                        switch (node.parent_pivot) {
                         case UNKNOWN:
                             // Undefined, do nothing
                             break;
                         case TOPLEFT:
-                            base_offset = parent.top_left;
+                            parent_offset = parent.top_left;
                             break;
                         case TOP:
-                            base_offset = {parent.center.x, parent.top_left.y};
+                            parent_offset = {parent.center.x, parent.top_left.y};
                             break;
                         case TOPRIGHT:
-                            base_offset = {parent.bottom_right.x, parent.top_left.y};
+                            parent_offset = {parent.bottom_right.x, parent.top_left.y};
                             break;
                         case RIGHT:
-                            base_offset = {parent.bottom_right.x, parent.center.y};
+                            parent_offset = {parent.bottom_right.x, parent.center.y};
                             break;
                         case BOTTOMRIGHT:
-                            base_offset = parent.bottom_right;
+                            parent_offset = parent.bottom_right;
                             break;
                         case BOTTOM:
-                            base_offset = {parent.center.x, parent.bottom_right.y};
+                            parent_offset = {parent.center.x, parent.bottom_right.y};
                             break;
                         case BOTTOMLEFT:
-                            base_offset = {parent.top_left.x, parent.bottom_right.y};
+                            parent_offset = {parent.top_left.x, parent.bottom_right.y};
                             break;
                         case LEFT:
-                            base_offset = {parent.top_left.x, parent.center.y};
+                            parent_offset = {parent.top_left.x, parent.center.y};
                             break;
                         case CENTER:
-                            base_offset = parent.center;
+                            parent_offset = parent.center;
                             break;
                         }
                     }
-                    //else printerr("Node '"<<node.id<<"' is referencing '"<<node.base_id<<"', which wasn't drawn yet!");
                 }
 
                 const auto node_width = (node.width > 0) ? node.width * zoom_level : label_size.x + 2 * node_padding;
@@ -120,8 +119,8 @@ void App::ModuleCanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, cons
                 }
 
                 // Calculate and store AABR
-                const ImVec2 aabr_top_left(node_x + base_offset.x + pivot_offset.x,
-                                           node_y + base_offset.y + pivot_offset.y);
+                const ImVec2 aabr_top_left(node_x + parent_offset.x + pivot_offset.x,
+                                           node_y + parent_offset.y + pivot_offset.y);
                 const ImVec2 aabr_bottom_right(aabr_top_left.x + node_width,
                                                aabr_top_left.y + node_height);
 

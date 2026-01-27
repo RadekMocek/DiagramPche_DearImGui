@@ -37,42 +37,36 @@ void App::Start()
 w = 110
 h = 72
 
-[[node]]
-id = "cache"
-value = "Cache"
-xy = [20, 20]
+[node.Cache]
+xy = [70, 70]
 size = ["w", "h"]
 
-[[node]]
-id = "alu"
-value = "ALU"
+[node.ALU]
 pivot = "top"
-base = ["cache", "bottom"]
-xy = [0, 35]
+xy = ["Cache", "bottom", 0, 35]
 size = ["w", "h"]
 
-[[node]]
-id = "cu"
-value = "Řídící\njednotka"
+[node."Řídící\njednotka"]
 pivot = "top"
-base = ["alu", "bottom"]
-xy = [0, 35]
+xy = ["ALU", "bottom", 0, 35]
 size = ["w", "h"]
 
-[[node]]
-id = "datareg"
-value = "Datové\nregistry"
+[node."Datové\nregistry"]
 pivot = "left"
-base = ["alu", "right"]
-xy = [35, 0]
+xy = ["ALU", "right", 35, 0]
 size = ["w", "h"]
 
-[[node]]
-id = "statusreg"
-value = "Stavové\nregistry"
+[node."Stavové\nregistry"]
 pivot = "left"
-base = ["cu", "right"]
-xy = [35, 0]
+xy = ["Řídící\njednotka", "right", 35, 0]
 size = ["w", "h"]
+
+[[path]]
+start=["cache","left"]
+end=["alu","left"]
+points=[
+	["@start", -10,"@start",0],
+	["@prev", "@end"]
+]
 )""";
 }

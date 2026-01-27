@@ -10,45 +10,47 @@ void Parser::ParseNode(const toml::table* node_t, NodeStruct& cn)
     // Foreach `key` = `value` in current [[node]]
     for (const auto& [key, value] : *node_t) {
         // Logic is branched according to the key.str() content:
-        // == id ==> single string, that cannot contain '@' (reserved character) and must be unique
-        if (const auto key_str = key.str(); key_str == "id") {
-            if (const auto* value_str_ptr = value.as_string()) {
-                const auto value_str = value_str_ptr->get();
-                if (!m_is_error) {
-                    // Check for '@'
-                    if (value_str.find('@') != std::string::npos) {
-                        m_error_source_region = value.source();
-                        m_error_description = "Character '@' is reserved and it can't be used in node ids";
-                        m_is_error = true;
-                    }
-                    // Check for duplicates
-                    else if (m_result_nodes_map.contains(value_str)) {
-                        m_error_source_region = value.source();
-                        m_error_description = std::format("Duplicate node id: '{}'", value_str);
-                        m_is_error = true;
-                    }
-                }
-                cn.id = value_str_ptr->get();
-            }
-            else ReportError(value.source(), "A string must follow after 'id='");
-        }
         // == value ==> single string (for now)
-        else if (key_str == "value") {
+        if (const auto key_str = key.str(); key_str == "value") {
             if (const auto* value_str_ptr = value.as_string()) {
                 cn.value = value_str_ptr->get();
+                cn.is_value_explicitly_set = true;
             }
             else ReportError(value.source(), "A string must follow after 'value='");
         }
         // == xy ==> array of two integers: x and y coordinates
         else if (key_str == "xy") {
-            if (const auto* value_arr_ptr = value.as_array(); value_arr_ptr && value_arr_ptr->size() == 2) {
-                SetIntFromIntOrVariable(value_arr_ptr->at(0), cn.x);
-                SetIntFromIntOrVariable(value_arr_ptr->at(1), cn.y);
+            if (const auto* value_arr_ptr = value.as_array(); value_arr_ptr) {
+                // [X, Y] or [Parent, Pivot, X, Y]
+                if (value_arr_ptr->size() == 2) {
+                    // X
+                    SetIntFromIntOrVariable(value_arr_ptr->at(0), cn.x);
+                    // Y
+                    SetIntFromIntOrVariable(value_arr_ptr->at(1), cn.y);
+                }
+                else if (value_arr_ptr->size() == 4) {
+                    const auto parent_id_source_region = value_arr_ptr->at(0).source();
+                    // Parent
+                    if (const auto* value_arr_0_str_ptr = value_arr_ptr->at(0).as_string()) {
+                        cn.parent_id = value_arr_0_str_ptr->value_or("");
+                        if (cn.parent_id.empty()) ReportError(parent_id_source_region, "Parent reference can't be empty");
+                        // Better error reporting (self reference/non existing reference) for better diagram developer experience :)
+                        cn.parent_id_source_region = parent_id_source_region;
+                    }
+                    else ReportError(parent_id_source_region, "In [Parent, Pivot, X, Y], 'Parent' must be a string");
+                    // Pivot
+                    if (const auto* value_arr_1_str_ptr = value_arr_ptr->at(1).as_string()) {
+                        SetPivotFromString(value_arr_1_str_ptr, cn.parent_pivot);
+                    }
+                    else ReportError(value_arr_ptr->at(1).source(), "In [Parent, Pivot, X, Y], 'Pivot' must be a string");
+                    // X
+                    SetIntFromIntOrVariable(value_arr_ptr->at(2), cn.x);
+                    // Y
+                    SetIntFromIntOrVariable(value_arr_ptr->at(3), cn.y);
+                }
+                else ReportError(value.source(), "An array ([X, Y] or [Parent, Pivot, X, Y]) must follow after 'xy='");
             }
-            else {
-                ReportError(value.source(),
-                            "An array of two integers/strings of variable names must follow after 'xy='");
-            }
+            else ReportError(value.source(), "An array ([X, Y] or [Parent, Pivot, X, Y]) must follow after 'xy='");
         }
         // == pivot ==> single string
         else if (key_str == "pivot") {
@@ -56,17 +58,6 @@ void Parser::ParseNode(const toml::table* node_t, NodeStruct& cn)
                 SetPivotFromString(value_str_ptr, cn.pivot);
             }
             else ReportError(value.source(), "A string must follow after 'pivot='");
-        }
-        // == base ==> array if two strings: base id and base pivot
-        else if (key_str == "base") {
-            if (const auto* value_arr_ptr = value.as_array(); value_arr_ptr &&
-                value_arr_ptr->size() == 2 && value_arr_ptr->is_homogeneous(toml::node_type::string)) {
-                cn.base_id = value_arr_ptr->at(0).value_or("");
-                // Better error reporting for better diagram developer experience :)
-                cn.base_id_source_region = value_arr_ptr->at(0).source();
-                SetPivotFromString(value_arr_ptr->at(1).as_string(), cn.base_pivot);
-            }
-            else ReportError(value.source(), "An array of two strings must follow after 'base='");
         }
         // == color ==> array of four u8s (rgba)
         else if (key_str == "color") {
