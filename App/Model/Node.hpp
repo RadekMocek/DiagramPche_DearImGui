@@ -2,14 +2,11 @@
 
 #include <string>
 
-//#include "../../Dependency/toml.hpp"
-//#include "imgui.h"
+#include "NodeType.hpp"
+#include "Pivot.hpp"
+#include "Point.hpp"
 
-#include "NodeTypeEnum.hpp"
-#include "PivotEnum.hpp"
-#include "PointStruct.hpp"
-
-struct NodeStruct
+struct Node
 {
     // todo
     NodeType type = RECTANGLE;
@@ -22,14 +19,7 @@ struct NodeStruct
     bool is_value_explicitly_set = false;
 
     // = XY =
-    /*
-    std::string parent_id{};
-    toml::source_region parent_id_source_region{};
-    Pivot parent_pivot{};
-    int x{};
-    int y{};
-    /**/
-    PointStruct position{};
+    Point position{};
 
     // = Pivot =
     Pivot pivot = TOPLEFT;

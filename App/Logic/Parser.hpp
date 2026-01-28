@@ -4,14 +4,14 @@
 #include <vector>
 
 #include "../../Dependency/toml.hpp"
-#include "../Model/NodeStruct.hpp"
-#include "../Model/PathStruct.hpp"
+#include "../Model/Node.hpp"
+#include "../Model/Path.hpp"
 
 class Parser
 {
 public:
-    std::unordered_map<std::string, NodeStruct> m_result_nodes_map;
-    std::vector<PathStruct> m_result_paths;
+    std::unordered_map<std::string, Node> m_result_nodes_map;
+    std::vector<Path> m_result_paths;
 
     // Error report
     bool m_is_error;
@@ -26,12 +26,14 @@ private:
 
     void ReportError(const toml::source_region& error_source_region, const std::string& error_description);
 
-    void ParseNode(const toml::table* node_t, NodeStruct& cn);
-    void ParsePath(const toml::table* path_t, PathStruct& cp);
+    void ParseNode(const toml::table* node_t, Node& cn);
+    void ParsePath(const toml::table* path_t, Path& cp);
 
     void SetPivotFromString(const toml::value<std::string>* value_str_ptr, Pivot& to_set);
     void SetIntFromIntOrVariable(const toml::node& value, int& to_set);
-    void SetPositionPointFromArray(const toml::node& value, PointStruct& to_set);
+    void SetPositionPointFromArray(const toml::node& value, Point& to_set);
+
+    void ParsePathStartOrEnd(const toml::node& value, Point& to_set);
 
     //TODO revize
     const NodeType DEFAULT_DRAW_ITEM_TYPE = RECTANGLE;

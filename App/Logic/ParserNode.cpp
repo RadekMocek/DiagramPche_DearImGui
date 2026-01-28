@@ -5,7 +5,7 @@
 #include "../Config.hpp"
 #include "../HelperFunction.hpp"
 
-void Parser::ParseNode(const toml::table* node_t, NodeStruct& cn)
+void Parser::ParseNode(const toml::table* node_t, Node& cn)
 {
     // Foreach `key` = `value` in current [node]
     for (const auto& [key, value] : *node_t) {
@@ -68,6 +68,7 @@ void Parser::ParseNode(const toml::table* node_t, NodeStruct& cn)
                                                         -Z_DEPTH_ABS_MAX, Z_DEPTH_ABS_MAX));
             }
         }
+        // == Unknown key ==> report error
         else ReportError(key.source(), std::format("Unknown key '{}'", key_str));
     }
 }

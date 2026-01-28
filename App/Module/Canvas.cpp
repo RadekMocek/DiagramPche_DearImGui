@@ -3,6 +3,7 @@
 
 #include "../App.hpp"
 #include "../Config.hpp"
+#include "../Model/CanvasNode.hpp"
 #include "../HelperFunction.hpp"
 
 void App::ModuleCanvas()
@@ -15,7 +16,6 @@ void App::ModuleCanvas()
     static bool is_grid_enabled = true;
 
     constexpr auto COLOR_GRID_LINE = IM_COL32(200, 200, 200, 40);
-    constexpr auto COLOR_PATH = IM_COL32(0, 0, 0, 255);
 
     constexpr int FONT_SIZE_BASE = 18;
     constexpr int FONT_SIZE_STEP = 4;
@@ -92,36 +92,21 @@ void App::ModuleCanvas()
         }
     }
 
-    //
+    // = Draw the diagram =
+
+    // AABR = axis aligned bounding rectangle :)
+    // This map is used to store some additional info about nodes and also to keep track about which nodes were already drawn.
+    // One thing we need to store is node's AABR. Relative nodes, which are drawn later, can then use it to determine their position. Paths also need AABR info.
+    m_canvas_nodes.clear();
+
+    // 9 draw layers which can be set by user in TOML with values: -4, -3, -2, -1, 0, 1, 2, 3, 4
     draw_list->ChannelsSplit(N_DRAW_LIST_CHANNELS);
-
-    // Draw nodes on the canvas
+    // Default draw layer for nodes is 1 in TOML (= 5 in C++)
     ModuleCanvasDrawNodes(draw_list, origin, zoom_level, font_size);
-
+    // Default layer for paths is 0 in TOML (= 4 in C++)
+    draw_list->ChannelsSetCurrent(Z_DEPTH_ABS_MAX);
+    ModuleCanvasDrawPaths(draw_list, origin, zoom_level);
     draw_list->ChannelsMerge();
-
-    // Draw paths on the canvas
-    for (const auto& path : m_parser.m_result_paths) {
-        bool is_first_iter = true;
-
-        float prev_point_x{};
-        float prev_point_y{};
-
-        for (const auto& point : path.points) {
-            float point_x = origin.x + static_cast<float>(point.x) * zoom_level;
-            float point_y = origin.y + static_cast<float>(point.y) * zoom_level;
-
-            if (is_first_iter) {
-                is_first_iter = false;
-            }
-            else {
-                draw_list->AddLine({prev_point_x, prev_point_y}, {point_x, point_y}, COLOR_PATH, zoom_level);
-            }
-
-            prev_point_x = point_x;
-            prev_point_y = point_y;
-        }
-    }
 
     ImGui::EndChild();
 }

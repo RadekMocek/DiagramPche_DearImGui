@@ -2,7 +2,7 @@
 
 #include "imgui.h"
 
-#include "PivotEnum.hpp"
+#include "Pivot.hpp"
 
 struct CanvasNode
 {

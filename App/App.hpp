@@ -26,6 +26,7 @@
 #endif
 
 #include "Logic/Parser.hpp"
+#include "Model/CanvasNode.hpp"
 
 class App
 {
@@ -44,12 +45,14 @@ private:
     const char* m_window_title = "Untitled – DiagramPche :: Dear ImGui";
     const bool m_is_dark_mode = false;
 
-    Parser m_parser{};
-
     bool m_do_show_demo_window{};
     bool m_is_about_popup_queued{};
 
     std::string m_source{};
+
+    Parser m_parser{};
+
+    std::unordered_map<std::string, CanvasNode> m_canvas_nodes{};
 
     // = Functions =
     // Boilerplate
@@ -64,6 +67,7 @@ private:
 
     void ModuleCanvas();
     void ModuleCanvasDrawNodes(ImDrawList* draw_list, ImVec2 origin, float zoom_level, int font_size);
+    void ModuleCanvasDrawPaths(ImDrawList* draw_list, ImVec2 origin, float zoom_level);
 
     void LoadSourceFromFile(const char* filename);
 };

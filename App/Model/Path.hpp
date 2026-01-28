@@ -2,15 +2,15 @@
 
 #include <vector>
 
-#include "PointStruct.hpp"
+#include "Pathpoint.hpp"
+#include "Point.hpp"
 
-struct PathStruct
+struct Path
 {
-    PointStruct start{};
+    Point start{};
+    Point end{};
 
-    //
-    // todo
-    std::vector<PointStruct> points;
+    std::vector<Pathpoint> path_points;
 
     /*
      path style:

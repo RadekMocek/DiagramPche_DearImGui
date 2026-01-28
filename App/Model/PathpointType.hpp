@@ -1,8 +1,8 @@
 #pragma once
 
-enum PointRefType
+enum PathpointType
 {
-    UNKNOWN_POINTREFTYPE,
+    UNKNOWN_PATHPOINTTYPE,
     REFERENCE,
     ABSOLUTE,
     START,

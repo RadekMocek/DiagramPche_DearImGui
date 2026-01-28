@@ -70,12 +70,14 @@ void Parser::Parse(const std::string& source)
                     if (node_id.empty()) {
                         ReportError(node_key.source(), "Node id cannot be empty");
                     }
+                    /*
                     else if (node_id == "@") {
                         ReportError(node_key.source(), "Id '@' is reserved for special purposes");
                     }
+                    */
 
                     // Currently processed Node == "cn"
-                    NodeStruct cn;
+                    Node cn;
                     cn.id = node_id;
 
                     // Parse `node_value_t` data and set `cn` members; or set error message
@@ -204,8 +206,10 @@ void Parser::SetIntFromIntOrVariable(const toml::node& value, int& to_set)
     else ReportError(value.source(), "Value must be specified as an integer or a string with a variable name");
 }
 
-void Parser::SetPositionPointFromArray(const toml::node& value, PointStruct& to_set)
+void Parser::SetPositionPointFromArray(const toml::node& value, Point& to_set)
 {
+    constexpr auto err_msg_expected_array = "An array ([X, Y] or [Parent, Pivot, X, Y]) expected";
+
     if (const auto* value_arr_ptr = value.as_array(); value_arr_ptr) {
         // [X, Y] or [Parent, Pivot, X, Y]
         if (value_arr_ptr->size() == 2) {
@@ -239,7 +243,7 @@ void Parser::SetPositionPointFromArray(const toml::node& value, PointStruct& to_
             // Y
             SetIntFromIntOrVariable(value_arr_ptr->at(3), to_set.y);
         }
-        else ReportError(value.source(), "An array ([X, Y] or [Parent, Pivot, X, Y]) expected");
+        else ReportError(value.source(), err_msg_expected_array);
     }
-    else ReportError(value.source(), "An array ([X, Y] or [Parent, Pivot, X, Y]) expected");
+    else ReportError(value.source(), err_msg_expected_array);
 }

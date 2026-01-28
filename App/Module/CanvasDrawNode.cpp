@@ -2,7 +2,6 @@
 
 #include "../App.hpp"
 #include "../Config.hpp"
-#include "../Model/CanvasNodeStruct.hpp"
 #include "../HelperFunction.hpp"
 
 void App::ModuleCanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, const float zoom_level, const int font_size)
@@ -10,17 +9,12 @@ void App::ModuleCanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, cons
     constexpr float NODE_BORDER_OFFSET_BASE = 18.0f;
     const float node_padding = NODE_BORDER_OFFSET_BASE * zoom_level;
 
-    // AABR = axis aligned bounding rectangle :)
-
-    // This map is used to store some additional info about nodes and also to keep track about which nodes were already drawn.
-    // One thing we need to store is node's AABR so relative nodes (which are drawn later) can use it to determine their position.
-    std::unordered_map<std::string, CanvasNode> canvas_nodes{};
     // We will just iterate `m_result_nodes_map` multiple times until every node was drawn; we increment `current_draw_batch_number` with each iteration.
     // If we have a node with an accordant batch number and it wasn't drawn yet, we draw it.
     // Alternative approach would be to sort the collction first by nodes' batch number, but sorting map by value probably requires to convert it
     // to some other collection (priority queue?), which means std::moving all the node structs or doing some pointer bussiness. This works for now...
     int current_draw_batch_number = -1;
-    while (m_parser.m_result_nodes_map.size() != canvas_nodes.size()) {
+    while (m_parser.m_result_nodes_map.size() != m_canvas_nodes.size()) {
         current_draw_batch_number++; // 0, 1, 2, ...
         for (const auto& node : m_parser.m_result_nodes_map | std::views::values) {
             if (node.draw_batch_number == current_draw_batch_number) {
@@ -38,7 +32,7 @@ void App::ModuleCanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, cons
                 // Move node according to its parent, if user have set some; this is where we use stored AABR from `canvas_nodes`
                 ImVec2 parent_offset(0, 0);
                 if (!node.position.parent_id.empty()) {
-                    if (const auto it = canvas_nodes.find(node.position.parent_id); it != canvas_nodes.end()) {
+                    if (const auto it = m_canvas_nodes.find(node.position.parent_id); it != m_canvas_nodes.end()) {
                         parent_offset = it->second.GetAnchor(node.position.parent_pivot);
                     }
                 }
@@ -88,7 +82,7 @@ void App::ModuleCanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, cons
                 const ImVec2 aabr_bottom_right(aabr_top_left.x + node_width,
                                                aabr_top_left.y + node_height);
 
-                auto& canvas_node = canvas_nodes[node.id];
+                auto& canvas_node = m_canvas_nodes[node.id];
                 canvas_node.top_left = aabr_top_left;
                 canvas_node.bottom_right = aabr_bottom_right;
                 canvas_node.center = ImVec2(aabr_top_left.x + node_width / 2,
