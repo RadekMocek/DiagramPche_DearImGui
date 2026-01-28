@@ -33,7 +33,7 @@ void App::ModuleCanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, cons
                 ImVec2 parent_offset(0, 0);
                 if (!node.position.parent_id.empty()) {
                     if (const auto it = m_canvas_nodes.find(node.position.parent_id); it != m_canvas_nodes.end()) {
-                        parent_offset = it->second.GetAnchor(node.position.parent_pivot);
+                        parent_offset = it->second.GetExactPointFromPivot(node.position.parent_pivot);
                     }
                 }
 

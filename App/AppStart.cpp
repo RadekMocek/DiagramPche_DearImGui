@@ -65,8 +65,8 @@ size = ["w", "h"]
 start=["Cache", "left", 0, 0]
 end=["ALU", "left", 0, 0]
 points=[
-	["", "start", -10, "", "start", 0],
-    ["", "prev", 0, "", "end", 0]
+  ["", "start", -10, "", "start", 0],
+  ["", "prev", 0, "", "end", 0]
 ]
 )""";
 }

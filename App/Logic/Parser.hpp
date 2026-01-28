@@ -34,6 +34,7 @@ private:
     void SetPositionPointFromArray(const toml::node& value, Point& to_set);
 
     void ParsePathStartOrEnd(const toml::node& value, Point& to_set);
+    void ParsePathpointXOrY(const toml::array* pathpoint_arr_ptr, bool is_x, Pathpoint& cpp);
 
     //TODO revize
     const NodeType DEFAULT_DRAW_ITEM_TYPE = RECTANGLE;

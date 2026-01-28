@@ -10,7 +10,7 @@ struct CanvasNode
     ImVec2 bottom_right;
     ImVec2 center;
 
-    [[nodiscard]] constexpr ImVec2 GetAnchor(const Pivot pivot) const
+    [[nodiscard]] constexpr ImVec2 GetExactPointFromPivot(const Pivot pivot) const
     {
         switch (pivot) {
         default:
