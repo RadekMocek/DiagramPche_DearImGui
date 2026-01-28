@@ -3,23 +3,35 @@
 #include "Parser.hpp"
 #include "../HelperFunction.hpp"
 
-void Parser::ParsePath(const toml::table* path_t, Path& cp)
+void Parser::ParsePath(const toml::table* path_table, Path& curr_path)
 {
     // Foreach `key` = `value` in current [[path]]
-    for (const auto& [key, value] : *path_t) {
+    for (const auto& [key, value] : *path_table) {
         // == start ==
         if (const auto key_str = key.str(); key_str == "start") {
-            ParsePathStartOrEnd(value, cp.start);
+            ParsePathStartOrEnd(value, curr_path.start);
         }
         // == end ==
         else if (key_str == "end") {
-            ParsePathStartOrEnd(value, cp.end);
+            curr_path.ends.emplace_back();
+            auto& current_point = curr_path.ends.back();
+            ParsePathStartOrEnd(value, current_point);
+        }
+        // == ends ==
+        else if (key_str == "ends") {
+            if (const auto* value_arr_ptr = value.as_array(); value_arr_ptr) {
+                for (const auto& inner_value : *value_arr_ptr) {
+                    curr_path.ends.emplace_back();
+                    auto& current_point = curr_path.ends.back();
+                    ParsePathStartOrEnd(inner_value, current_point);
+                }
+            }
         }
         // == points ==
         else if (key_str == "points") {
-            if (const auto* pathpoints_array = value.as_array(); pathpoints_array) {
-                for (const auto& pathpoint : *pathpoints_array) {
-                    constexpr auto err_msg_pathpoint_array =
+            if (const auto* pathpoints_arr = value.as_array(); pathpoints_arr) {
+                for (const auto& pathpoint : *pathpoints_arr) {
+                    constexpr auto err_msg_pathpoint_arr =
                         "Pathpoint must be an array of 6 items: [string, string, integer, string, string, integer]";
 
                     // Array of 6 items: two trios (x,y); each trio can be one of:
@@ -38,14 +50,14 @@ void Parser::ParsePath(const toml::table* path_t, Path& cp)
                             && pathpoint_arr_ptr->at(4).is_string()
                             && (pathpoint_arr_ptr->at(5).is_integer() || pathpoint_arr_ptr->at(5).is_string())
                         ) {
-                            cp.path_points.emplace_back();
-                            auto& cpp = cp.path_points.back();
-                            ParsePathpointXOrY(pathpoint_arr_ptr, true, cpp);
-                            ParsePathpointXOrY(pathpoint_arr_ptr, false, cpp);
+                            curr_path.path_points.emplace_back();
+                            auto& curr_pathpoint = curr_path.path_points.back();
+                            ParsePathpointXOrY(pathpoint_arr_ptr, true, curr_pathpoint);
+                            ParsePathpointXOrY(pathpoint_arr_ptr, false, curr_pathpoint);
                         }
-                        else ReportError(pathpoint.source(), err_msg_pathpoint_array);
+                        else ReportError(pathpoint.source(), err_msg_pathpoint_arr);
                     }
-                    else ReportError(pathpoint.source(), err_msg_pathpoint_array);
+                    else ReportError(pathpoint.source(), err_msg_pathpoint_arr);
                 }
             }
             else ReportError(value.source(), "An array of arrays must follow after 'points='");
@@ -66,7 +78,7 @@ void Parser::ParsePathStartOrEnd(const toml::node& value, Point& to_set)
     }
 }
 
-void Parser::ParsePathpointXOrY(const toml::array* pathpoint_arr_ptr, const bool is_x, Pathpoint& cpp)
+void Parser::ParsePathpointXOrY(const toml::array* pathpoint_arr_ptr, const bool is_x, Pathpoint& curr_pathpoint)
 {
     // (This method expects correct data types and is taylor-made for parsing the specific 6 item array)
     const auto arr_offset = (is_x) ? 0 : 3;
@@ -93,15 +105,15 @@ void Parser::ParsePathpointXOrY(const toml::array* pathpoint_arr_ptr, const bool
     SetIntFromIntOrVariable(pathpoint_arr_ptr->at(2 + arr_offset), coor);
 
     if (is_x) {
-        cpp.x_type = type;
-        cpp.x_parent_id = id_str;
-        cpp.x_parent_pivot = pivot;
-        cpp.x = coor;
+        curr_pathpoint.x_type = type;
+        curr_pathpoint.x_parent_id = id_str;
+        curr_pathpoint.x_parent_pivot = pivot;
+        curr_pathpoint.x = coor;
     }
     else {
-        cpp.y_type = type;
-        cpp.y_parent_id = id_str;
-        cpp.y_parent_pivot = pivot;
-        cpp.y = coor;
+        curr_pathpoint.y_type = type;
+        curr_pathpoint.y_parent_id = id_str;
+        curr_pathpoint.y_parent_pivot = pivot;
+        curr_pathpoint.y = coor;
     }
 }

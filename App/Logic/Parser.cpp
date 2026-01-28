@@ -3,7 +3,6 @@
 #include <set>
 
 #include "Parser.hpp"
-
 #include "../HelperFunction.hpp"
 
 void Parser::Parse(const std::string& source)
@@ -21,12 +20,13 @@ void Parser::Parse(const std::string& source)
         return;
     }
 
-    // == Variables ==
+    // .: Variables :.
+    // .:===========:.
     m_variables.clear();
 
     if (const auto vars = toml_parsed["variables"]; !!vars && vars.is_table()) {
-        if (const auto* vars_t = vars.as_table()) {
-            for (const auto& [key, value] : *vars_t) {
+        if (const auto* vars_table = vars.as_table()) {
+            for (const auto& [key, value] : *vars_table) {
                 if (const auto* value_int_ptr = value.as_integer()) {
                     m_variables.insert_or_assign(std::string(key.str()), value_int_ptr->value_or(0));
                 }
@@ -35,8 +35,8 @@ void Parser::Parse(const std::string& source)
         }
     }
 
-    // == Nodes ==
-
+    // .: Nodes :.
+    // .:=======:.
     // This map is used by canvas logic to make draw commands
     // It is `map` and not `vector` simply because it's better for the "node reference" implementation
     m_result_nodes_map.clear();
@@ -62,48 +62,44 @@ void Parser::Parse(const std::string& source)
     std::set<std::string> stable_nodes{};
 
     if (const auto node = toml_parsed["node"]; !!node && node.is_table()) {
-        if (const auto* node_t = node.as_table()) {
-            for (const auto& [node_key, node_value] : *node_t) {
-                if (const auto* node_value_t = node_value.as_table()) {
+        if (const auto* node_table = node.as_table()) {
+            for (const auto& [node_key, node_value] : *node_table) {
+                if (const auto* node_value_table = node_value.as_table()) {
                     // Key exists and is unique (TOML won't parse if duplicate), but it could be empty string (not ideal)
                     const auto node_id = node_key.str();
                     if (node_id.empty()) {
                         ReportError(node_key.source(), "Node id cannot be empty");
                     }
-                    /*
-                    else if (node_id == "@") {
-                        ReportError(node_key.source(), "Id '@' is reserved for special purposes");
-                    }
-                    */
 
-                    // Currently processed Node == "cn"
-                    Node cn;
-                    cn.id = node_id;
+                    // Currently processed Node
+                    Node curr_node;
+                    curr_node.id = node_id;
 
-                    // Parse `node_value_t` data and set `cn` members; or set error message
-                    ParseNode(node_value_t, cn);
+                    // Parse `node_value_table` data and set `curr_node` members; or set error message
+                    ParseNode(node_value_table, curr_node);
 
                     // Check if the node is not referencing itself
-                    if (cn.id == cn.position.parent_id) {
-                        ReportError(cn.position.parent_id_source_region,
-                                    std::format("Node with id '{}' is referencing itself", cn.id));
+                    if (curr_node.id == curr_node.position.parent_id) {
+                        ReportError(curr_node.position.parent_id_source_region,
+                                    std::format("Node with id '{}' is referencing itself", curr_node.id));
                     }
 
-                    //
-                    if (!cn.is_value_explicitly_set) {
-                        cn.value = cn.id;
+                    // If user doesn't set any text value explicitly, we use node's ID (can be rejected by setting `value=""`)
+                    if (!curr_node.is_value_explicitly_set) {
+                        curr_node.value = curr_node.id;
                     }
 
                     // Empty parent means stable node; otherwise dependant node
-                    if (!cn.position.parent_id.empty()) {
-                        refs.insert({cn.id, cn.position.parent_id});
+                    if (!curr_node.position.parent_id.empty()) {
+                        refs.insert({curr_node.id, curr_node.position.parent_id});
                     }
                     else {
-                        stable_nodes.insert(cn.id);
+                        stable_nodes.insert(curr_node.id);
                     }
 
                     // Add node to the result collection
-                    m_result_nodes_map.emplace(cn.id, std::move(cn)); // Duplicate ID check was done in `ParseNode()`
+                    m_result_nodes_map.emplace(curr_node.id, std::move(curr_node));
+                    // Duplicate ID check was done in `ParseNode()`
                 }
             }
         }
@@ -153,21 +149,20 @@ void Parser::Parse(const std::string& source)
         m_is_error = true;
     }
 
-    // == Paths ==
-
+    // .: Paths :.
+    // .:=======:.
     // Parse the paths
     m_result_paths.clear();
 
     if (const auto paths = toml_parsed["path"]; !!paths && paths.is_array_of_tables()) {
-        if (toml::array* paths_array = paths.as_array()) {
+        if (const auto* paths_array = paths.as_array()) {
             // `paths_array` is an array of tables labeled as `[[path]]`
             for (const auto& path : *paths_array) {
-                if (const auto* path_t = path.as_table()) {
-                    // Currently processed Path == "cp"
+                if (const auto* path_table = path.as_table()) {
+                    // Currently processed Path
                     m_result_paths.emplace_back();
-                    auto& cp = m_result_paths.back();
-
-                    ParsePath(path_t, cp);
+                    auto& curr_path = m_result_paths.back();
+                    ParsePath(path_table, curr_path);
                 }
             }
         }
@@ -246,4 +241,31 @@ void Parser::SetPositionPointFromArray(const toml::node& value, Point& to_set)
         else ReportError(value.source(), err_msg_expected_array);
     }
     else ReportError(value.source(), err_msg_expected_array);
+}
+
+int Parser::GetZFromInt(const toml::node& value, const bool is_node)
+{
+    constexpr int min = 0;
+    constexpr int max = N_DRAW_LIST_CHANNELS - 1;
+    const auto err_msg_range = std::format("An integer between {} and {} must follow after 'z='", min, max);
+    const int default_result = (is_node) ? DRAW_LIST_CHANNEL_DEFAULT_NODE : DRAW_LIST_CHANNEL_DEFAULT_PATH;
+
+    if (const auto* value_int_ptr = value.as_integer()) {
+        const int result = value_int_ptr->value_or(default_result);
+
+        if (result < min) {
+            ReportError(value.source(), err_msg_range);
+            return min;
+        }
+
+        if (result > max) {
+            ReportError(value.source(), err_msg_range);
+            return max;
+        }
+
+        return result;
+    }
+
+    ReportError(value.source(), err_msg_range);
+    return default_result;
 }

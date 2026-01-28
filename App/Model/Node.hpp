@@ -5,6 +5,7 @@
 #include "NodeType.hpp"
 #include "Pivot.hpp"
 #include "Point.hpp"
+#include "../Config.hpp"
 
 struct Node
 {
@@ -38,28 +39,8 @@ struct Node
     Pivot label_position = CENTER;
 
     // = Z =
-    int z = 1;
+    int z = DRAW_LIST_CHANNEL_DEFAULT_NODE;
 
     // = Other internal =
     int draw_batch_number = 0;
-
-    /*
-    text color
-    text size
-    text bold
-    text italic
-    rectangle size
-    rectangle round corners
-    text position within the rectangle
-    rectangle color
-    rectangle edge color
-    rectangle edge style (dotted?)
-
-    // ...
-    Rich text? text=["abcd","red12b","defghi","green13i"]; nebo [[style]]
-
-    // ...
-    other shapes than rectangle
-    custom image
-    */
 };

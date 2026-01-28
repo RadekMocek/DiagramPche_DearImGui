@@ -37,6 +37,8 @@ void App::Start()
 w = 110
 h = 72
 
+[node."0,0"]
+
 [node.Cache]
 xy = [70, 70]
 size = ["w", "h"]
@@ -63,9 +65,13 @@ size = ["w", "h"]
 
 [[path]]
 start=["Cache", "left", 0, 0]
-end=["ALU", "left", 0, 0]
+ends=[
+  ["ALU", "left", 0, 0],
+  ["Řídící\njednotka", "left",0,0]
+]
 points=[
-  ["", "start", -10, "", "start", 0],
+  ["", "start", -25, "", "", 5],
+  ["Datové\nregistry", "top", 0, "", "", 5],
   ["", "prev", 0, "", "end", 0]
 ]
 )""";

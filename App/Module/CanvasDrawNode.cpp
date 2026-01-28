@@ -93,7 +93,7 @@ void App::ModuleCanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, cons
                 const ImVec2 draw_bottom_right = ImVec2Sum(origin, aabr_bottom_right);
 
                 // Do the actual drawing of the rectangle
-                draw_list->ChannelsSetCurrent(node.z + Z_DEPTH_ABS_MAX);
+                draw_list->ChannelsSetCurrent(node.z);
 
                 constexpr auto COLOR_NODE = IM_COL32(0, 0, 0, 255);
 

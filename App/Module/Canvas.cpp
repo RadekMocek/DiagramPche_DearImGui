@@ -99,12 +99,12 @@ void App::ModuleCanvas()
     // One thing we need to store is node's AABR. Relative nodes, which are drawn later, can then use it to determine their position. Paths also need AABR info.
     m_canvas_nodes.clear();
 
-    // 9 draw layers which can be set by user in TOML with values: -4, -3, -2, -1, 0, 1, 2, 3, 4
+    // 9 draw layers which can be set by user in TOML with values: 0, 1, 2, 3, 4, 5, 6, 7, 8
     draw_list->ChannelsSplit(N_DRAW_LIST_CHANNELS);
-    // Default draw layer for nodes is 1 in TOML (= 5 in C++)
+    // Default draw layer for nodes is 4 (see Model → Node.hpp → int z)
     ModuleCanvasDrawNodes(draw_list, origin, zoom_level, font_size);
-    // Default layer for paths is 0 in TOML (= 4 in C++)
-    draw_list->ChannelsSetCurrent(Z_DEPTH_ABS_MAX);
+    // Default layer for paths is 5
+    draw_list->ChannelsSetCurrent(DRAW_LIST_CHANNEL_DEFAULT_PATH);
     ModuleCanvasDrawPaths(draw_list, origin, zoom_level);
     draw_list->ChannelsMerge();
 

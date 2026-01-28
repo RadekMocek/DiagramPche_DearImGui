@@ -18,6 +18,7 @@ void App::ModuleTextEditor()
     ImGui::BeginChild("SourceParent", textedit_size, ImGuiChildFlags_Borders | ImGuiChildFlags_ResizeX);
     ImGui::PopStyleVar();
 
+    // TODO on altgr press looses focus -_-
     ImGui::InputTextMultiline(TEXTEDIT_ID,
                               &m_source,
                               ImGui::GetContentRegionAvail(),

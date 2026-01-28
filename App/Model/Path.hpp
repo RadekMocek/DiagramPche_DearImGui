@@ -8,18 +8,6 @@
 struct Path
 {
     Point start{};
-    Point end{};
-
+    std::vector<Point> ends{};
     std::vector<Pathpoint> path_points;
-
-    /*
-     path style:
-     * dotted?
-     * thickness
-     * color
-
-     path ends (arrows etc.)
-
-     curves?
-    */
 };
