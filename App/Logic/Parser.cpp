@@ -82,8 +82,8 @@ void Parser::Parse(const std::string& source)
                     ParseNode(node_value_t, cn);
 
                     // Check if the node is not referencing itself
-                    if (cn.id == cn.parent_id) {
-                        ReportError(cn.parent_id_source_region,
+                    if (cn.id == cn.position.parent_id) {
+                        ReportError(cn.position.parent_id_source_region,
                                     std::format("Node with id '{}' is referencing itself", cn.id));
                     }
 
@@ -93,8 +93,8 @@ void Parser::Parse(const std::string& source)
                     }
 
                     // Empty parent means stable node; otherwise dependant node
-                    if (!cn.parent_id.empty()) {
-                        refs.insert({cn.id, cn.parent_id});
+                    if (!cn.position.parent_id.empty()) {
+                        refs.insert({cn.id, cn.position.parent_id});
                     }
                     else {
                         stable_nodes.insert(cn.id);
@@ -121,7 +121,7 @@ void Parser::Parse(const std::string& source)
         for (const auto& [key, value] : refs) {
             // Check if the refered ID does exist
             if (!m_is_error && !m_result_nodes_map.contains(value)) {
-                ReportError(m_result_nodes_map[key].parent_id_source_region,
+                ReportError(m_result_nodes_map[key].position.parent_id_source_region,
                             std::format("Node '{}' is referencing non existant id: '{}'", key, value));
             }
 
@@ -161,7 +161,11 @@ void Parser::Parse(const std::string& source)
             // `paths_array` is an array of tables labeled as `[[path]]`
             for (const auto& path : *paths_array) {
                 if (const auto* path_t = path.as_table()) {
-                    ParsePath(path_t);
+                    // Currently processed Path == "cp"
+                    m_result_paths.emplace_back();
+                    auto& cp = m_result_paths.back();
+
+                    ParsePath(path_t, cp);
                 }
             }
         }
@@ -175,4 +179,67 @@ void Parser::ReportError(const toml::source_region& error_source_region, const s
         m_error_description = error_description;
         m_is_error = true;
     }
+}
+
+void Parser::SetPivotFromString(const toml::value<std::string>* value_str_ptr, Pivot& to_set)
+{
+    const auto pivot = GetPivotFromString(value_str_ptr->get());
+    if (pivot == UNKNOWN_PIVOT) {
+        ReportError(value_str_ptr->source(), PIVOT_ERROR_MESSAGE);
+    }
+    to_set = pivot;
+}
+
+void Parser::SetIntFromIntOrVariable(const toml::node& value, int& to_set)
+{
+    if (const auto* value_int_ptr = value.as_integer()) {
+        to_set = value_int_ptr->value_or(0);
+    }
+    else if (const auto* value_str_ptr = value.as_string()) {
+        if (const auto it = m_variables.find(value_str_ptr->get()); it != m_variables.end()) {
+            to_set = it->second;
+        }
+        else ReportError(value.source(), std::format("Variable '{}' does not exist", value_str_ptr->get()));
+    }
+    else ReportError(value.source(), "Value must be specified as an integer or a string with a variable name");
+}
+
+void Parser::SetPositionPointFromArray(const toml::node& value, PointStruct& to_set)
+{
+    if (const auto* value_arr_ptr = value.as_array(); value_arr_ptr) {
+        // [X, Y] or [Parent, Pivot, X, Y]
+        if (value_arr_ptr->size() == 2) {
+            // X
+            SetIntFromIntOrVariable(value_arr_ptr->at(0), to_set.x);
+            // Y
+            SetIntFromIntOrVariable(value_arr_ptr->at(1), to_set.y);
+        }
+        else if (value_arr_ptr->size() == 4) {
+            const auto parent_id_source_region = value_arr_ptr->at(0).source();
+            // Parent
+            if (const auto* value_arr_0_str_ptr = value_arr_ptr->at(0).as_string()) {
+                to_set.parent_id = value_arr_0_str_ptr->value_or("");
+                if (to_set.parent_id.empty()) {
+                    ReportError(parent_id_source_region, "Parent reference can't be empty");
+                }
+                // Better error reporting (self reference/non existing reference) for better diagram developer experience :)
+                to_set.parent_id_source_region = parent_id_source_region;
+            }
+            else ReportError(parent_id_source_region, "In [Parent, Pivot, X, Y], 'Parent' must be a string");
+            // Pivot
+            if (const auto* value_arr_1_str_ptr = value_arr_ptr->at(1).as_string()) {
+                SetPivotFromString(value_arr_1_str_ptr, to_set.parent_pivot);
+            }
+            else {
+                ReportError(value_arr_ptr->at(1).source(),
+                            "In [Parent, Pivot, X, Y], 'Pivot' must be a string");
+            }
+            // X
+            SetIntFromIntOrVariable(value_arr_ptr->at(2), to_set.x);
+            // Y
+            SetIntFromIntOrVariable(value_arr_ptr->at(3), to_set.y);
+        }
+        else ReportError(value.source(), "An array ([X, Y] or [Parent, Pivot, X, Y]) expected");
+    }
+    else ReportError(value.source(), "An array ([X, Y] or [Parent, Pivot, X, Y]) expected");
 }

@@ -27,10 +27,11 @@ private:
     void ReportError(const toml::source_region& error_source_region, const std::string& error_description);
 
     void ParseNode(const toml::table* node_t, NodeStruct& cn);
+    void ParsePath(const toml::table* path_t, PathStruct& cp);
+
     void SetPivotFromString(const toml::value<std::string>* value_str_ptr, Pivot& to_set);
     void SetIntFromIntOrVariable(const toml::node& value, int& to_set);
-
-    void ParsePath(const toml::table* path_t);
+    void SetPositionPointFromArray(const toml::node& value, PointStruct& to_set);
 
     //TODO revize
     const NodeType DEFAULT_DRAW_ITEM_TYPE = RECTANGLE;

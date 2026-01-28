@@ -2,13 +2,15 @@
 
 #include "imgui.h"
 
+#include "PivotEnum.hpp"
+
 struct CanvasNode
 {
     ImVec2 top_left;
     ImVec2 bottom_right;
     ImVec2 center;
 
-    ImVec2 GetAnchor(const Pivot pivot)
+    [[nodiscard]] constexpr ImVec2 GetAnchor(const Pivot pivot) const
     {
         switch (pivot) {
         default:

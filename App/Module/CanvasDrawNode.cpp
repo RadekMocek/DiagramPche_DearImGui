@@ -32,14 +32,14 @@ void App::ModuleCanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, cons
                     CalcTextSizeA(font_size, FLT_MAX, -1.0f, label_c_str);
 
                 // This is from the line `xy=[0,0]`
-                const auto node_x = static_cast<float>(node.x) * zoom_level;
-                const auto node_y = static_cast<float>(node.y) * zoom_level;
+                const auto node_x = static_cast<float>(node.position.x) * zoom_level;
+                const auto node_y = static_cast<float>(node.position.y) * zoom_level;
 
                 // Move node according to its parent, if user have set some; this is where we use stored AABR from `canvas_nodes`
                 ImVec2 parent_offset(0, 0);
-                if (!node.parent_id.empty()) {
-                    if (const auto it = canvas_nodes.find(node.parent_id); it != canvas_nodes.end()) {
-                        parent_offset = it->second.GetAnchor(node.parent_pivot);
+                if (!node.position.parent_id.empty()) {
+                    if (const auto it = canvas_nodes.find(node.position.parent_id); it != canvas_nodes.end()) {
+                        parent_offset = it->second.GetAnchor(node.position.parent_pivot);
                     }
                 }
 

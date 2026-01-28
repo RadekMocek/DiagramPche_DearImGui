@@ -7,6 +7,7 @@
 
 #include "NodeTypeEnum.hpp"
 #include "PivotEnum.hpp"
+#include "PointStruct.hpp"
 
 struct NodeStruct
 {
@@ -21,10 +22,14 @@ struct NodeStruct
     bool is_value_explicitly_set = false;
 
     // = XY =
+    /*
     std::string parent_id{};
+    toml::source_region parent_id_source_region{};
     Pivot parent_pivot{};
     int x{};
     int y{};
+    /**/
+    PointStruct position{};
 
     // = Pivot =
     Pivot pivot = TOPLEFT;
@@ -47,8 +52,6 @@ struct NodeStruct
 
     // = Other internal =
     int draw_batch_number = 0;
-    // Better error reporting (self reference/non existing reference) for better diagram developer experience :)
-    toml::source_region parent_id_source_region{};
 
     /*
     text color

@@ -6,7 +6,11 @@
 
 struct PathStruct
 {
-    std::vector<PathPointStruct> points;
+    PointStruct start{};
+
+    //
+    // todo
+    std::vector<PointStruct> points;
 
     /*
      path style:
