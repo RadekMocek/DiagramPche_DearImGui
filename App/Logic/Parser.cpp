@@ -196,7 +196,8 @@ void Parser::SetIntFromIntOrVariable(const toml::node& value, int& to_set)
         if (const auto it = m_variables.find(value_str_ptr->get()); it != m_variables.end()) {
             to_set = it->second;
         }
-        else ReportError(value.source(), std::format("Variable '{}' does not exist", value_str_ptr->get()));
+        else ReportError(value.source(), std::format("Variable '{}' does not exist (expecting [X, Y])"
+                                                     "", value_str_ptr->get()));
     }
     else ReportError(value.source(), "Value must be specified as an integer or a string with a variable name");
 }
@@ -205,7 +206,7 @@ void Parser::SetPositionPointFromArray(const toml::node& value, Point& to_set)
 {
     constexpr auto err_msg_expected_array = "An array ([X, Y] or [Parent, Pivot, X, Y]) expected";
 
-    if (const auto* value_arr_ptr = value.as_array(); value_arr_ptr) {
+    if (const auto* value_arr_ptr = value.as_array()) {
         // [X, Y] or [Parent, Pivot, X, Y]
         if (value_arr_ptr->size() == 2) {
             // X

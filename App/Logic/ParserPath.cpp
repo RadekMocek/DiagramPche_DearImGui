@@ -19,20 +19,21 @@ void Parser::ParsePath(const toml::table* path_table, Path& curr_path)
         }
         // == ends ==
         else if (key_str == "ends") {
-            if (const auto* value_arr_ptr = value.as_array(); value_arr_ptr) {
+            if (const auto* value_arr_ptr = value.as_array()) {
                 for (const auto& inner_value : *value_arr_ptr) {
                     curr_path.ends.emplace_back();
                     auto& current_point = curr_path.ends.back();
                     ParsePathStartOrEnd(inner_value, current_point);
                 }
             }
+            else ReportError(value.source(), "An array of end Pathpoints must follow after 'ends='");
         }
         // == points ==
         else if (key_str == "points") {
-            if (const auto* pathpoints_arr = value.as_array(); pathpoints_arr) {
+            if (const auto* pathpoints_arr = value.as_array()) {
                 for (const auto& pathpoint : *pathpoints_arr) {
                     constexpr auto err_msg_pathpoint_arr =
-                        "Pathpoint must be an array of 6 items: [string, string, integer, string, string, integer]";
+                        "Pathpoint must be an array of 6 items: [string, string, integer, string, string, integer] (and 'points' expects an ARRAY of pathpoints)";
 
                     // Array of 6 items: two trios (x,y); each trio can be one of:
                     // "", "", 23         :: absolute 23
@@ -41,7 +42,7 @@ void Parser::ParsePath(const toml::table* path_table, Path& curr_path)
                     // "", "end", 23      :: relative to path end
                     // "", "prev", 23     :: relative to previous pathpoint
                     // Instead of integer (23), string with variable name can be used
-                    if (const auto* pathpoint_arr_ptr = pathpoint.as_array(); pathpoint_arr_ptr) {
+                    if (const auto* pathpoint_arr_ptr = pathpoint.as_array()) {
                         if (pathpoint_arr_ptr->size() == 6
                             && pathpoint_arr_ptr->at(0).is_string()
                             && pathpoint_arr_ptr->at(1).is_string()
@@ -61,6 +62,10 @@ void Parser::ParsePath(const toml::table* path_table, Path& curr_path)
                 }
             }
             else ReportError(value.source(), "An array of arrays must follow after 'points='");
+        }
+        // == shift ==
+        else if (key_str == "shift") {
+            SetIntFromIntOrVariable(value, curr_path.shift);
         }
         // == Unknown key ==> report error
         else ReportError(key.source(), std::format("Unknown key '{}'", key_str));

@@ -19,8 +19,8 @@ void App::ModuleCanvas()
 
     constexpr int FONT_SIZE_BASE = 18;
     constexpr int FONT_SIZE_STEP = 4;
-    constexpr int FONT_SIZE_MIN = 8;
-    constexpr int FONT_SIZE_MAX = 28;
+    constexpr int FONT_SIZE_MIN = 6;
+    constexpr int FONT_SIZE_MAX = 30;
 
     static int font_size = FONT_SIZE_BASE;
     static float zoom_level = 1.0f;

@@ -14,7 +14,7 @@ color = [183, 183, 183, 255]
 [node.bg_mb]
 value = "Základní deska"
 pivot = "left"
-xy = ["bg_cpu", "right", 0, 0]
+xy = ["bg_cpu", "right", -1, 0]
 size = [340, "bg_h"]
 label_pos = "bottom-left"
 color = [238, 238, 238, 255]
@@ -75,5 +75,50 @@ size = ["io_w", "h"]
 [[path]]
 start = ["cache", "left", 0, 0]
 ends = [
-    ["alu", "left", 0, 0]
+    ["alu", "left", 0, 0],
+    ["cu", "left", 0, 0],
+]
+shift = 18
+
+[[path]]
+start = ["cache", "bottom", 0, 0]
+end = ["alu", "top", 0, 0]
+
+[[path]]
+start = ["alu", "bottom", 0, 0]
+end = ["cu", "top", 0, 0]
+
+[[path]]
+start = ["cache", "right", 0, 0]
+end = ["ram", "left", 0, -4]
+
+[[path]]
+start = ["alu", "right", 0, 0]
+end = ["datareg", "left", 0, 0]
+
+[[path]]
+start = ["datareg", "right", 0, 0]
+end = ["ram", "bottom", 0, 0]
+points = [["", "end", 0, "", "start", 0]]
+
+[[path]]
+start = ["statusreg", "top", 0, 0]
+end = ["alu", "bottom", 0, 17]
+points = [["", "start", 0, "", "end", 0]]
+
+[[path]]
+start = ["statusreg", "right", 0, 0]
+end = ["ram", "right", 20, 0]
+points = [["", "end", 0, "", "start", 0]]
+
+[[path]]
+start = ["ram", "right", 0, 0]
+ends = [
+    ["buses", "left", 0, 0],
+    ["ins", "left", 0, 0],
+    ["outs", "left", 0, 0],
+]
+points = [
+    ["", "start", 50, "", "start", 0],
+    ["", "prev", 0, "", "end", 0]
 ]
