@@ -71,6 +71,29 @@ void Parser::ParsePath(const toml::table* path_table, Path& curr_path)
         else if (key_str == "color") {
             SetColorFromArray(value, curr_path.color);
         }
+        // == tips ==> 2 char string for now?
+        else if (key_str == "tips") {
+            if (const auto* value_str_ptr = value.as_string()) {
+                if (const std::string value_str = value_str_ptr->value_or(""); value_str == "--") {
+                    curr_path.do_start_arrow = false;
+                    curr_path.do_end_arrow = false;
+                }
+                else if (value_str == "<-") {
+                    curr_path.do_start_arrow = true;
+                    curr_path.do_end_arrow = false;
+                }
+                else if (value_str == "->") {
+                    curr_path.do_start_arrow = false;
+                    curr_path.do_end_arrow = true;
+                }
+                else if (value_str == "<>") {
+                    curr_path.do_start_arrow = true;
+                    curr_path.do_end_arrow = true;
+                }
+                else ReportError(value.source(), "Possible values after 'tips=' are '--', '<-', '->', '<>'");
+            }
+            else ReportError(value.source(), "A string must follow after 'tips='");
+        }
         // == Unknown key ==> report error
         else ReportError(key.source(), std::format("Unknown key '{}'", key_str));
     }

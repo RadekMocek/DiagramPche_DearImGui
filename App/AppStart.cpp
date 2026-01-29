@@ -47,6 +47,7 @@ size = ["w", "h"]
 pivot = "top"
 xy = ["Cache", "bottom", 0, 35]
 size = ["w", "h"]
+z = 6
 
 [node."Řídící\njednotka"]
 pivot = "top"
@@ -67,7 +68,7 @@ size = ["w", "h"]
 start=["Cache", "left", 0, 0]
 ends=[
   ["ALU", "left", 0, 0],
-  ["Řídící\njednotka", "left",0,0]
+  ["Řídící\njednotka", "bottom",0,0]
 ]
 shift = 25
 points=[
@@ -75,10 +76,21 @@ points=[
   ["Datové\nregistry", "top", 0, "", "", 5],
   ["", "prev", 0, "", "end", 0]
 ]
+tips="<>"
 
 [[path]]
 start=["Cache","top-left",0,0]
 end=["Cache","bottom-right",0,0]
 color=[150,0,0,255]
+tips="<>"
+
+[[path]]
+start=[400,400]
+end=[400,500]
+points=[
+  ["","",500,"","",400],
+  ["","",500,"","",500],
+]
+tips="<>"
 )""";
 }

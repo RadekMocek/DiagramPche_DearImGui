@@ -17,6 +17,10 @@ struct Path
 
     std::tuple<unsigned char, unsigned char, unsigned char, unsigned char> color = {0, 0, 0, 255};
 
+    bool do_start_arrow = false;
+    bool do_end_arrow = true;
+
+    //
     [[nodiscard]] constexpr ImVec2 GetShiftDirection(const Pivot pivot, const float zoom_level) const
     {
         const auto sf = static_cast<float>(shift) * zoom_level;

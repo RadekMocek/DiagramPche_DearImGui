@@ -2,16 +2,12 @@
 
 #include <string>
 
-#include "NodeType.hpp"
 #include "Pivot.hpp"
 #include "Point.hpp"
 #include "../Config.hpp"
 
 struct Node
 {
-    // todo
-    NodeType type = RECTANGLE;
-
     // = ID =
     std::string id{};
 

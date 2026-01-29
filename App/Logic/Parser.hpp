@@ -42,19 +42,4 @@ private:
 
     void ParsePathStartOrEnd(const toml::node& value, Point& to_set);
     void ParsePathpointXOrY(const toml::array* pathpoint_arr_ptr, bool is_x, Pathpoint& curr_pathpoint);
-
-    //TODO revize
-    const NodeType DEFAULT_DRAW_ITEM_TYPE = RECTANGLE;
-
-    const std::unordered_map<std::string, NodeType> STRING_TO_NODE_TYPE = {
-        {"ref", REF},
-        {"text", TEXT},
-        {"rectangle", RECTANGLE}
-    };
-
-    NodeType GetNodeType(const std::string& type_str) const
-    {
-        const auto it = STRING_TO_NODE_TYPE.find(type_str);
-        return it != STRING_TO_NODE_TYPE.end() ? it->second : DEFAULT_DRAW_ITEM_TYPE;
-    }
 };

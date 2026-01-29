@@ -51,7 +51,7 @@ void App::ModuleCanvas()
     ImGui::InvisibleButton("Canvas", canvas_size, ImGuiButtonFlags_MouseButtonLeft | ImGuiButtonFlags_MouseButtonRight);
     const bool is_hovered = ImGui::IsItemHovered(); // Hovered (hot item)
     const bool is_active = ImGui::IsItemActive(); // Held
-    //const ImVec2 mouse_pos_in_canvas(io.MousePos.x - origin.x, io.MousePos.y - origin.y);
+    const ImVec2 mouse_pos_in_canvas(io.MousePos.x - origin.x, io.MousePos.y - origin.y);
 
     // Mousewheel to adjust the zoom level
     if (is_hovered) {
@@ -107,6 +107,21 @@ void App::ModuleCanvas()
     draw_list->ChannelsSetCurrent(DRAW_LIST_CHANNEL_DEFAULT_PATH);
     ModuleCanvasDrawPaths(draw_list, origin, zoom_level);
     draw_list->ChannelsMerge();
+
+    // .: User AABR interaction :.
+    //  .:======================:.
+
+    // Show tooltip with Node ID on hover
+    static std::string tooltip;
+    tooltip.clear();
+    for (const auto& [key, value] : m_canvas_nodes) {
+        if (value.IsPointInsideIncl(mouse_pos_in_canvas)) {
+            tooltip += ", " + key;
+        }
+    }
+    if (!tooltip.empty()) {
+        ImGui::SetTooltip("%s", tooltip.substr(2).c_str());
+    }
 
     ImGui::EndChild();
 }

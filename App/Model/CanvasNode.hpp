@@ -35,4 +35,9 @@ struct CanvasNode
             return center;
         }
     }
+
+    [[nodiscard]] constexpr bool IsPointInsideIncl(const ImVec2 point) const
+    {
+        return point.x >= top_left.x && point.x <= bottom_right.x && point.y >= top_left.y && point.y <= bottom_right.y;
+    }
 };

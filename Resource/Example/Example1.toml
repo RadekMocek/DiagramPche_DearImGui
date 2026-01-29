@@ -80,37 +80,45 @@ ends = [
 ]
 shift = 18
 color = [208, 208, 208, 255]
+tips = "<>"
 
 [[path]]
 start = ["cache", "bottom", 0, 0]
 end = ["alu", "top", 0, 0]
+tips = "<>"
 
 [[path]]
 start = ["alu", "bottom", 0, 0]
 end = ["cu", "top", 0, 0]
+tips = "<>"
 
 [[path]]
 start = ["cache", "right", 0, 0]
 end = ["ram", "left", 0, -4]
+tips = "<>"
 
 [[path]]
 start = ["alu", "right", 0, 0]
 end = ["datareg", "left", 0, 0]
+tips = "<>"
 
 [[path]]
 start = ["datareg", "right", 0, 0]
 end = ["ram", "bottom", 0, 0]
 points = [["", "end", 0, "", "start", 0]]
+tips = "<>"
 
 [[path]]
 start = ["statusreg", "top", 0, 0]
 end = ["alu", "bottom", 0, 17]
 points = [["", "start", 0, "", "end", 0]]
+tips = "<>"
 
 [[path]]
 start = ["statusreg", "right", 0, 0]
-end = ["ram", "right", 20, 0]
+end = ["ram", "right", 30, 0]
 points = [["", "end", 0, "", "start", 0]]
+tips = "<>"
 
 [[path]]
 start = ["ram", "right", 0, 0]
@@ -123,3 +131,4 @@ points = [
     ["", "start", 50, "", "start", 0],
     ["", "prev", 0, "", "end", 0]
 ]
+tips = "<>"
