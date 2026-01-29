@@ -15,14 +15,13 @@ void App::ModuleCanvasDrawPaths(ImDrawList* draw_list, const ImVec2 origin, cons
         if (!path.start.parent_id.empty()) {
             if (const auto it = m_canvas_nodes.find(path.start.parent_id); it != m_canvas_nodes.end()) {
                 // Move so it's relative to parent's pivot
-                start = ImVec2Sum(start, it->second.GetExactPointFromPivot(path.start.parent_pivot));
+                start += it->second.GetExactPointFromPivot(path.start.parent_pivot);
                 // If shift is set, draw line from OG start to shifted start, and update the start variable
                 if (shift != 0) {
-                    const auto shifted_start
-                        = ImVec2Sum(start, path.GetShiftDirection(path.start.parent_pivot, zoom_level));
+                    const auto shifted_start = start + path.GetShiftDirection(path.start.parent_pivot, zoom_level);
 
-                    draw_list->AddLine(ImVec2Sum(start, origin),
-                                       ImVec2Sum(shifted_start, origin),
+                    draw_list->AddLine(start + origin,
+                                       shifted_start + origin,
                                        COLOR_PATH,
                                        zoom_level);
 
@@ -38,15 +37,14 @@ void App::ModuleCanvasDrawPaths(ImDrawList* draw_list, const ImVec2 origin, cons
             // Is the end point realative to some node?
             if (!path_end.parent_id.empty()) {
                 if (const auto it = m_canvas_nodes.find(path_end.parent_id); it != m_canvas_nodes.end()) {
-                    end = ImVec2Sum(end, it->second.GetExactPointFromPivot(path_end.parent_pivot));
+                    end += it->second.GetExactPointFromPivot(path_end.parent_pivot);
                 }
                 // If shift is set, draw line from OG end to shifted end, and update the end variable
                 if (shift != 0) {
-                    const auto shifted_end
-                        = ImVec2Sum(end, path.GetShiftDirection(path_end.parent_pivot, zoom_level));
+                    const auto shifted_end = end + path.GetShiftDirection(path_end.parent_pivot, zoom_level);
 
-                    draw_list->AddLine(ImVec2Sum(end, origin),
-                                       ImVec2Sum(shifted_end, origin),
+                    draw_list->AddLine(end + origin,
+                                       shifted_end + origin,
                                        COLOR_PATH,
                                        zoom_level);
 
@@ -103,12 +101,16 @@ void App::ModuleCanvasDrawPaths(ImDrawList* draw_list, const ImVec2 origin, cons
                 }
 
                 // Draw the line and set new previous point for next iteration
-                draw_list->AddLine(ImVec2Sum(prev, origin), ImVec2Sum(curr, origin), COLOR_PATH, zoom_level);
+                draw_list->AddLine(prev + origin, curr + origin, COLOR_PATH, zoom_level);
                 prev = curr;
             }
 
             // Last line from last Pathpoint to end
-            draw_list->AddLine(ImVec2Sum(prev, origin), ImVec2Sum(end, origin), COLOR_PATH, zoom_level);
+
+            const auto p1 = prev + origin;
+            const auto p2 = end + origin;
+
+            draw_list->AddLine(p1, p2, COLOR_PATH, zoom_level);
         }
     }
 }

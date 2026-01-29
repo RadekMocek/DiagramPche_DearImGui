@@ -89,8 +89,8 @@ void App::ModuleCanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, cons
                                             aabr_top_left.y + node_height / 2);
 
                 // By adding origin (canvas position in window + scrolling) to AABR we get proper drawing coordinates
-                const ImVec2 draw_top_left = ImVec2Sum(origin, aabr_top_left);
-                const ImVec2 draw_bottom_right = ImVec2Sum(origin, aabr_bottom_right);
+                const ImVec2 draw_top_left = origin + aabr_top_left;
+                const ImVec2 draw_bottom_right = origin + aabr_bottom_right;
 
                 // Do the actual drawing of the rectangle
                 draw_list->ChannelsSetCurrent(node.z);
@@ -112,7 +112,7 @@ void App::ModuleCanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, cons
                 if (node.width > 0 || node.height > 0) {
                     // Custom width/height => `text_pos` makes sense
                     // Helper vars:
-                    const ImVec2 draw_center = ImVec2Sum(origin, canvas_node.center);
+                    const ImVec2 draw_center = origin + canvas_node.center;
                     switch (node.label_position) {
                     default: // UNKNOWN (undefined) + TOPLEFT (nothing to do)
                         break;
