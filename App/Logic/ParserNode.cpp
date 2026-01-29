@@ -1,8 +1,6 @@
-#include <algorithm>
 #include <format>
 
 #include "Parser.hpp"
-#include "../Config.hpp"
 #include "../HelperFunction.hpp"
 
 void Parser::ParseNode(const toml::table* node_table, Node& curr_node)
@@ -31,14 +29,7 @@ void Parser::ParseNode(const toml::table* node_table, Node& curr_node)
         }
         // == color ==> array of four u8s (rgba)
         else if (key_str == "color") {
-            if (const auto* value_arr_ptr = value.as_array(); value_arr_ptr &&
-                value_arr_ptr->size() == 4 && value_arr_ptr->is_homogeneous(toml::node_type::integer)) {
-                curr_node.color_r = value_arr_ptr->at(0).value_or(0);
-                curr_node.color_g = value_arr_ptr->at(1).value_or(0);
-                curr_node.color_b = value_arr_ptr->at(2).value_or(0);
-                curr_node.color_a = value_arr_ptr->at(3).value_or(0);
-            }
-            else ReportError(value.source(), "An array of four uchars (0–255) must follow after 'color='");
+            SetColorFromArray(value, curr_node.color);
         }
         // == size ==> array of two items [width, height], where each is specified either by integer or a string with variable name
         else if (key_str == "size") {

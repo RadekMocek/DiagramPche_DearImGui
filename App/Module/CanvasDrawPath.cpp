@@ -3,9 +3,8 @@
 
 void App::ModuleCanvasDrawPaths(ImDrawList* draw_list, const ImVec2 origin, const float zoom_level)
 {
-    constexpr auto COLOR_PATH = IM_COL32(0, 0, 0, 255);
-
     for (const auto& path : m_parser.m_result_paths) {
+        const auto COLOR_PATH = GetColorFromTuple(path.color);
         const auto shift = path.shift;
 
         // Ready the start point

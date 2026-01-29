@@ -79,6 +79,7 @@ ends = [
     ["cu", "left", 0, 0],
 ]
 shift = 18
+color = [208, 208, 208, 255]
 
 [[path]]
 start = ["cache", "bottom", 0, 0]

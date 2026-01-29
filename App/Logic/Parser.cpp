@@ -196,8 +196,10 @@ void Parser::SetIntFromIntOrVariable(const toml::node& value, int& to_set)
         if (const auto it = m_variables.find(value_str_ptr->get()); it != m_variables.end()) {
             to_set = it->second;
         }
-        else ReportError(value.source(), std::format("Variable '{}' does not exist (expecting [X, Y])"
-                                                     "", value_str_ptr->get()));
+        else {
+            ReportError(value.source(),
+                        std::format("Variable '{}' does not exist (expecting [X, Y])", value_str_ptr->get()));
+        }
     }
     else ReportError(value.source(), "Value must be specified as an integer or a string with a variable name");
 }
@@ -242,6 +244,23 @@ void Parser::SetPositionPointFromArray(const toml::node& value, Point& to_set)
         else ReportError(value.source(), err_msg_expected_array);
     }
     else ReportError(value.source(), err_msg_expected_array);
+}
+
+void Parser::SetColorFromArray(
+    const toml::node& value,
+    std::tuple<unsigned char, unsigned char, unsigned char, unsigned char>& to_set
+)
+{
+    if (const auto* value_arr_ptr = value.as_array(); value_arr_ptr &&
+        value_arr_ptr->size() == 4 && value_arr_ptr->is_homogeneous(toml::node_type::integer)) {
+        to_set = {
+            value_arr_ptr->at(0).value_or(0),
+            value_arr_ptr->at(1).value_or(0),
+            value_arr_ptr->at(2).value_or(0),
+            value_arr_ptr->at(3).value_or(0)
+        };
+    }
+    else ReportError(value.source(), "An array of four uchars (0–255) must follow after 'color='");
 }
 
 int Parser::GetZFromInt(const toml::node& value, const bool is_node)

@@ -75,5 +75,10 @@ points=[
   ["Datové\nregistry", "top", 0, "", "", 5],
   ["", "prev", 0, "", "end", 0]
 ]
+
+[[path]]
+start=["Cache","top-left",0,0]
+end=["Cache","bottom-right",0,0]
+color=[150,0,0,255]
 )""";
 }

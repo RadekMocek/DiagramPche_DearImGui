@@ -7,17 +7,17 @@ void Parser::ParsePath(const toml::table* path_table, Path& curr_path)
 {
     // Foreach `key` = `value` in current [[path]]
     for (const auto& [key, value] : *path_table) {
-        // == start ==
+        // == start ==> position point
         if (const auto key_str = key.str(); key_str == "start") {
             ParsePathStartOrEnd(value, curr_path.start);
         }
-        // == end ==
+        // == end ==> position point
         else if (key_str == "end") {
             curr_path.ends.emplace_back();
             auto& current_point = curr_path.ends.back();
             ParsePathStartOrEnd(value, current_point);
         }
-        // == ends ==
+        // == ends ==> array of position points
         else if (key_str == "ends") {
             if (const auto* value_arr_ptr = value.as_array()) {
                 for (const auto& inner_value : *value_arr_ptr) {
@@ -28,7 +28,7 @@ void Parser::ParsePath(const toml::table* path_table, Path& curr_path)
             }
             else ReportError(value.source(), "An array of end Pathpoints must follow after 'ends='");
         }
-        // == points ==
+        // == points ==> array of 6 item arrays
         else if (key_str == "points") {
             if (const auto* pathpoints_arr = value.as_array()) {
                 for (const auto& pathpoint : *pathpoints_arr) {
@@ -63,9 +63,13 @@ void Parser::ParsePath(const toml::table* path_table, Path& curr_path)
             }
             else ReportError(value.source(), "An array of arrays must follow after 'points='");
         }
-        // == shift ==
+        // == shift ==> int or var
         else if (key_str == "shift") {
             SetIntFromIntOrVariable(value, curr_path.shift);
+        }
+        // == color ==> array of four u8s (rgba)
+        else if (key_str == "color") {
+            SetColorFromArray(value, curr_path.color);
         }
         // == Unknown key ==> report error
         else ReportError(key.source(), std::format("Unknown key '{}'", key_str));

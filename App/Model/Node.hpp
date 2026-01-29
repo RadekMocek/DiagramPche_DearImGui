@@ -26,10 +26,7 @@ struct Node
     Pivot pivot = TOPLEFT;
 
     // = Color =
-    unsigned char color_r = 255;
-    unsigned char color_g = 255;
-    unsigned char color_b = 255;
-    unsigned char color_a = 255;
+    std::tuple<unsigned char, unsigned char, unsigned char, unsigned char> color = {255, 255, 255, 255};
 
     // = Size =
     int width{};

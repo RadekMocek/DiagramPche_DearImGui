@@ -95,14 +95,13 @@ void App::ModuleCanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, cons
                 // Do the actual drawing of the rectangle
                 draw_list->ChannelsSetCurrent(node.z);
 
-                constexpr auto COLOR_NODE = IM_COL32(0, 0, 0, 255);
-
                 draw_list->AddRectFilled(draw_top_left,
                                          draw_bottom_right,
-                                         IM_COL32(node.color_r, node.color_g, node.color_b, node.color_a),
+                                         GetColorFromTuple(node.color),
                                          0,
                                          0);
 
+                constexpr auto COLOR_NODE = IM_COL32(0, 0, 0, 255);
                 draw_list->AddRect(draw_top_left, draw_bottom_right, COLOR_NODE, 0, 0, zoom_level);
 
                 // Draw label
