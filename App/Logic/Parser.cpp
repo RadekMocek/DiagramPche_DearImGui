@@ -3,7 +3,6 @@
 #include <set>
 
 #include "Parser.hpp"
-#include "../HelperFunction.hpp"
 
 void Parser::Parse(const std::string& source)
 {

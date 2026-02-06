@@ -1,6 +1,6 @@
 #include "../App.hpp"
 
-void App::ModuleMainMenuBar()
+void App::GUIMainMenuBar()
 {
     ImGui::PushFont(nullptr, 16.0f);
     ImGui::BeginMainMenuBar();

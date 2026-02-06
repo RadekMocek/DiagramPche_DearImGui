@@ -4,9 +4,8 @@
 #include "../App.hpp"
 #include "../Config.hpp"
 #include "../Model/CanvasNode.hpp"
-#include "../HelperFunction.hpp"
 
-void App::ModuleCanvas()
+void App::GUICanvas()
 {
     static ImGuiIO& io = ImGui::GetIO(); // For getting the mouse position
 
@@ -103,10 +102,10 @@ void App::ModuleCanvas()
     // 9 draw layers which can be set by user in TOML with values: 0, 1, 2, 3, 4, 5, 6, 7, 8
     draw_list->ChannelsSplit(N_DRAW_LIST_CHANNELS);
     // Default draw layer for nodes is 4 (see Model → Node.hpp → int z)
-    ModuleCanvasDrawNodes(draw_list, origin, zoom_level, font_size);
+    GUICanvasDrawNodes(draw_list, origin, zoom_level, font_size);
     // Default layer for paths is 5
     draw_list->ChannelsSetCurrent(DRAW_LIST_CHANNEL_DEFAULT_PATH);
-    ModuleCanvasDrawPaths(draw_list, origin, zoom_level);
+    GUICanvasDrawPaths(draw_list, origin, zoom_level);
     draw_list->ChannelsMerge();
 
     // .: User AABR interaction :.

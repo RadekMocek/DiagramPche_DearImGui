@@ -1,7 +1,6 @@
 #include <format>
 
 #include "Parser.hpp"
-#include "../HelperFunction.hpp"
 
 void Parser::ParsePath(const toml::table* path_table, Path& curr_path)
 {

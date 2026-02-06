@@ -61,15 +61,15 @@ private:
     void Update();
 
     // App specific
-    void ModuleMainMenuBar();
-    void ModuleBody();
-    void ModuleTextEditor();
+    void GUIMainMenuBar();
+    void GUIBody();
+    void GUITextEditor();
 
-    void ModuleCanvas();
-    void ModuleCanvasDrawNodes(ImDrawList* draw_list, ImVec2 origin, float zoom_level, int font_size);
-    void ModuleCanvasDrawPaths(ImDrawList* draw_list, ImVec2 origin, float zoom_level);
+    void GUICanvas();
+    void GUICanvasDrawNodes(ImDrawList* draw_list, ImVec2 origin, float zoom_level, int font_size);
+    void GUICanvasDrawPaths(ImDrawList* draw_list, ImVec2 origin, float zoom_level);
 
-    // (ModuleCanvasDrawPaths helper method)
+    // (GUICanvasDrawPaths helper method)
     static inline void PathShift(ImVec2& point, bool& is_arrow_satisfied, const Path& path, const Pivot& pivot,
                                  ImDrawList* draw_list, ImVec2 origin, float zoom_level, ImU32 color);
 

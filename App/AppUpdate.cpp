@@ -3,10 +3,10 @@
 void App::Update()
 {
     // .: Main menu bar :.
-    ModuleMainMenuBar();
+    GUIMainMenuBar();
 
     // .: Main "full-viewport" window :.
-    ModuleBody();
+    GUIBody();
 
     // .: Show the big demo window if enabled :.
     if (m_do_show_demo_window) {

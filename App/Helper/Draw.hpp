@@ -5,10 +5,8 @@
 
 #include "imgui.h"
 
-// == Dear ImGui helper functions ==
-// = ImVec2 =
-// Curiosity: MSVC says this cannot be constexpr, MinGW is OK with it
-constexpr ImVec2 ImVec2Normalized(const ImVec2 vec)
+// Helper helper functions :)
+inline ImVec2 ImVec2Normalized(const ImVec2 vec)
 {
     const auto magnitude = sqrtf((vec.x * vec.x) + (vec.y * vec.y));
     return {vec.x / magnitude, vec.y / magnitude};
@@ -43,9 +41,3 @@ inline void DrawArrowTip(
                                  point_slightly_before_p2 + p2_orthogonal_addition,
                                  color);
 }
-
-// == A huge time saver :) ==
-#include <iostream>
-#define print(x) std::cout << x << '\n'
-#define printerr(x) std::cerr << "[ERR] " << x << '\n'
-#define printvec(v) std::cout << "[" << v.x << ", " << v.y << "]\n"

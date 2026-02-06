@@ -1,9 +1,9 @@
 #include <ranges>
 
 #include "../App.hpp"
-#include "../HelperFunction.hpp"
+#include "../Helper/Draw.hpp"
 
-void App::ModuleCanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, const float zoom_level, const int font_size)
+void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, const float zoom_level, const int font_size)
 {
     constexpr float NODE_BORDER_OFFSET_BASE = 18.0f;
     const float node_padding = NODE_BORDER_OFFSET_BASE * zoom_level;

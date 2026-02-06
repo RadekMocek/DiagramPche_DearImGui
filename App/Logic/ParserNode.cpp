@@ -1,7 +1,6 @@
 #include <format>
 
 #include "Parser.hpp"
-#include "../HelperFunction.hpp"
 
 void Parser::ParseNode(const toml::table* node_table, Node& curr_node)
 {

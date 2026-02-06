@@ -2,9 +2,8 @@
 
 #include "../App.hpp"
 #include "../Config.hpp"
-#include "../HelperFunction.hpp"
 
-void App::ModuleTextEditor()
+void App::GUITextEditor()
 {
     // Same ID for textedit and drawing error highlights
     constexpr auto TEXTEDIT_ID = "##Source";

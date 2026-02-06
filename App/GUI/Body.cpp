@@ -2,7 +2,7 @@
 
 #include "../App.hpp"
 
-void App::ModuleBody()
+void App::GUIBody()
 {
     // Full-viewport window setup
     constexpr ImGuiWindowFlags flags
@@ -21,9 +21,9 @@ void App::ModuleBody()
 
     // Two main columns
     m_parser.Parse(m_source);
-    ModuleTextEditor();
+    GUITextEditor();
     ImGui::SameLine();
-    ModuleCanvas();
+    GUICanvas();
 
     // "Status bar"
     constexpr auto COLOR_ERROR = IM_COL32(211, 1, 2, 255);

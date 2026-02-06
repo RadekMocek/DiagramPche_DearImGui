@@ -1,7 +1,7 @@
 #include "../App.hpp"
-#include "../HelperFunction.hpp"
+#include "../Helper/Draw.hpp"
 
-void App::ModuleCanvasDrawPaths(ImDrawList* draw_list, const ImVec2 origin, const float zoom_level)
+void App::GUICanvasDrawPaths(ImDrawList* draw_list, const ImVec2 origin, const float zoom_level)
 {
     for (const auto& path : m_parser.m_result_paths) {
         // Get the "simple" values from path
