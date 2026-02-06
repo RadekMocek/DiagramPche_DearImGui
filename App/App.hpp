@@ -48,6 +48,8 @@ private:
     bool m_do_show_demo_window{};
     bool m_is_about_popup_queued{};
 
+    bool m_do_show_grid{};
+
     std::string m_source{};
 
     Parser m_parser{};

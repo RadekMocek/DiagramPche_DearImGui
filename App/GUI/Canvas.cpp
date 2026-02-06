@@ -12,7 +12,6 @@ void App::GUICanvas()
     // .: Options and state :.
     // .:===================:.
     static ImVec2 scrolling(0.0f, 0.0f); // Scrolling means moving the canvas in this context
-    static bool is_grid_enabled = true;
 
     constexpr auto COLOR_GRID_LINE = IM_COL32(200, 200, 200, 40);
 
@@ -74,7 +73,7 @@ void App::GUICanvas()
 
     // Draw grid + all lines in the canvas
     draw_list->PushClipRect(canvas_top_left, canvas_bottom_right, true);
-    if (is_grid_enabled) {
+    if (m_do_show_grid) {
         constexpr float GRID_STEP_BASE = 100.0f;
         const float GRID_STEP = GRID_STEP_BASE * zoom_level;
 

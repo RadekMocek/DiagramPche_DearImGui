@@ -3,6 +3,7 @@
 #include <set>
 
 #include "Parser.hpp"
+#include "../Helper/Color.hpp"
 
 void Parser::Parse(const std::string& source)
 {
@@ -251,7 +252,10 @@ void Parser::SetColorFromArray(
             value_arr_ptr->at(3).value_or(0)
         };
     }
-    else ReportError(value.source(), "An array of four uchars (0–255) must follow after 'color='");
+    else if (const auto* value_str_ptr = value.as_string()) {
+        to_set = GetTupleFromString(value_str_ptr->value_or(""));
+    }
+    else ReportError(value.source(), "An array of four uchars (0–255) or RGBA hex string must follow after 'color='");
 }
 
 int Parser::GetZFromInt(const toml::node& value, const bool is_node)

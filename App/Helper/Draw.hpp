@@ -1,11 +1,9 @@
 #pragma once
 
 #include <cmath>
-#include <tuple>
 
 #include "imgui.h"
 
-// Helper helper functions :)
 inline ImVec2 ImVec2Normalized(const ImVec2 vec)
 {
     const auto magnitude = sqrtf((vec.x * vec.x) + (vec.y * vec.y));
@@ -17,13 +15,6 @@ constexpr ImVec2 ImVec2Orthogonalized(const ImVec2 vec)
     return {-vec.y, vec.x};
 }
 
-// = Color =
-constexpr ImU32 GetColorFromTuple(const std::tuple<unsigned char, unsigned char, unsigned char, unsigned char>& tup)
-{
-    return IM_COL32(std::get<0>(tup), std::get<1>(tup), std::get<2>(tup), std::get<3>(tup));
-}
-
-// = Draw =
 inline void DrawArrowTip(
     ImDrawList* draw_list,
     const ImVec2 p1,

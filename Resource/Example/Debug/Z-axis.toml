@@ -1,0 +1,84 @@
+[variables]
+s = 325
+
+[node.4]
+value = "444444\n444444\n444444\n444444"
+pivot = "left"
+xy = ["3", "center", -10, -10]
+z = 4
+size = ["s", "s"]
+color = "#E97881FF"
+
+[node.1]
+value = "111111\n111111\n111111\n111111"
+xy = ["0", "left", 60, -10]
+z = 1
+size = ["s", "s"]
+color = "#E19A83FF"
+
+[node.8]
+value = "888888\n888888\n888888\n888888"
+xy = [10, 10]
+z = 8
+size = ["s", "s"]
+color = "#F34B7DCF"
+
+[node.2]
+value = "222222\n222222\n222222\n222222"
+xy = ["1", "left", 60, -10]
+z = 2
+size = ["s", "s"]
+color = "#E38F82FF"
+
+[node.5]
+value = "555555\n555555\n555555\n555555"
+pivot = "bottom-right"
+xy = ["4", "center", 100, 11]
+z = 5
+size = ["s", "s"]
+color = "#EB6D80FF"
+
+[node.0]
+value = "000000\n000000\n000000\n000000"
+xy = ["8", "left", 50, -20]
+z = 0
+size = ["s", "s"]
+color = "#DEA584FF"
+
+[node.3]
+value = "333333\n333333\n333333\n333333"
+pivot = "left"
+xy = ["2", "center", -10, -10]
+z = 3
+size = ["s", "s"]
+color = "#E68381FF"
+
+[node.7]
+value = "777777\n777777\n777777\n777777\n"
+pivot = "bottom-right"
+xy = ["6", "center", 100, 11]
+z = 7
+size = ["s", "s"]
+color = "#F0567EFF"
+
+[node.6]
+value = "666666\n666666\n666666\n666666"
+pivot = "bottom-right"
+xy = ["5", "center", 100, 11]
+z = 6
+size = ["s", "s"]
+color = "#EE627FFF"
+
+[[path]]
+start = ["0", "center", 0, 0]
+ends = [
+    ["1", "center", 0, 0],
+    ["2", "center", 0, 0],
+    ["3", "center", 0, 0],
+    ["4", "center", 0, 0],
+    ["5", "center", 0, 0],
+    ["6", "center", 0, 0],
+    ["7", "center", 0, 0],
+    ["8", "center", 0, 0],
+]
+color = "#00627AFF"

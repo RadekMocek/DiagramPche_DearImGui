@@ -1,4 +1,5 @@
 #include "../App.hpp"
+#include "../Helper/Color.hpp"
 #include "../Helper/Draw.hpp"
 
 void App::GUICanvasDrawPaths(ImDrawList* draw_list, const ImVec2 origin, const float zoom_level)

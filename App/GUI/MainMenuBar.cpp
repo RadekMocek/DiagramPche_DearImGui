@@ -15,6 +15,23 @@ void App::GUIMainMenuBar()
     }
     // .: View :.
     if (ImGui::BeginMenu("View")) {
+        // . Grid .
+        if (ImGui::MenuItem("Grid", nullptr, m_do_show_grid)) {
+            m_do_show_grid = !m_do_show_grid;
+        }
+        // .::.
+        ImGui::EndMenu();
+    }
+    // .: Debug :.
+    if (ImGui::BeginMenu("Debug")) {
+        // .: Debug diagrams :.
+        if (ImGui::BeginMenu("Debug diagrams")) {
+            if (ImGui::MenuItem("Z-axis, out-of-order")) {
+                LoadSourceFromFile("./Resource/Example/Debug/Z-axis.toml");
+            }
+            // .::.
+            ImGui::EndMenu();
+        }
         // . Dear ImGui demo window .
         if (ImGui::MenuItem("Dear ImGui demo window", nullptr, m_do_show_demo_window)) {
             m_do_show_demo_window = !m_do_show_demo_window;

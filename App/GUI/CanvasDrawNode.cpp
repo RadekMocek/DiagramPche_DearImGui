@@ -1,6 +1,7 @@
 #include <ranges>
 
 #include "../App.hpp"
+#include "../Helper/Color.hpp"
 #include "../Helper/Draw.hpp"
 
 void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, const float zoom_level, const int font_size)
