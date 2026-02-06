@@ -1,6 +1,9 @@
 #pragma once
 
+#include <string>
+
 #include "PathpointType.hpp"
+#include "Pivot.hpp"
 
 struct Pathpoint
 {

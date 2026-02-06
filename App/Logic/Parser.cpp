@@ -99,7 +99,6 @@ void Parser::Parse(const std::string& source)
 
                     // Add node to the result collection
                     m_result_nodes_map.emplace(curr_node.id, std::move(curr_node));
-                    // Duplicate ID check was done in `ParseNode()`
                 }
             }
         }
@@ -116,21 +115,21 @@ void Parser::Parse(const std::string& source)
     while (did_anything_change) {
         did_anything_change = false;
 
-        for (const auto& [key, value] : refs) {
-            // Check if the refered ID does exist
-            if (!m_is_error && !m_result_nodes_map.contains(value)) {
-                ReportError(m_result_nodes_map[key].position.parent_id_source_region,
-                            std::format("Node '{}' is referencing non existant id: '{}'", key, value));
+        for (const auto& [dep_id, ref_id] : refs) {
+            // Check if the referred ID does exist
+            if (!m_is_error && !m_result_nodes_map.contains(ref_id)) {
+                ReportError(m_result_nodes_map[dep_id].position.parent_id_source_region,
+                            std::format("Node '{}' is referencing non existant id: '{}'", dep_id, ref_id));
             }
 
-            if (!stable_nodes.contains(key) // Is p1 unstable and
-                && stable_nodes.contains(value) // is p2 stable?
+            if (!stable_nodes.contains(dep_id) // Is p1 unstable and
+                && stable_nodes.contains(ref_id) // is p2 stable?
             ) { // Update the batch number and mark as stable
-                const auto& refered_node = m_result_nodes_map.at(value);
-                auto& dependant_node = m_result_nodes_map.at(key);
-                dependant_node.draw_batch_number = refered_node.draw_batch_number + 1;
+                const auto& referred_node = m_result_nodes_map.at(ref_id);
+                auto& dependant_node = m_result_nodes_map.at(dep_id);
+                dependant_node.draw_batch_number = referred_node.draw_batch_number + 1;
 
-                stable_nodes.insert(key);
+                stable_nodes.insert(dep_id);
                 did_anything_change = true; // We did the action in this iteration, so there will be another iteration
             }
         }
@@ -151,7 +150,6 @@ void Parser::Parse(const std::string& source)
 
     // .: Paths :.
     // .:=======:.
-    // Parse the paths
     m_result_paths.clear();
 
     if (const auto paths = toml_parsed["path"]; !!paths && paths.is_array_of_tables()) {
@@ -206,44 +204,38 @@ void Parser::SetIntFromIntOrVariable(const toml::node& value, int& to_set)
 
 void Parser::SetPositionPointFromArray(const toml::node& value, Point& to_set)
 {
-    constexpr auto err_msg_expected_array = "An array ([X, Y] or [Parent, Pivot, X, Y]) expected";
-
-    if (const auto* value_arr_ptr = value.as_array()) {
-        // [X, Y] or [Parent, Pivot, X, Y]
-        if (value_arr_ptr->size() == 2) {
-            // X
-            SetIntFromIntOrVariable(value_arr_ptr->at(0), to_set.x);
-            // Y
-            SetIntFromIntOrVariable(value_arr_ptr->at(1), to_set.y);
-        }
-        else if (value_arr_ptr->size() == 4) {
-            const auto parent_id_source_region = value_arr_ptr->at(0).source();
-            // Parent
-            if (const auto* value_arr_0_str_ptr = value_arr_ptr->at(0).as_string()) {
-                to_set.parent_id = value_arr_0_str_ptr->value_or("");
-                if (to_set.parent_id.empty()) {
-                    ReportError(parent_id_source_region, "Parent reference can't be empty");
-                }
-                // Better error reporting (self reference/non existing reference) for better diagram developer experience :)
-                to_set.parent_id_source_region = parent_id_source_region;
-            }
-            else ReportError(parent_id_source_region, "In [Parent, Pivot, X, Y], 'Parent' must be a string");
-            // Pivot
-            if (const auto* value_arr_1_str_ptr = value_arr_ptr->at(1).as_string()) {
-                SetPivotFromString(value_arr_1_str_ptr, to_set.parent_pivot);
-            }
-            else {
-                ReportError(value_arr_ptr->at(1).source(),
-                            "In [Parent, Pivot, X, Y], 'Pivot' must be a string");
-            }
-            // X
-            SetIntFromIntOrVariable(value_arr_ptr->at(2), to_set.x);
-            // Y
-            SetIntFromIntOrVariable(value_arr_ptr->at(3), to_set.y);
-        }
-        else ReportError(value.source(), err_msg_expected_array);
+    // [X, Y] or [Parent, Pivot, X, Y]
+    if (const auto* value_arr_ptr = value.as_array(); !!value_arr_ptr && value_arr_ptr->size() == 2) {
+        // X
+        SetIntFromIntOrVariable(value_arr_ptr->at(0), to_set.x);
+        // Y
+        SetIntFromIntOrVariable(value_arr_ptr->at(1), to_set.y);
     }
-    else ReportError(value.source(), err_msg_expected_array);
+    else if (!!value_arr_ptr && value_arr_ptr->size() == 4) {
+        const auto parent_id_source_region = value_arr_ptr->at(0).source();
+        // Parent
+        if (const auto* value_arr_0_str_ptr = value_arr_ptr->at(0).as_string()) {
+            to_set.parent_id = value_arr_0_str_ptr->value_or("");
+            if (to_set.parent_id.empty()) {
+                ReportError(parent_id_source_region, "Parent reference can't be empty");
+            }
+            // Better error reporting (self reference or non existing reference) for better diagram developer experience :)
+            to_set.parent_id_source_region = parent_id_source_region;
+        }
+        else ReportError(parent_id_source_region, "In [Parent, Pivot, X, Y], 'Parent' must be a string");
+        // Pivot
+        if (const auto* value_arr_1_str_ptr = value_arr_ptr->at(1).as_string()) {
+            SetPivotFromString(value_arr_1_str_ptr, to_set.parent_pivot);
+        }
+        else {
+            ReportError(value_arr_ptr->at(1).source(), "In [Parent, Pivot, X, Y], 'Pivot' must be a string");
+        }
+        // X
+        SetIntFromIntOrVariable(value_arr_ptr->at(2), to_set.x);
+        // Y
+        SetIntFromIntOrVariable(value_arr_ptr->at(3), to_set.y);
+    }
+    else ReportError(value.source(), "An array ([X, Y] or [Parent, Pivot, X, Y]) expected");
 }
 
 void Parser::SetColorFromArray(

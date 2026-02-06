@@ -1,7 +1,6 @@
 #include <ranges>
 
 #include "../App.hpp"
-#include "../Config.hpp"
 #include "../HelperFunction.hpp"
 
 void App::ModuleCanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, const float zoom_level, const int font_size)
@@ -11,7 +10,7 @@ void App::ModuleCanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, cons
 
     // We will just iterate `m_result_nodes_map` multiple times until every node was drawn; we increment `current_draw_batch_number` with each iteration.
     // If we have a node with an accordant batch number and it wasn't drawn yet, we draw it.
-    // Alternative approach would be to sort the collction first by nodes' batch number, but sorting map by value probably requires to convert it
+    // Alternative approach would be to sort the colletion first by nodes' batch number, but sorting map by value probably requires to convert it
     // to some other collection (priority queue?), which means std::moving all the node structs or doing some pointer bussiness. This works for now...
     int current_draw_batch_number = -1;
     while (m_parser.m_result_nodes_map.size() != m_canvas_nodes.size()) {
@@ -21,15 +20,23 @@ void App::ModuleCanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, cons
                 // Dear ImGui text functions take `const char*`
                 const auto label_c_str = node.value.c_str();
 
-                // This gives us the size of label if we draw it; it's used for implicit (AAB)Rectangle size
+                // This gives us the size of label if we draw it; it's used for implicit (AAB)Rectangle size and for determining the label position
                 const auto label_size = m_font_inconsolata_medium->
-                    CalcTextSizeA(font_size, FLT_MAX, -1.0f, label_c_str);
+                    CalcTextSizeA(static_cast<float>(font_size), FLT_MAX, -1.0f, label_c_str);
 
-                // This is from the line `xy=[0,0]`
+                // Get explicit or calculate implicit node size
+                const auto node_width = (node.width > 0)
+                                            ? static_cast<float>(node.width) * zoom_level
+                                            : label_size.x + 2 * node_padding;
+                const auto node_height = (node.height > 0)
+                                             ? static_cast<float>(node.height) * zoom_level
+                                             : label_size.y + 2 * node_padding;
+
+                // Get node position, this is from the line `xy = [number, number]`
                 const auto node_x = static_cast<float>(node.position.x) * zoom_level;
                 const auto node_y = static_cast<float>(node.position.y) * zoom_level;
 
-                // Move node according to its parent, if user have set some; this is where we use stored AABR from `canvas_nodes`
+                // Move node according to its parent, if the user had set some; this is where we use stored AABR from `canvas_nodes`
                 ImVec2 parent_offset(0, 0);
                 if (!node.position.parent_id.empty()) {
                     if (const auto it = m_canvas_nodes.find(node.position.parent_id); it != m_canvas_nodes.end()) {
@@ -37,10 +44,7 @@ void App::ModuleCanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, cons
                     }
                 }
 
-                const auto node_width = (node.width > 0) ? node.width * zoom_level : label_size.x + 2 * node_padding;
-                const auto node_height = (node.height > 0) ? node.height * zoom_level : label_size.y + 2 * node_padding;
-
-                // Move node according to its `pivot`, if user have set some
+                // Move node according to its `pivot`, if the user had set some
                 ImVec2 pivot_offset(0, 0);
 
                 switch (node.pivot) {
@@ -76,12 +80,13 @@ void App::ModuleCanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, cons
                     break;
                 }
 
-                // Calculate and store AABR
+                // Calculate and store the AABR
                 const ImVec2 aabr_top_left(node_x + parent_offset.x + pivot_offset.x,
                                            node_y + parent_offset.y + pivot_offset.y);
                 const ImVec2 aabr_bottom_right(aabr_top_left.x + node_width,
                                                aabr_top_left.y + node_height);
 
+                // ReSharper disable once CppUseStructuredBinding
                 auto& canvas_node = m_canvas_nodes[node.id];
                 canvas_node.top_left = aabr_top_left;
                 canvas_node.bottom_right = aabr_bottom_right;
@@ -104,11 +109,12 @@ void App::ModuleCanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, cons
                 constexpr auto COLOR_NODE = IM_COL32(0, 0, 0, 255);
                 draw_list->AddRect(draw_top_left, draw_bottom_right, COLOR_NODE, 0, 0, zoom_level);
 
-                // Draw label
+                // Draw the label
                 const auto label_left_x = draw_top_left.x + node_padding;
                 const auto label_top_y = draw_top_left.y + node_padding;
                 ImVec2 draw_label_position(label_left_x, label_top_y);
 
+                // Custom text position?
                 if (node.width > 0 || node.height > 0) {
                     // Custom width/height => `text_pos` makes sense
                     // Helper vars:
@@ -168,7 +174,7 @@ void App::ModuleCanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, cons
                 }
 
                 draw_list->AddText(m_font_inconsolata_medium,
-                                   font_size,
+                                   static_cast<float>(font_size),
                                    draw_label_position,
                                    COLOR_NODE,
                                    label_c_str);

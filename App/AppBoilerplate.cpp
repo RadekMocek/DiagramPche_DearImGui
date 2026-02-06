@@ -1,6 +1,6 @@
 #include "App.hpp"
 
-void App::GLFWErrorCallback(int error, const char* description)
+void App::GLFWErrorCallback(const int error, const char* description)
 {
     fprintf(stderr, "GLFW Error %d: %s\n", error, description);
 }

@@ -27,7 +27,6 @@ void App::ModuleBody()
 
     // "Status bar"
     constexpr auto COLOR_ERROR = IM_COL32(211, 1, 2, 255);
-    //constexpr auto COLOR_WARNING = IM_COL32(176, 66, 19, 255);
     if (m_parser.m_is_error) {
         ImGui::PushStyleColor(ImGuiCol_Text, COLOR_ERROR);
         std::ranges::replace(m_parser.m_error_description, '\n', ' ');

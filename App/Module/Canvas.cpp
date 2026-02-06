@@ -97,6 +97,7 @@ void App::ModuleCanvas()
     // AABR = axis aligned bounding rectangle :)
     // This map is used to store some additional info about nodes and also to keep track about which nodes were already drawn.
     // One thing we need to store is node's AABR. Relative nodes, which are drawn later, can then use it to determine their position. Paths also need AABR info.
+    // Stored AABRs take zoom_level into account, but not scrolling.
     m_canvas_nodes.clear();
 
     // 9 draw layers which can be set by user in TOML with values: 0, 1, 2, 3, 4, 5, 6, 7, 8

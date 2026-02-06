@@ -2,6 +2,7 @@
 
 #include <string>
 
+#include "../../Dependency/toml.hpp"
 #include "Pivot.hpp"
 
 struct Point
