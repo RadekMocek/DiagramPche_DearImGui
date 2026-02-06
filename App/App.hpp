@@ -69,5 +69,9 @@ private:
     void ModuleCanvasDrawNodes(ImDrawList* draw_list, ImVec2 origin, float zoom_level, int font_size);
     void ModuleCanvasDrawPaths(ImDrawList* draw_list, ImVec2 origin, float zoom_level);
 
+    // (ModuleCanvasDrawPaths helper method)
+    static inline void PathShift(ImVec2& point, bool& is_arrow_satisfied, const Path& path, const Pivot& pivot,
+                                 ImDrawList* draw_list, ImVec2 origin, float zoom_level, ImU32 color);
+
     void LoadSourceFromFile(const char* filename);
 };

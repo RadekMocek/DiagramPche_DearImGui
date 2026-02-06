@@ -48,8 +48,8 @@ void Parser::ParsePath(const toml::table* path_table, Path& curr_path)
                         && pathpoint_arr_ptr->at(4).is_string()
                         && (pathpoint_arr_ptr->at(5).is_integer() || pathpoint_arr_ptr->at(5).is_string())
                     ) {
-                        curr_path.path_points.emplace_back();
-                        auto& curr_pathpoint = curr_path.path_points.back();
+                        curr_path.pathpoints.emplace_back();
+                        auto& curr_pathpoint = curr_path.pathpoints.back();
                         ParsePathpointXOrY(pathpoint_arr_ptr, true, curr_pathpoint);
                         ParsePathpointXOrY(pathpoint_arr_ptr, false, curr_pathpoint);
                     }

@@ -110,7 +110,7 @@ void App::ModuleCanvas()
     draw_list->ChannelsMerge();
 
     // .: User AABR interaction :.
-    //  .:======================:.
+    // .:=======================:.
 
     // Show tooltip with Node ID on hover
     static std::string tooltip;

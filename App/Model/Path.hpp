@@ -11,7 +11,7 @@ struct Path
 {
     Point start{};
     std::vector<Point> ends{};
-    std::vector<Pathpoint> path_points{};
+    std::vector<Pathpoint> pathpoints{};
 
     int shift{};
 
@@ -21,7 +21,7 @@ struct Path
     bool do_end_arrow = true;
 
     //
-    [[nodiscard]] constexpr ImVec2 GetShiftDirection(const Pivot pivot, const float zoom_level) const
+    [[nodiscard]] constexpr ImVec2 GetShiftVector(const Pivot pivot, const float zoom_level) const
     {
         const auto sf = static_cast<float>(shift) * zoom_level;
         switch (pivot) {
