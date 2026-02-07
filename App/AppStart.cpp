@@ -50,6 +50,7 @@ pivot = "top"
 xy = ["Cache", "bottom", 0, 35]
 size = ["w", "h"]
 z = 6
+color = "#006db6FF"
 
 [node."Řídící\njednotka"]
 pivot = "top"

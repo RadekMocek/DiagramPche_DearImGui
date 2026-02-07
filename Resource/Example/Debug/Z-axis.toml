@@ -1,46 +1,46 @@
 [variables]
 s = 325
 
-[node.4]
+[node."Praesent"]
 value = "444444\n444444\n444444\n444444"
 pivot = "left"
-xy = ["3", "center", -10, -10]
+xy = [495, 635]
 z = 4
 size = ["s", "s"]
 color = "#E97881FF"
 
-[node.1]
+[node."dapibus"]
 value = "111111\n111111\n111111\n111111"
-xy = ["0", "left", 60, -10]
+xy = ["malesuada", "left", 60, -10]
 z = 1
 size = ["s", "s"]
 color = "#E19A83FF"
 
-[node.8]
+[node."enim"]
 value = "888888\n888888\n888888\n888888"
-xy = [10, 10]
+xy = [15, 40]
 z = 8
 size = ["s", "s"]
 color = "#F34B7DCF"
 
-[node.2]
+[node."arcu"]
 value = "222222\n222222\n222222\n222222"
-xy = ["1", "left", 60, -10]
+xy = [190, 490]
 z = 2
 size = ["s", "s"]
 color = "#E38F82FF"
 
-[node.5]
+[node."imperdiet"]
 value = "555555\n555555\n555555\n555555"
 pivot = "bottom-right"
-xy = ["4", "center", 100, 11]
+xy = ["Praesent", "center", 100, 11]
 z = 5
 size = ["s", "s"]
 color = "#EB6D80FF"
 
-[node.0]
+[node."malesuada"]
 value = "000000\n000000\n000000\n000000"
-xy = ["8", "left", 50, -20]
+xy = ["enim", "left", 50, -20]
 z = 0
 size = ["s", "s"]
 color = "#DEA584FF"
@@ -48,7 +48,7 @@ color = "#DEA584FF"
 [node.3]
 value = "333333\n333333\n333333\n333333"
 pivot = "left"
-xy = ["2", "center", -10, -10]
+xy = ["arcu", "center", -10, -10]
 z = 3
 size = ["s", "s"]
 color = "#E68381FF"
@@ -64,21 +64,21 @@ color = "#F0567EFF"
 [node.6]
 value = "666666\n666666\n666666\n666666"
 pivot = "bottom-right"
-xy = ["5", "center", 100, 11]
+xy = [690, 490]
 z = 6
 size = ["s", "s"]
 color = "#EE627FFF"
 
 [[path]]
-start = ["0", "center", 0, 0]
+start = ["malesuada", "center", 0, 0]
 ends = [
-    ["1", "center", 0, 0],
-    ["2", "center", 0, 0],
+    ["dapibus", "center", 0, 0],
+    ["arcu", "center", 0, 0],
     ["3", "center", 0, 0],
-    ["4", "center", 0, 0],
-    ["5", "center", 0, 0],
+    ["Praesent", "center", 0, 0],
+    ["imperdiet", "center", 0, 0],
     ["6", "center", 0, 0],
     ["7", "center", 0, 0],
-    ["8", "center", 0, 0],
+    ["enim", "center", 0, 0],
 ]
 color = "#00627AFF"

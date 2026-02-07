@@ -20,6 +20,8 @@ struct Path
     bool do_start_arrow = false;
     bool do_end_arrow = true;
 
+    int z = DRAW_LIST_CHANNEL_DEFAULT_PATH;
+
     //
     [[nodiscard]] constexpr ImVec2 GetShiftVector(const Pivot pivot, const float zoom_level) const
     {

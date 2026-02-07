@@ -5,6 +5,8 @@
 void App::GUICanvasDrawPaths(ImDrawList* draw_list, const ImVec2 origin, const float zoom_level)
 {
     for (const auto& path : m_parser.m_result_paths) {
+        draw_list->ChannelsSetCurrent(path.z);
+
         // Get the "simple" values from path
         const auto color = GetColorFromTuple(path.color);
         const auto shift = path.shift;

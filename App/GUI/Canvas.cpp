@@ -100,10 +100,9 @@ void App::GUICanvas()
 
     // 9 draw layers which can be set by user in TOML with values: 0, 1, 2, 3, 4, 5, 6, 7, 8
     draw_list->ChannelsSplit(N_DRAW_LIST_CHANNELS);
-    // Default draw layer for nodes is 4 (see Model → Node.hpp → int z)
+    // Default draw layer for nodes is 4 (Model → Node.hpp → int z)
     GUICanvasDrawNodes(draw_list, origin, zoom_level, font_size);
-    // Default layer for paths is 5
-    draw_list->ChannelsSetCurrent(DRAW_LIST_CHANNEL_DEFAULT_PATH);
+    // Default layer for paths is 5 (Model → Path.hpp → int z)
     GUICanvasDrawPaths(draw_list, origin, zoom_level);
     draw_list->ChannelsMerge();
 
