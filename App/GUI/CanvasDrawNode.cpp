@@ -3,6 +3,7 @@
 #include "../App.hpp"
 #include "../Helper/Color.hpp"
 #include "../Helper/Draw.hpp"
+#include "../Helper/DrawLayer.hpp"
 
 void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, const float zoom_level, const int font_size)
 {
@@ -99,7 +100,7 @@ void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, const f
                 const ImVec2 draw_bottom_right = origin + aabr_bottom_right;
 
                 // Do the actual drawing of the rectangle
-                draw_list->ChannelsSetCurrent(node.z);
+                draw_list->ChannelsSetCurrent(DLUserChannelToRealChannel(node.z, true));
 
                 draw_list->AddRectFilled(draw_top_left,
                                          draw_bottom_right,

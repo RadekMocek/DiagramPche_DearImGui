@@ -4,7 +4,7 @@
 
 #include "Pivot.hpp"
 #include "Point.hpp"
-#include "../Config.hpp"
+#include "../Helper/DrawLayer.hpp"
 
 struct Node
 {
@@ -32,7 +32,7 @@ struct Node
     Pivot label_position = CENTER;
 
     // = Z =
-    int z = DRAW_LIST_CHANNEL_DEFAULT_NODE;
+    int z = DL_USER_CHANNEL_DEFAULT_NODE;
 
     // = Other internal =
     int draw_batch_number = 0;

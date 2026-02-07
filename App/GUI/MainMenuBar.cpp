@@ -24,8 +24,8 @@ void App::GUIMainMenuBar()
     }
     // .: Debug :.
     if (ImGui::BeginMenu("Debug")) {
-        // .: Debug diagrams :.
-        if (ImGui::BeginMenu("Debug diagrams")) {
+        // .: Render tests :.
+        if (ImGui::BeginMenu("Render tests")) {
             if (ImGui::MenuItem("Z-axis, out-of-order")) {
                 LoadSourceFromFile("./Resource/Example/Debug/Z-axis.toml");
             }

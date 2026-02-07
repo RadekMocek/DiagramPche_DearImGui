@@ -4,6 +4,7 @@
 
 #include "Parser.hpp"
 #include "../Helper/Color.hpp"
+#include "../Helper/DrawLayer.hpp"
 
 void Parser::Parse(const std::string& source)
 {
@@ -261,9 +262,9 @@ void Parser::SetColorFromArray(
 int Parser::GetZFromInt(const toml::node& value, const bool is_node)
 {
     constexpr int min = 0;
-    constexpr int max = N_DRAW_LIST_CHANNELS - 1;
+    constexpr int max = N_DL_USER_CHANNELS - 1;
     const auto err_msg_range = std::format("An integer between {} and {} must follow after 'z='", min, max);
-    const int default_result = (is_node) ? DRAW_LIST_CHANNEL_DEFAULT_NODE : DRAW_LIST_CHANNEL_DEFAULT_PATH;
+    const int default_result = (is_node) ? DL_USER_CHANNEL_DEFAULT_NODE : DL_USER_CHANNEL_DEFAULT_PATH;
 
     if (const auto* value_int_ptr = value.as_integer()) {
         const int result = value_int_ptr->value_or(default_result);

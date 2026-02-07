@@ -2,8 +2,9 @@
 #include <cmath>
 
 #include "../App.hpp"
-#include "../Config.hpp"
+#include "../Helper/DrawLayer.hpp"
 #include "../Model/CanvasNode.hpp"
+#include "../Config.hpp"
 
 void App::GUICanvas()
 {
@@ -98,8 +99,10 @@ void App::GUICanvas()
     // Stored AABRs take zoom_level into account, but not scrolling.
     m_canvas_nodes.clear();
 
-    // 9 draw layers which can be set by user in TOML with values: 0, 1, 2, 3, 4, 5, 6, 7, 8
-    draw_list->ChannelsSplit(N_DRAW_LIST_CHANNELS);
+    // 10 draw layers which can be set by user in TOML with values: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
+    // But number of real layers is actually 20 to ensure that path is always above node when they have the same 'z' value
+    // (We use 2*z for nodes and 2*z+1 for paths)
+    draw_list->ChannelsSplit(N_DL_REAL_CHANNELS);
     // Default draw layer for nodes is 4 (Model → Node.hpp → int z)
     GUICanvasDrawNodes(draw_list, origin, zoom_level, font_size);
     // Default layer for paths is 5 (Model → Path.hpp → int z)

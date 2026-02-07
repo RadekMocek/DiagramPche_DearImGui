@@ -1,6 +1,19 @@
 [variables]
 s = 325
 
+[[path]]
+start = ["Praesent", "right", 0, 0]
+end = ["7", "right", 0, 0]
+points = [
+    ["", "", 1000, "", "", 850],
+    ["", "prev", -150, "", "prev", 0],
+    ["", "start", 150, "", "start", -150],
+    ["imperdiet", "top-right", 0, "imperdiet", "top-right", 0],
+    ["", "end", 150, "", "end", -150],
+]
+shift = 50
+z = 8
+
 [node."Praesent"]
 value = "444444\n444444\n444444\n444444"
 pivot = "left"
@@ -23,6 +36,21 @@ z = 8
 size = ["s", "s"]
 color = "#F34B7DCF"
 
+[[path]]
+start = ["Praesent", "center", 0, 0]
+ends = [
+    ["dapibus", "center", 0, 0],
+    ["malesuada", "center", 0, 0],
+    ["3", "center", 0, 0],
+    ["Praesent", "center", 0, 0],
+    ["imperdiet", "center", 0, 0],
+    ["6", "center", 0, 0],
+    ["7", "center", 0, 0],
+    ["enim", "center", 0, 0],
+]
+color = "#00627AFF"
+z = 4
+
 [node."arcu"]
 value = "222222\n222222\n222222\n222222"
 xy = [190, 490]
@@ -44,6 +72,19 @@ xy = ["enim", "left", 50, -20]
 z = 0
 size = ["s", "s"]
 color = "#DEA584FF"
+
+[[path]]
+start = ["6", "center", 0, 0]
+ends = [
+    ["dapibus", "center", 0, 0],
+    ["malesuada", "center", 0, 0],
+    ["3", "center", 0, 0],
+    ["Praesent", "center", 0, 0],
+    ["7", "center", 0, 0],
+    ["enim", "center", 0, 0],
+]
+color = "#00627AFF"
+z = 6
 
 [node.3]
 value = "333333\n333333\n333333\n333333"
@@ -82,3 +123,4 @@ ends = [
     ["enim", "center", 0, 0],
 ]
 color = "#00627AFF"
+z = 0

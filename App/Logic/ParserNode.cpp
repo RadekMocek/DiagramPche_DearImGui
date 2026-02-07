@@ -26,7 +26,7 @@ void Parser::ParseNode(const toml::table* node_table, Node& curr_node)
             }
             else ReportError(value.source(), "A string must follow after 'pivot='");
         }
-        // == color ==> array of four u8s (rgba)
+        // == color ==> array of four u8s (rgba) or RGBA hex string ("#xxxxxxxx")
         else if (key_str == "color") {
             SetColorFromArray(value, curr_node.color);
         }

@@ -65,7 +65,7 @@ void Parser::ParsePath(const toml::table* path_table, Path& curr_path)
         else if (key_str == "shift") {
             SetIntFromIntOrVariable(value, curr_path.shift);
         }
-        // == color ==> array of four u8s (rgba)
+        // == color ==> array of four u8s (rgba) or RGBA hex string ("#xxxxxxxx")
         else if (key_str == "color") {
             SetColorFromArray(value, curr_path.color);
         }

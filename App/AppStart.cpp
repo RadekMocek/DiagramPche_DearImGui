@@ -73,9 +73,9 @@ ends=[
   ["ALU", "left", 0, 0],
   ["Řídící\njednotka", "bottom",0,0]
 ]
-shift = 25
+shift = 30
 points=[
-  ["", "start", -25, "", "", 5],
+  ["", "start", -25, "", "start", -15],
   ["Datové\nregistry", "top", 0, "", "", 5],
   ["", "prev", 0, "", "end", 0]
 ]

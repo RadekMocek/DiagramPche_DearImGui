@@ -1,11 +1,12 @@
 #include "../App.hpp"
 #include "../Helper/Color.hpp"
 #include "../Helper/Draw.hpp"
+#include "../Helper/DrawLayer.hpp"
 
 void App::GUICanvasDrawPaths(ImDrawList* draw_list, const ImVec2 origin, const float zoom_level)
 {
     for (const auto& path : m_parser.m_result_paths) {
-        draw_list->ChannelsSetCurrent(path.z);
+        draw_list->ChannelsSetCurrent(DLUserChannelToRealChannel(path.z, false));
 
         // Get the "simple" values from path
         const auto color = GetColorFromTuple(path.color);
