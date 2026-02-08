@@ -29,7 +29,6 @@ void App::GUITextEditor()
         // this could be moved into AppStart if font size is not changing at runtime (or update member var on every change)
         const auto char_width_x = m_font_inconsolata_medium->CalcTextSizeA(FONT_SIZE_DEFAULT, FLT_MAX, -1.0f, "A").x;
         const auto text_line_height = ImGui::GetTextLineHeight();
-        constexpr auto COLOR_ERROR_HIGHLIGHT = IM_COL32(211, 1, 2, 80);
 
         // Using the same id to get scroll value of the InputTextMultiline and to not draw outside the text edit
         ImGui::BeginChild(TEXTEDIT_ID);

@@ -1,5 +1,15 @@
 # DiagramPche :: Dear ImGui
 
+## TODO
+
+* Get rid of 'unknown' enum values?
+* Add app icon
+* Horizontal scrolling problem (Shift + mousewheel)
+  * Can scroll like this in textedit even when all text is visible
+  * Long error → can scroll the whole app
+* ResizeX textedit not ideal, changing window size does not keep textedit:canvas ratio
+* Check \n vs \r\n
+
 ## Dependencies
 
 * [Dear ImGui](https://github.com/ocornut/imgui) ([MIT](https://github.com/ocornut/imgui/blob/master/LICENSE.txt))

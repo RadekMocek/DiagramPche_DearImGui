@@ -34,6 +34,8 @@ void App::Start()
 
     m_do_show_grid = true;
 
+    m_scrolling = SCROLLING_DEFAULT;
+
     m_source = R"""(
 [variables]
 w = 110

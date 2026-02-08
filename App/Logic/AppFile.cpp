@@ -1,4 +1,5 @@
 #include "../App.hpp"
+#include "../Config.hpp"
 
 void App::LoadSourceFromFile(const char* filename)
 {
@@ -9,4 +10,6 @@ void App::LoadSourceFromFile(const char* filename)
         stream.read(&m_source[0], static_cast<std::streamsize>(m_source.size()));
         stream.close();
     }
+
+    m_scrolling = SCROLLING_DEFAULT;
 }

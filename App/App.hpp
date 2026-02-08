@@ -56,6 +56,8 @@ private:
 
     std::unordered_map<std::string, CanvasNode> m_canvas_nodes{};
 
+    ImVec2 m_scrolling{};
+
     // = Functions =
     // Boilerplate
     static void GLFWErrorCallback(int error, const char* description);

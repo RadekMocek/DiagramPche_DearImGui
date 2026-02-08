@@ -10,18 +10,9 @@ void App::GUICanvas()
 {
     static ImGuiIO& io = ImGui::GetIO(); // For getting the mouse position
 
-    // .: Options and state :.
-    // .:===================:.
-    static ImVec2 scrolling(0.0f, 0.0f); // Scrolling means moving the canvas in this context
-
-    constexpr auto COLOR_GRID_LINE = IM_COL32(200, 200, 200, 40);
-
-    constexpr int FONT_SIZE_BASE = 18;
-    constexpr int FONT_SIZE_STEP = 4;
-    constexpr int FONT_SIZE_MIN = 6;
-    constexpr int FONT_SIZE_MAX = 30;
-
-    static int font_size = FONT_SIZE_BASE;
+    // .: State :.
+    // .:=======:.
+    static int font_size = CANVAS_FONT_SIZE_BASE;
     static float zoom_level = 1.0f;
 
     // .: Prepare ground for the canvas :.
@@ -42,7 +33,7 @@ void App::GUICanvas()
     const auto canvas_bottom_right = ImVec2(canvas_top_left.x + canvas_size.x, canvas_top_left.y + canvas_size.y);
 
     // Canvas origin position (window absolute)
-    const ImVec2 origin(canvas_top_left.x + scrolling.x, canvas_top_left.y + scrolling.y);
+    const ImVec2 origin(canvas_top_left.x + m_scrolling.x, canvas_top_left.y + m_scrolling.y);
 
     // .: User interaction :.
     // .:==================:.
@@ -54,18 +45,18 @@ void App::GUICanvas()
 
     // Mousewheel to adjust the zoom level
     if (is_hovered) {
-        const int font_size_unclamped = font_size + io.MouseWheel * FONT_SIZE_STEP;
-        font_size = std::clamp(font_size_unclamped, FONT_SIZE_MIN, FONT_SIZE_MAX);
-        zoom_level = font_size / static_cast<float>(FONT_SIZE_BASE);
+        const int font_size_unclamped = font_size + io.MouseWheel * CANVAS_FONT_SIZE_STEP;
+        font_size = std::clamp(font_size_unclamped, CANVAS_FONT_SIZE_MIN, CANVAS_FONT_SIZE_MAX);
+        zoom_level = font_size / static_cast<float>(CANVAS_FONT_SIZE_BASE);
     }
 
     // RMB drag to move the canvas ("scrolling")
     // Pan (we use a zero mouse threshold when there's no context menu)
     // You may decide to make that threshold dynamic based on whether the mouse is hovering something etc.
-    constexpr float mouse_threshold_for_pan = -1.0f;
-    if (is_active && ImGui::IsMouseDragging(ImGuiMouseButton_Right, mouse_threshold_for_pan)) {
-        scrolling.x += io.MouseDelta.x;
-        scrolling.y += io.MouseDelta.y;
+    if (constexpr float mouse_threshold_for_pan = -1.0f;
+        is_active && ImGui::IsMouseDragging(ImGuiMouseButton_Right, mouse_threshold_for_pan)) {
+        m_scrolling.x += io.MouseDelta.x;
+        m_scrolling.y += io.MouseDelta.y;
     }
 
     // .: Draw on canvas :.
@@ -75,16 +66,15 @@ void App::GUICanvas()
     // Draw grid
     draw_list->PushClipRect(canvas_top_left, canvas_bottom_right, true);
     if (m_do_show_grid) {
-        constexpr float GRID_STEP_BASE = 100.0f;
         const float GRID_STEP = GRID_STEP_BASE * zoom_level;
 
-        for (float x = fmodf(scrolling.x, GRID_STEP); x < canvas_size.x; x += GRID_STEP) { // NOLINT(*-flp30-c)
+        for (float x = fmodf(m_scrolling.x, GRID_STEP); x < canvas_size.x; x += GRID_STEP) { // NOLINT(*-flp30-c)
             draw_list->AddLine(ImVec2(canvas_top_left.x + x, canvas_top_left.y),
                                ImVec2(canvas_top_left.x + x, canvas_bottom_right.y),
                                COLOR_GRID_LINE);
         }
 
-        for (float y = fmodf(scrolling.y, GRID_STEP); y < canvas_size.y; y += GRID_STEP) { // NOLINT(*-flp30-c)
+        for (float y = fmodf(m_scrolling.y, GRID_STEP); y < canvas_size.y; y += GRID_STEP) { // NOLINT(*-flp30-c)
             draw_list->AddLine(ImVec2(canvas_top_left.x, canvas_top_left.y + y),
                                ImVec2(canvas_bottom_right.x, canvas_top_left.y + y),
                                COLOR_GRID_LINE);
@@ -113,18 +103,20 @@ void App::GUICanvas()
     // .:=======================:.
 
     // Show tooltip with Node ID on hover
-    static std::string tooltip;
-    tooltip.clear();
-    for (const auto& [key, value] : m_canvas_nodes) {
-        if (value.IsPointInsideIncl(mouse_pos_in_canvas)) {
-            // Remove newlines
-            auto key_copy = key;
-            std::ranges::replace(key_copy, '\n', ' ');
-            tooltip += ", " + key_copy;
+    if (is_hovered) {
+        static std::string tooltip;
+        tooltip.clear();
+        for (const auto& [key, value] : m_canvas_nodes) {
+            if (value.IsPointInsideIncl(mouse_pos_in_canvas)) {
+                // Remove newlines
+                auto key_copy = key;
+                std::ranges::replace(key_copy, '\n', ' ');
+                tooltip += ", " + key_copy;
+            }
         }
-    }
-    if (!tooltip.empty()) {
-        ImGui::SetTooltip("%s", tooltip.substr(2).c_str());
+        if (!tooltip.empty()) {
+            ImGui::SetTooltip("%s", tooltip.substr(2).c_str());
+        }
     }
 
     ImGui::EndChild();
