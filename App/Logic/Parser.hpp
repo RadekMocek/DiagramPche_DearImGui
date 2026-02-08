@@ -1,5 +1,6 @@
 #pragma once
 
+#include <queue>
 #include <unordered_map>
 #include <vector>
 
@@ -10,7 +11,7 @@
 class Parser
 {
 public:
-    std::unordered_map<std::string, Node> m_result_nodes_map;
+    std::priority_queue<Node> m_result_nodes_pq;
     std::vector<Path> m_result_paths;
 
     // Error report
@@ -23,6 +24,7 @@ public:
 
 private:
     std::unordered_map<std::string, int> m_variables;
+    std::unordered_map<std::string, Node> m_nodes_map;
 
     void ReportError(const toml::source_region& error_source_region, const std::string& error_description);
 

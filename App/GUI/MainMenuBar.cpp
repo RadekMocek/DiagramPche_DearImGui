@@ -1,8 +1,9 @@
 #include "../App.hpp"
+#include "../Config.hpp"
 
 void App::GUIMainMenuBar()
 {
-    ImGui::PushFont(nullptr, 16.0f);
+    ImGui::PushFont(nullptr, FONT_SIZE_MAIN_MENU_BAR);
     ImGui::BeginMainMenuBar();
     // .: File :.
     if (ImGui::BeginMenu("File")) {

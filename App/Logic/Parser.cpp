@@ -23,8 +23,9 @@ void Parser::Parse(const std::string& source)
 
     // .: Variables :.
     // .:===========:.
+    // Variables can be used to have multiple nodes with shared coordinates and/or size
     m_variables.clear();
-
+    // They are set in table [variables]
     if (const auto vars = toml_parsed["variables"]; !!vars && vars.is_table()) {
         if (const auto* vars_table = vars.as_table()) {
             for (const auto& [key, value] : *vars_table) {
@@ -38,30 +39,31 @@ void Parser::Parse(const std::string& source)
 
     // .: Nodes :.
     // .:=======:.
-    // This map is used by canvas logic to make draw commands
-    // It is `map` and not `vector` simply because it's better for the "node reference" implementation
-    m_result_nodes_map.clear();
+    // This map is used to store nodes while they are being parsed and then for checking node references and updating their draw order (more info below).
+    // After that, nodes are moved into priority queue, which is used by the canvas to draw them in correct order.
+    m_nodes_map.clear();
 
     // Each node can have its coordinates defined absolutely (xy=[10,10]) or relatively (xy=["some_id","center",10,10]).
     // For the relative option, `xy`'s first two parameters are parent node's ID and parent node's pivot.
 
-    // Dependand node will be drawn relative to parent node's pivot; to know the pivot's location, the parent node must be drawn first!
+    // Dependand node will be drawn relative to parent node's pivot; to know the pivot's location, the parent node must be drawn first! (Or at least "laid out")
     // This means we have to tell the canvas which nodes must be drawn earlier and which later – we set their `draw_batch_number`.
 
     // So we set parent's batch number to 0 and dependant's to 1? But how do we know that the parent node is not also dependant on some other node?
     // What if the parent node wasn't parsed yet? Or it does not exist? Or there is a circular dependency?
 
-    // For this to work, every node has to have some ID. If not defined by the user, implicit IDs are given: @Node0, @Node1, etc.
-    // Character '@' is therefore reserved for internal purposes and cannot be used in explicit IDs.
-    // First we traverse the TOML and set `draw_batch_number` to 0 regardless of references,
+    // For this to work, every node has to have some ID.
+    // First we traverse the TOML and set `draw_batch_number` to 0 regardless of references (except for one optimization introduced later),
     // but we remember all the references and we will update batch number of dependant nodes later.
 
     // Pairs dependant→parent
     std::unordered_map<std::string, std::string> refs{};
 
-    // IDs of nodes that are not dependant on any other node ("stable node" == its batch number is final)
+    // IDs of nodes that are not dependant on any other node or their `draw_batch_number` is final => "stable nodes"
     std::set<std::string> stable_nodes{};
 
+    // Nodes are defined as [node."id1"], [node."id2"] etc., this gives us a structure that would look like this in JSON land:
+    // "node": { "id1": { ... }, "id2": { ... } }
     if (const auto node = toml_parsed["node"]; !!node && node.is_table()) {
         if (const auto* node_table = node.as_table()) {
             for (const auto& [node_key, node_value] : *node_table) {
@@ -85,27 +87,35 @@ void Parser::Parse(const std::string& source)
                                     std::format("Node with id '{}' is referencing itself", curr_node.id));
                     }
 
-                    // If user doesn't set any text value explicitly, we use node's ID (can be rejected by setting `value=""`)
+                    // If user doesn't set any text value explicitly, we use node's ID (can be opted-out by setting `value=""`)
                     if (!curr_node.is_value_explicitly_set) {
                         curr_node.value = curr_node.id;
                     }
 
                     // Empty parent means stable node; otherwise dependant node
                     if (!curr_node.position.parent_id.empty()) {
-                        refs.insert({curr_node.id, curr_node.position.parent_id});
+                        // (Optimization) If dependant's node parent is stable, we can mark dependant node also as stable, and set the `draw_batch_number` one higher
+                        // than that of the parent. We'll be doing this later for every reference pair that does not undergo this optimization.
+                        if (const auto parent_id = curr_node.position.parent_id; stable_nodes.contains(parent_id)) {
+                            curr_node.draw_batch_number = m_nodes_map.at(parent_id).draw_batch_number + 1;
+                            stable_nodes.insert(curr_node.id);
+                        }
+                        else {
+                            refs.insert({curr_node.id, parent_id});
+                        }
                     }
                     else {
                         stable_nodes.insert(curr_node.id);
                     }
 
                     // Add node to the result collection
-                    m_result_nodes_map.emplace(curr_node.id, std::move(curr_node));
+                    m_nodes_map.emplace(curr_node.id, std::move(curr_node));
                 }
             }
         }
     }
 
-    // Now we irate over `refs` (pairs dependant→parent – p1→p2 for short):
+    // Now we irate over `refs` (pairs dependant→parent(referred); p1→p2 for short):
     // If p2 is stable and p1 is unstable, we make p1's batch number one greater than p2's batch number and mark p1 as stable.
     // Don't stop until there is a whole iteration, where we don't do this action ↑
     // (So if we have dependecies (C→B) (B→A), first iter makes B stable, second iter makes C stable, third iter does nothing => break)
@@ -118,16 +128,16 @@ void Parser::Parse(const std::string& source)
 
         for (const auto& [dep_id, ref_id] : refs) {
             // Check if the referred ID does exist
-            if (!m_is_error && !m_result_nodes_map.contains(ref_id)) {
-                ReportError(m_result_nodes_map[dep_id].position.parent_id_source_region,
+            if (!m_is_error && !m_nodes_map.contains(ref_id)) {
+                ReportError(m_nodes_map[dep_id].position.parent_id_source_region,
                             std::format("Node '{}' is referencing non existant id: '{}'", dep_id, ref_id));
             }
 
             if (!stable_nodes.contains(dep_id) // Is p1 unstable and
                 && stable_nodes.contains(ref_id) // is p2 stable?
             ) { // Update the batch number and mark as stable
-                const auto& referred_node = m_result_nodes_map.at(ref_id);
-                auto& dependant_node = m_result_nodes_map.at(dep_id);
+                const auto& referred_node = m_nodes_map.at(ref_id);
+                auto& dependant_node = m_nodes_map.at(dep_id);
                 dependant_node.draw_batch_number = referred_node.draw_batch_number + 1;
 
                 stable_nodes.insert(dep_id);
@@ -138,15 +148,21 @@ void Parser::Parse(const std::string& source)
 
     // At this point, if there are still some unresolved references, that means we have a circular reference
     // Pinpointing the exact loop would need aditional logic so we'll just fill the error message with all unstable node IDs
-    if (!m_is_error && stable_nodes.size() < m_result_nodes_map.size()) {
+    if (!m_is_error && stable_nodes.size() < m_nodes_map.size()) {
         m_error_source_region = {};
         m_error_description = "Circular reference somewhere among:";
-        for (const auto& key : m_result_nodes_map | std::views::keys) {
+        for (const auto& key : m_nodes_map | std::views::keys) {
             if (!stable_nodes.contains(key)) {
                 m_error_description += std::format(" '{}'", key);
             }
         }
         m_is_error = true;
+    }
+
+    // Move nodes from `m_nodes_map` to `m_result_nodes_pq`
+    m_result_nodes_pq = std::priority_queue<Node>();
+    for (auto& value : m_nodes_map | std::views::values) {
+        m_result_nodes_pq.push(std::move(value)); // Moved out of a map, accessing the map now means crash
     }
 
     // .: Paths :.

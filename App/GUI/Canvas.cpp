@@ -72,7 +72,7 @@ void App::GUICanvas()
     // .:================:.
     ImDrawList* draw_list = ImGui::GetWindowDrawList(); // Enables us to draw primitives
 
-    // Draw grid + all lines in the canvas
+    // Draw grid
     draw_list->PushClipRect(canvas_top_left, canvas_bottom_right, true);
     if (m_do_show_grid) {
         constexpr float GRID_STEP_BASE = 100.0f;
@@ -117,7 +117,10 @@ void App::GUICanvas()
     tooltip.clear();
     for (const auto& [key, value] : m_canvas_nodes) {
         if (value.IsPointInsideIncl(mouse_pos_in_canvas)) {
-            tooltip += ", " + key;
+            // Remove newlines
+            auto key_copy = key;
+            std::ranges::replace(key_copy, '\n', ' ');
+            tooltip += ", " + key_copy;
         }
     }
     if (!tooltip.empty()) {

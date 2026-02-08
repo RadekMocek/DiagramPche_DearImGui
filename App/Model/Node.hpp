@@ -36,4 +36,11 @@ struct Node
 
     // = Other internal =
     int draw_batch_number = 0;
+
+    // For priority queue
+    bool operator<(const Node& other) const
+    {
+        // Negative so lower `draw_batch_number` has priority in priority queue
+        return -draw_batch_number < -other.draw_batch_number;
+    }
 };
