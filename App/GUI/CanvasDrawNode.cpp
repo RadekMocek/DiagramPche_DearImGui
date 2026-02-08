@@ -42,7 +42,7 @@ void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, const f
         ImVec2 pivot_offset(0, 0);
 
         switch (node.pivot) {
-        default: // UNKNOWN (undefined) + TOPLEFT (nothing to do)
+        case TOPLEFT:
             break;
         case TOP:
             pivot_offset.x -= node_width / 2;
@@ -114,7 +114,7 @@ void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, const f
             // Helper vars:
             const ImVec2 draw_center = origin + canvas_node.center;
             switch (node.label_position) {
-            default: // UNKNOWN (undefined) + TOPLEFT (nothing to do)
+            case TOPLEFT:
                 break;
             case TOP:
                 draw_label_position = {

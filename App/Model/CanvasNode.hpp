@@ -14,7 +14,7 @@ struct CanvasNode
     {
         switch (pivot) {
         default:
-            // Undefined
+            // Unreachable (?), fallthrough
         case TOPLEFT:
             return top_left;
         case TOP:

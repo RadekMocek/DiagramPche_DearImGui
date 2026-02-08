@@ -65,7 +65,7 @@ void App::GUICanvasDrawPaths(ImDrawList* draw_list, const ImVec2 origin, const f
                 // For both coordinates apply the Pathpoint type
                 // X
                 switch (pathpoint.x_type) {
-                default: // UNKNOWN_PATHPOINTTYPE || ABSOLUTE
+                case ABSOLUTE:
                     break;
                 case REFERENCE:
                     if (const auto it = m_canvas_nodes.find(pathpoint.x_parent_id); it != m_canvas_nodes.end()) {
@@ -84,7 +84,7 @@ void App::GUICanvasDrawPaths(ImDrawList* draw_list, const ImVec2 origin, const f
                 }
                 // Y
                 switch (pathpoint.y_type) {
-                default: // UNKNOWN_PATHPOINTTYPE || ABSOLUTE
+                case ABSOLUTE:
                     break;
                 case REFERENCE:
                     if (const auto it = m_canvas_nodes.find(pathpoint.y_parent_id); it != m_canvas_nodes.end()) {

@@ -121,10 +121,14 @@ void Parser::ParsePathpointXOrY(const toml::array* pathpoint_arr_ptr, const bool
     const std::string id_str = pathpoint_arr_ptr->at(0 + arr_offset).as_string()->value_or("");
 
     PathpointType type = REFERENCE;
-    Pivot pivot = UNKNOWN_PIVOT;
+    Pivot pivot = CENTER;
     if (id_str.empty()) { // Empty ID => not a REFERENCE pathpoint type
-        type = GetPathpointTypeFromString(pathpoint_arr_ptr->at(1 + arr_offset).as_string()->value_or(""));
-        if (type == UNKNOWN_PATHPOINTTYPE) {
+        if (const auto type_opt =
+                GetPathpointTypeFromString(pathpoint_arr_ptr->at(1 + arr_offset).as_string()->value_or(""));
+            type_opt.has_value()) {
+            type = type_opt.value();
+        }
+        else {
             ReportError(pathpoint_arr_ptr->at(1 + arr_offset).source(), PATHPOINTTYPE_ERROR_MESSAGE);
         }
     }

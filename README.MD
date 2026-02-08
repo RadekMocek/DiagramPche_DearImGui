@@ -2,13 +2,14 @@
 
 ## TODO
 
-* Get rid of 'unknown' enum values?
+* ~~Replace 'unknown' enum values with std::optional~~
 * Add app icon
 * Horizontal scrolling problem (Shift + mousewheel)
   * Can scroll like this in textedit even when all text is visible
   * Long error → can scroll the whole app
 * ResizeX textedit not ideal, changing window size does not keep textedit:canvas ratio
 * Check \n vs \r\n
+* Error highlight breaks on tab
 
 ## Dependencies
 

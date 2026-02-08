@@ -28,7 +28,9 @@ struct Path
     {
         const auto sf = static_cast<float>(shift) * zoom_level;
         switch (pivot) {
-        default: // UNKNOWN_PIVOT || CENTER
+        default:
+            // Unreachable (?), fallthrough
+        case CENTER:
             return {0, 0};
         case TOPLEFT:
             return {-sf, -sf};

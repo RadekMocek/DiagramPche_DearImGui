@@ -1,11 +1,9 @@
 #pragma once
 
 #include <string>
-#include <unordered_map>
 
 enum Pivot
 {
-    UNKNOWN_PIVOT,
     TOPLEFT,
     TOP,
     TOPRIGHT,
@@ -17,22 +15,18 @@ enum Pivot
     CENTER
 };
 
-const std::unordered_map<std::string, Pivot> STRING_TO_PIVOT = {
-    {"top-left", TOPLEFT},
-    {"top", TOP},
-    {"top-right", TOPRIGHT},
-    {"right", RIGHT},
-    {"bottom-right", BOTTOMRIGHT},
-    {"bottom", BOTTOM},
-    {"bottom-left", BOTTOMLEFT},
-    {"left", LEFT},
-    {"center", CENTER},
-};
-
-inline Pivot GetPivotFromString(const std::string& pivot_str)
+inline std::optional<Pivot> GetPivotFromString(const std::string& pivot_str)
 {
-    const auto it = STRING_TO_PIVOT.find(pivot_str);
-    return it != STRING_TO_PIVOT.end() ? it->second : UNKNOWN_PIVOT;
+    if (pivot_str == "top-left") return TOPLEFT;
+    if (pivot_str == "top") return TOP;
+    if (pivot_str == "top-right") return TOPRIGHT;
+    if (pivot_str == "right") return RIGHT;
+    if (pivot_str == "bottom-right") return BOTTOMRIGHT;
+    if (pivot_str == "bottom") return BOTTOM;
+    if (pivot_str == "bottom-left") return BOTTOMLEFT;
+    if (pivot_str == "left") return LEFT;
+    if (pivot_str == "center") return CENTER;
+    return std::nullopt;
 }
 
 const std::string PIVOT_ERROR_MESSAGE =

@@ -2,7 +2,6 @@
 
 enum PathpointType
 {
-    UNKNOWN_PATHPOINTTYPE,
     REFERENCE,
     ABSOLUTE,
     START,
@@ -10,13 +9,13 @@ enum PathpointType
     PREVIOUS
 };
 
-constexpr PathpointType GetPathpointTypeFromString(const std::string& type_str)
+constexpr std::optional<PathpointType> GetPathpointTypeFromString(const std::string& type_str)
 {
     if (type_str.empty()) return ABSOLUTE;
     if (type_str == "start") return START;
     if (type_str == "end") return END;
     if (type_str == "prev") return PREVIOUS;
-    return UNKNOWN_PATHPOINTTYPE;
+    return std::nullopt;
 }
 
 const std::string PATHPOINTTYPE_ERROR_MESSAGE =

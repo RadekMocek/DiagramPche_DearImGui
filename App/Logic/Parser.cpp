@@ -195,11 +195,12 @@ void Parser::ReportError(const toml::source_region& error_source_region, const s
 
 void Parser::SetPivotFromString(const toml::value<std::string>* value_str_ptr, Pivot& to_set)
 {
-    const auto pivot = GetPivotFromString(value_str_ptr->get());
-    if (pivot == UNKNOWN_PIVOT) {
+    if (const auto pivot_opt = GetPivotFromString(value_str_ptr->get()); pivot_opt.has_value()) {
+        to_set = pivot_opt.value();
+    }
+    else {
         ReportError(value_str_ptr->source(), PIVOT_ERROR_MESSAGE);
     }
-    to_set = pivot;
 }
 
 void Parser::SetIntFromIntOrVariable(const toml::node& value, int& to_set)
