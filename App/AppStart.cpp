@@ -43,31 +43,39 @@ h = 72
 
 [node."0,0"]
 
+[node.custom_size]
+value = "it is\nwhat\nit is"
+xy = ["Datové\nregistry", "top-right", -10, 10]
+pivot = "bottom-left"
+size = [200, 150]
+label_pos = "bottom-right"
+z = 3
+
 [node.Cache]
 xy = [70, 70]
-size = ["w", "h"]
+#size = ["w", "h"]
 
 [node.ALU]
 pivot = "top"
 xy = ["Cache", "bottom", 0, 35]
-size = ["w", "h"]
+#size = ["w", "h"]
 z = 6
 color = "#006db6AF"
 
 [node."Řídící\njednotka"]
 pivot = "top"
 xy = ["ALU", "bottom", 0, 35]
-size = ["w", "h"]
+#size = ["w", "h"]
 
 [node."Datové\nregistry"]
 pivot = "left"
 xy = ["ALU", "right", 35, 0]
-size = ["w", "h"]
+#size = ["w", "h"]
 
 [node."Stavové\nregistry"]
 pivot = "left"
 xy = ["Řídící\njednotka", "right", 35, 0]
-size = ["w", "h"]
+#size = ["w", "h"]
 
 [[path]]
 start=["Cache", "left", 0, 0]

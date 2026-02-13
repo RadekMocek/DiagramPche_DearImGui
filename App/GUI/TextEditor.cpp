@@ -14,7 +14,9 @@ void App::GUITextEditor()
     const ImVec2 textedit_size(content_region_available.x * 0.5f, content_region_available.y - BOTTOM_BAR_HEIGHT);
 
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
-    ImGui::BeginChild("SourceParent", textedit_size, ImGuiChildFlags_Borders | ImGuiChildFlags_ResizeX);
+    //constexpr auto flags = ImGuiChildFlags_Borders | ImGuiChildFlags_ResizeX;
+    constexpr auto flags = ImGuiChildFlags_Borders;
+    ImGui::BeginChild("SourceParent", textedit_size, flags);
     ImGui::PopStyleVar();
 
     // TODO on altgr press looses focus -_-

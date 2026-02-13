@@ -11,6 +11,7 @@
 class Parser
 {
 public:
+    // Parsing results
     std::priority_queue<Node> m_result_nodes_pq;
     std::vector<Path> m_result_paths;
 

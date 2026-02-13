@@ -95,8 +95,8 @@ void Parser::Parse(const std::string& source)
                     // Empty parent means stable node; otherwise dependant node
                     if (!curr_node.position.parent_id.empty()) {
                         // (Optimization) If dependant's node parent is stable, we can mark dependant node also as stable, and set the `draw_batch_number` one higher
-                        // than that of the parent. We'll be doing this later for every reference pair that does not undergo this optimization.
-                        if (const auto parent_id = curr_node.position.parent_id; stable_nodes.contains(parent_id)) {
+                        // than that of the parent. (We'll be doing this later for every reference pair that does not undergo this optimization.)
+                        if (const auto& parent_id = curr_node.position.parent_id; stable_nodes.contains(parent_id)) {
                             curr_node.draw_batch_number = m_nodes_map.at(parent_id).draw_batch_number + 1;
                             stable_nodes.insert(curr_node.id);
                         }

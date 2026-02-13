@@ -108,11 +108,10 @@ void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, const f
         const auto label_top_y = draw_top_left.y + node_padding;
         ImVec2 draw_label_position(label_left_x, label_top_y);
 
-        // Custom text position?
+        // Custom label position?
         if (node.width > 0 || node.height > 0) {
-            // Custom width/height => `text_pos` makes sense
-            // Helper vars:
-            const ImVec2 draw_center = origin + canvas_node.center;
+            // Custom width/height => `label_pos` makes sense
+            const ImVec2 draw_center = origin + canvas_node.center; // Helper variable
             switch (node.label_position) {
             case TOPLEFT:
                 break;
