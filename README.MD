@@ -3,13 +3,16 @@
 ## TODO
 
 * ~~Replace 'unknown' enum values with std::optional~~
-* Add app icon
+* ~~Add app icon~~
 * Horizontal scrolling problem (Shift + mousewheel)
   * Can scroll like this in textedit even when all text is visible
   * Long error → can scroll the whole app
 * ResizeX textedit not ideal, changing window size does not keep textedit:canvas ratio
 * Check \n vs \r\n
-* Error highlight breaks on tab
+* Error highlight breaks on:
+  * Tab
+  * Textedit horizontal scroll
+* All nodes disappear instead of showing last valid nodes when TOML parsing error occurs
 
 ## Dependencies
 
@@ -19,6 +22,7 @@
 * [FreeType](https://gitlab.freedesktop.org/freetype/freetype) ([Custom](https://gitlab.freedesktop.org/freetype/freetype/-/blob/master/docs/FTL.TXT))
 * [Inconsolata](https://levien.com/type/myfonts/inconsolata.html) ([SIL Open Font](https://github.com/google/fonts/blob/main/ofl/inconsolata/OFL.txt))
 * [toml++](https://github.com/marzer/tomlplusplus) ([MIT](https://github.com/marzer/tomlplusplus/blob/master/LICENSE))
+* [stb](https://github.com/nothings/stb) ([MIT](https://github.com/nothings/stb/blob/master/LICENSE))
 
 <!--
 NODE:

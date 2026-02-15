@@ -1,5 +1,8 @@
 #include "App.hpp"
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "../Dependency/stb_image.h"
+
 void App::GLFWErrorCallback(const int error, const char* description)
 {
     fprintf(stderr, "GLFW Error %d: %s\n", error, description);
@@ -55,6 +58,11 @@ bool App::Init()
 
     glfwMakeContextCurrent(m_window);
     glfwSwapInterval(1); // Enable vsync
+
+    GLFWimage images[1];
+    images[0].pixels = stbi_load("./Resource/Icon/icon-256.png", &images[0].width, &images[0].height, nullptr, 4);
+    glfwSetWindowIcon(m_window, 1, images);
+    stbi_image_free(images[0].pixels);
 
     // Init Glad
     if (!gladLoaderLoadGL()) {
