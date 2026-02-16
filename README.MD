@@ -1,13 +1,12 @@
 # DiagramPche :: Dear ImGui
 
-## TODO
+## Problems
 
-* ~~Replace 'unknown' enum values with std::optional~~
-* ~~Add app icon~~
 * InputTextMultiline problems:
   * Loses focus on AltGR
   * Shift + mousewheel allows you to do small amount of horizontal scroll (make an issue?)
-* ResizeX textedit not ideal, changing window size does not keep textedit:canvas ratio
+    * `ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));` resolves it, but not ideal
+  * Horizontal scrolling is problematic [...](https://github.com/hoffstadt/DearPyGui/issues/2381#issuecomment-2303922790)
 * Error highlight breaks on tab
 * All nodes disappear instead of showing last valid nodes when TOML parsing error occurs
 

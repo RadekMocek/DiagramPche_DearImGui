@@ -1,5 +1,7 @@
 #include <algorithm>
 
+#include "imgui_internal.h"
+
 #include "../App.hpp"
 #include "../Config.hpp"
 
@@ -22,11 +24,29 @@ void App::GUIBody()
     // Full-viewport window
     ImGui::Begin("Main", nullptr, flags);
 
-    // Two main columns
+    // Do the TOML parse
     m_parser.Parse(m_source);
-    GUITextEditor();
+
+    // Two main columns with draggable separator between them
+    ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
+    const ImVec2 content_region_available = ImGui::GetContentRegionAvail();
+    const auto textedit_width = content_region_available.x * m_body_split_ratio;
+    // - TextEdit
+    GUITextEditor(textedit_width);
+    // - Separator
     ImGui::SameLine();
+    ImGui::InvisibleButton("BodySeparator", ImVec2(4.0f, content_region_available.y - BOTTOM_BAR_HEIGHT));
+    if (ImGui::IsItemActive()) {
+        m_body_split_ratio = (textedit_width + ImGui::GetIO().MouseDelta.x) / content_region_available.x;
+        m_body_split_ratio = ImClamp(m_body_split_ratio, 0.1f, 0.9f);
+    }
+    if (ImGui::IsItemHovered() || ImGui::IsItemActive()) {
+        ImGui::SetMouseCursor(ImGuiMouseCursor_ResizeEW);
+    }
+    ImGui::SameLine();
+    // - Canvas
     GUICanvas();
+    ImGui::PopStyleVar();
 
     // "Status bar"
     if (m_parser.m_is_error) {

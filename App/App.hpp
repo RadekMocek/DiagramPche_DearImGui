@@ -48,15 +48,15 @@ private:
     bool m_do_show_demo_window{};
     bool m_is_about_popup_queued{};
 
-    bool m_do_show_grid{};
-
+    // Body
     std::string m_source{};
-
+    float m_body_split_ratio = 0.5f;
     Parser m_parser{};
 
-    std::unordered_map<std::string, CanvasNode> m_canvas_nodes{};
-
+    // Canvas
+    bool m_do_show_grid{};
     ImVec2 m_scrolling{};
+    std::unordered_map<std::string, CanvasNode> m_canvas_nodes{};
 
     // = Functions =
     // Boilerplate
@@ -67,7 +67,7 @@ private:
     // App specific
     void GUIMainMenuBar();
     void GUIBody();
-    void GUITextEditor();
+    void GUITextEditor(float textedit_width);
 
     void GUICanvas();
     void GUICanvasDrawNodes(ImDrawList* draw_list, ImVec2 origin, float zoom_level, int font_size);

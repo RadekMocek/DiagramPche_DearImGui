@@ -4,18 +4,16 @@
 #include "../App.hpp"
 #include "../Config.hpp"
 
-void App::GUITextEditor()
+void App::GUITextEditor(const float textedit_width)
 {
     // Same ID for textedit and drawing error highlights
     constexpr auto TEXTEDIT_ID = "##Source";
 
     // Text editor must be put in a child window for resizing (moving the divider between textedit and canvas) to work (we can use a special flag)
     const auto textedit_top_left = ImGui::GetCursorScreenPos();
-    const auto content_region_available = ImGui::GetContentRegionAvail();
-    const ImVec2 textedit_size(content_region_available.x * 0.5f, content_region_available.y - BOTTOM_BAR_HEIGHT);
+    const ImVec2 textedit_size(textedit_width, ImGui::GetContentRegionAvail().y - BOTTOM_BAR_HEIGHT);
 
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
-    //constexpr auto flags = ImGuiChildFlags_Borders | ImGuiChildFlags_ResizeX;
     constexpr auto flags = ImGuiChildFlags_Borders;
     ImGui::BeginChild("SourceParent", textedit_size, flags);
     ImGui::PopStyleVar();
