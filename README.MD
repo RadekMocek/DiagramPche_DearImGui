@@ -4,14 +4,11 @@
 
 * ~~Replace 'unknown' enum values with std::optional~~
 * ~~Add app icon~~
-* Horizontal scrolling problem (Shift + mousewheel)
-  * Can scroll like this in textedit even when all text is visible
-  * Long error → can scroll the whole app
+* InputTextMultiline problems:
+  * Loses focus on AltGR
+  * Shift + mousewheel allows you to do small amount of horizontal scroll (make an issue?)
 * ResizeX textedit not ideal, changing window size does not keep textedit:canvas ratio
-* Check \n vs \r\n
-* Error highlight breaks on:
-  * Tab
-  * Textedit horizontal scroll
+* Error highlight breaks on tab
 * All nodes disappear instead of showing last valid nodes when TOML parsing error occurs
 
 ## Dependencies

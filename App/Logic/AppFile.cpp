@@ -11,5 +11,7 @@ void App::LoadSourceFromFile(const char* filename)
         stream.close();
     }
 
+    std::erase(m_source, '\r'); // \r\n → \n
+
     m_scrolling = SCROLLING_DEFAULT;
 }

@@ -1,3 +1,4 @@
+#include "imgui_internal.h"
 #include "misc/cpp/imgui_stdlib.h"
 
 #include "../App.hpp"
@@ -19,11 +20,12 @@ void App::GUITextEditor()
     ImGui::BeginChild("SourceParent", textedit_size, flags);
     ImGui::PopStyleVar();
 
-    // TODO on altgr press looses focus -_-
     ImGui::InputTextMultiline(TEXTEDIT_ID,
                               &m_source,
                               ImGui::GetContentRegionAvail(),
                               ImGuiInputTextFlags_AllowTabInput);
+
+    const auto textedit_real_id = ImGui::GetID(TEXTEDIT_ID);
 
     // == ERROR HIGHLIGHT ==
     if (m_parser.m_is_error) {
@@ -34,7 +36,8 @@ void App::GUITextEditor()
 
         // Using the same id to get scroll value of the InputTextMultiline and to not draw outside the text edit
         ImGui::BeginChild(TEXTEDIT_ID);
-        const auto textedit_scroll_offset = ImGui::GetScrollY();
+
+        const auto textedit_scroll_offset_y = ImGui::GetScrollY();
         ImDrawList* draw_list = ImGui::GetWindowDrawList();
 
         // EH == error highlight
@@ -43,8 +46,14 @@ void App::GUITextEditor()
         const auto error_x_start = static_cast<float>(EH_region.begin.column - 1);
         const auto error_x_length = static_cast<float>(EH_region.end.column) - error_x_start;
 
-        const auto EH_x_start = char_width_x * error_x_start + char_width_x / 2;
-        const auto EH_y_start = (error_y - 1) * text_line_height - textedit_scroll_offset + text_line_height / 8;
+        auto EH_x_start = char_width_x * error_x_start + char_width_x / 2;
+        const auto EH_y_start = (error_y - 1) * text_line_height - textedit_scroll_offset_y + text_line_height / 8;
+
+        // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+        // [!] using `umgui_internal.h` to make EH work with TextInput Horizontal scroll
+        const auto input_text_state = ImGui::GetInputTextState(textedit_real_id);
+        EH_x_start -= input_text_state->Scroll.x;
+        // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
         const auto EH_top_left = textedit_top_left + ImVec2(EH_x_start, EH_y_start);
         const auto EH_bottom_right = EH_top_left + ImVec2(char_width_x * error_x_length, text_line_height);
