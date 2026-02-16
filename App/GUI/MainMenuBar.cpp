@@ -7,6 +7,10 @@ void App::GUIMainMenuBar()
     ImGui::BeginMainMenuBar();
     // .: File :.
     if (ImGui::BeginMenu("File")) {
+        // . Export to SVG .
+        if (ImGui::MenuItem("Export to SVG (WIP)")) {
+            m_exporter.Start();
+        }
         // . Exit .
         if (ImGui::MenuItem("Exit", "Alt+F4")) {
             glfwSetWindowShouldClose(m_window, GLFW_TRUE);

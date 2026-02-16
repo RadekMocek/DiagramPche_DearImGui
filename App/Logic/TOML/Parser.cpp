@@ -3,8 +3,8 @@
 #include <set>
 
 #include "Parser.hpp"
-#include "../Helper/Color.hpp"
-#include "../Helper/DrawLayer.hpp"
+#include "../../Helper/Color.hpp"
+#include "../../Helper/DrawLayer.hpp"
 
 void Parser::Parse(const std::string& source)
 {
@@ -17,7 +17,9 @@ void Parser::Parse(const std::string& source)
     }
     catch (const toml::parse_error& err) {
         ReportError(err.source(), std::string(err.description()));
-        // By returning here, last valid TOML will be drawn (result collections weren't cleared yet)
+        // By returning here, last valid TOML could be drawn.
+        // But priority queue has been popped empty, and node info was std::moved from the map. So, in current state, it cannot be drawn.
+        // This is true for nodes, paths will be still drawn thanks to this return.
         return;
     }
 

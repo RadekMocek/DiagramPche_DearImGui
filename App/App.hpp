@@ -25,7 +25,8 @@
 #include "../libs/emscripten/emscripten_mainloop_stub.h"
 #endif
 
-#include "Logic/Parser.hpp"
+#include "Logic/SVG/Exporter.hpp"
+#include "Logic/TOML/Parser.hpp"
 #include "Model/CanvasNode.hpp"
 
 class App
@@ -57,6 +58,8 @@ private:
     bool m_do_show_grid{};
     ImVec2 m_scrolling{};
     std::unordered_map<std::string, CanvasNode> m_canvas_nodes{};
+
+    Exporter m_exporter{};
 
     // = Functions =
     // Boilerplate

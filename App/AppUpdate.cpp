@@ -33,4 +33,7 @@ void App::Update()
         if (ImGui::Button("Close", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
         ImGui::EndPopup();
     }
+
+    // ...
+    m_exporter.Save();
 }

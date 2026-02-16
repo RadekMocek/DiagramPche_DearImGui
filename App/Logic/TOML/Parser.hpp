@@ -4,9 +4,9 @@
 #include <unordered_map>
 #include <vector>
 
-#include "../../Dependency/toml.hpp"
-#include "../Model/Node.hpp"
-#include "../Model/Path.hpp"
+#include "../../../Dependency/toml.hpp"
+#include "../../Model/Node.hpp"
+#include "../../Model/Path.hpp"
 
 class Parser
 {

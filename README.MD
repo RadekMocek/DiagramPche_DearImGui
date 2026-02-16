@@ -8,7 +8,6 @@
     * `ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));` resolves it, but not ideal
   * Horizontal scrolling is problematic [...](https://github.com/hoffstadt/DearPyGui/issues/2381#issuecomment-2303922790)
 * Error highlight breaks on tab
-* All nodes disappear instead of showing last valid nodes when TOML parsing error occurs
 
 ## Dependencies
 
@@ -19,6 +18,7 @@
 * [Inconsolata](https://levien.com/type/myfonts/inconsolata.html) ([SIL Open Font](https://github.com/google/fonts/blob/main/ofl/inconsolata/OFL.txt))
 * [toml++](https://github.com/marzer/tomlplusplus) ([MIT](https://github.com/marzer/tomlplusplus/blob/master/LICENSE))
 * [stb](https://github.com/nothings/stb) ([MIT](https://github.com/nothings/stb/blob/master/LICENSE))
+* [simple-svg](https://github.com/adishavit/simple-svg) ([BSD-3-Clause](https://github.com/adishavit/simple-svg/blob/master/LICENSE))
 
 <!--
 NODE:
