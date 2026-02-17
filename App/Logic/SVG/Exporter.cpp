@@ -1,6 +1,6 @@
 #include "Exporter.hpp"
 
-#define Report(x) std::cout << x << '\n'
+#define Report(x) std::cout << "SVGExporter> " << x << '\n'
 
 void Exporter::Start()
 {
@@ -16,7 +16,7 @@ void Exporter::AddRect(const int z, const double x, const double y, const double
                        const std::tuple<unsigned char, unsigned char, unsigned char, unsigned char>& color)
 {
     if (!m_is_enabled) return;
-    Report("Adding rect: " << x << " " << y << " " << width << " " << height << " ...");
+    //Report("Adding rect: " << x << " " << y << " " << width << " " << height << " ...");
     m_draw_commands.push({
         z, PRIORITY_RECT,
         std::make_unique<svg::Rectangle>(svg::Point(x, y), width, height, svg::Fill(color), STROKE_BLACK)
@@ -36,12 +36,29 @@ void Exporter::AddRect(const int z, const double x, const double y, const double
     }
 }
 
-void Exporter::AddText(const int z, const double x, const double y, std::string value)
+void Exporter::AddText(const int z, const double x, const double y, const std::string& value)
 {
     if (!m_is_enabled) return;
-    Report("Adding text: '" << value << "'");
-    m_draw_commands.push(
-        {z, PRIORITY_TEXT, std::make_unique<svg::Text>(svg::Point(x, y), value, FILL_BLACK, svg::Font(12, "Inconsolata"))});
+    //Report("Adding text: '" << value << "'");
+
+    //TODO magic numbers
+    const auto font = svg::Font(17, "Inconsolata");
+    constexpr auto line_height_ratio = 1.1;
+    double y_offset = 0;
+    const auto line_height = font.getSize() * line_height_ratio;
+    const auto y_start = y - font.getSize() / 6;
+
+    std::istringstream iss(value);
+    std::string line;
+
+    while (std::getline(iss, line)) {
+        m_draw_commands.push(
+            {
+                z, PRIORITY_TEXT,
+                std::make_unique<svg::Text>(svg::Point(x, y_start + y_offset), line, FILL_BLACK, font)
+            });
+        y_offset += line_height;
+    }
 }
 
 void Exporter::Save()
@@ -68,4 +85,43 @@ void Exporter::Save()
     else {
         Report("Failed to save the file");
     }
+}
+
+void Exporter::StartPolyLine()
+{
+    if (!m_is_enabled) return;
+    Report("Starting PolyLine");
+    //m_polyline = svg::Polyline(STROKE_BLACK);
+    m_polyline_points.clear();
+}
+
+void Exporter::AddPointToPolyLine(double x, double y)
+{
+    if (!m_is_enabled) return;
+    Report("Adding point [" << x << ", " << y << "] to PolyLine");
+    m_polyline_points.emplace_back(x, y);
+
+    if (x < m_boundaries_min_x) {
+        m_boundaries_min_x = x;
+    }
+    if (x > m_boundaries_max_x) {
+        m_boundaries_max_x = x;
+    }
+    if (y < m_boundaries_min_y) {
+        m_boundaries_min_y = y;
+    }
+    if (y > m_boundaries_max_y) {
+        m_boundaries_max_y = y;
+    }
+}
+
+void Exporter::AddPolyLine(const int z)
+{
+    if (!m_is_enabled) return;
+    Report("Adding PolyLine");
+    m_draw_commands.push(
+        {
+            z, PRIORITY_LINE,
+            std::make_unique<svg::Polyline>(m_polyline_points, svg::Fill(), STROKE_BLACK)
+        });
 }

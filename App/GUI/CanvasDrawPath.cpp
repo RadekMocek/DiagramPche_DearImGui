@@ -6,7 +6,8 @@
 void App::GUICanvasDrawPaths(ImDrawList* draw_list, const ImVec2 origin, const float zoom_level)
 {
     for (const auto& path : m_parser.m_result_paths) {
-        draw_list->ChannelsSetCurrent(DLUserChannelToRealChannel(path.z, false));
+        const auto z = DLUserChannelToRealChannel(path.z, false);
+        draw_list->ChannelsSetCurrent(z);
 
         // Get the "simple" values from path
         const auto color = GetColorFromTuple(path.color);
@@ -35,6 +36,8 @@ void App::GUICanvasDrawPaths(ImDrawList* draw_list, const ImVec2 origin, const f
 
         // Foreach end point (there can be multiple end points for effective definition of multiple paths)
         for (const auto& path_end : path.ends) {
+            m_exporter.StartPolyLine();
+
             // Ready the current end point
             ImVec2 end(static_cast<float>(path_end.x) * zoom_level, static_cast<float>(path_end.y) * zoom_level);
             bool is_end_arrow_satisfied = !path.do_end_arrow;
@@ -106,6 +109,7 @@ void App::GUICanvasDrawPaths(ImDrawList* draw_list, const ImVec2 origin, const f
                 const auto p1 = prev + origin;
                 const auto p2 = curr + origin;
                 draw_list->AddLine(p1, p2, color, zoom_level);
+                m_exporter.AddPointToPolyLine(prev.x / zoom_level, prev.y / zoom_level);
 
                 if (!is_start_arrow_satisfied) {
                     DrawArrowTip(draw_list, p2, p1, zoom_level, color);
@@ -131,6 +135,8 @@ void App::GUICanvasDrawPaths(ImDrawList* draw_list, const ImVec2 origin, const f
                 DrawArrowTip(draw_list, p2, p1, zoom_level, color);
                 is_start_arrow_satisfied = true;
             }
+
+            m_exporter.AddPolyLine(z);
         }
     }
 }

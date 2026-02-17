@@ -7,9 +7,10 @@
 class Exporter
 {
 private:
-    static constexpr auto SVG_PADDING = 50;
+    static constexpr auto SVG_PADDING = 50.0f;
     static constexpr auto PRIORITY_RECT = 0;
     static constexpr auto PRIORITY_TEXT = 1;
+    static constexpr auto PRIORITY_LINE = 1;
 
     const svg::Stroke STROKE_BLACK = svg::Stroke(1, svg::Color::Black);
     const svg::Fill FILL_BLACK = svg::Fill(svg::Color::Black, 1.0);
@@ -17,7 +18,8 @@ private:
     struct DrawCommand
     {
         int z;
-        int same_z_priority; // I added this which should decide if the zs are equal, how to edit the operator< function ?
+        int same_z_priority;
+        // I added this which should decide if the zs are equal, how to edit the operator< function ?
         std::unique_ptr<svg::Shape> shape;
 
         bool operator<(const DrawCommand& other) const
@@ -37,7 +39,8 @@ private:
     double m_boundaries_max_x{};
     double m_boundaries_max_y{};
 
-    svg::Polyline m_polyline;
+    //svg::Polyline m_polyline = svg::Polyline(STROKE_BLACK);
+    std::vector<svg::Point> m_polyline_points{};
 
 public:
     //
@@ -49,10 +52,10 @@ public:
                  const std::tuple<unsigned char, unsigned char, unsigned char, unsigned char>& color);
 
     // Text
-    void AddText(int z, double x, double y, std::string value);
+    void AddText(int z, double x, double y, const std::string& value);
 
     // Line
     void StartPolyLine();
-
-    void AddPolyLine();
+    void AddPointToPolyLine(double x, double y);
+    void AddPolyLine(int z);
 };
