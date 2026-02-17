@@ -2,7 +2,7 @@
 
 ## TODO
 
-* `CanvasDrawPath.cpp`: use `ImDrawList::AddPolyline`
+* ~~`CanvasDrawPath.cpp`: use `ImDrawList::AddPolyline`~~
 * ~~SVG export: multiline text~~
 * SVG export: paths
 * SVG export: arrows
