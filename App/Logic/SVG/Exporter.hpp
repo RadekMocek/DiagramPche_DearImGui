@@ -39,7 +39,6 @@ private:
     double m_boundaries_max_x{};
     double m_boundaries_max_y{};
 
-    //svg::Polyline m_polyline = svg::Polyline(STROKE_BLACK);
     std::vector<svg::Point> m_polyline_points{};
 
 public:
@@ -57,5 +56,5 @@ public:
     // Line
     void StartPolyLine();
     void AddPointToPolyLine(double x, double y);
-    void AddPolyLine(int z);
+    void FinishPolyLine(int z, const std::tuple<unsigned char, unsigned char, unsigned char, unsigned char>& color);
 };

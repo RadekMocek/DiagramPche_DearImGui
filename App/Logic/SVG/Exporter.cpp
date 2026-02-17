@@ -12,6 +12,32 @@ void Exporter::Start()
     m_boundaries_max_y = 0;
 }
 
+void Exporter::Save()
+{
+    constexpr svg::Layout::Origin ORIGIN = svg::Layout::TopLeft;
+
+    if (!m_is_enabled) return;
+    m_is_enabled = false;
+
+    const svg::Dimensions dimensions(m_boundaries_max_x - m_boundaries_min_x + SVG_PADDING,
+                                     m_boundaries_max_y - m_boundaries_min_y + SVG_PADDING);
+    const auto layout = svg::Layout(dimensions, ORIGIN);
+    svg::Document document("test.svg", layout);
+
+    for (; !m_draw_commands.empty(); m_draw_commands.pop()) {
+        const auto& [z1, z2, shape] = m_draw_commands.top();
+        shape->offset(svg::Point(SVG_PADDING / 2, SVG_PADDING / 2));
+        document << *shape;
+    }
+
+    if (document.save()) {
+        Report("File saved successfully");
+    }
+    else {
+        Report("Failed to save the file");
+    }
+}
+
 void Exporter::AddRect(const int z, const double x, const double y, const double width, const double height,
                        const std::tuple<unsigned char, unsigned char, unsigned char, unsigned char>& color)
 {
@@ -61,37 +87,10 @@ void Exporter::AddText(const int z, const double x, const double y, const std::s
     }
 }
 
-void Exporter::Save()
-{
-    constexpr svg::Layout::Origin ORIGIN = svg::Layout::TopLeft;
-
-    if (!m_is_enabled) return;
-    m_is_enabled = false;
-
-    const svg::Dimensions dimensions(m_boundaries_max_x - m_boundaries_min_x + SVG_PADDING,
-                                     m_boundaries_max_y - m_boundaries_min_y + SVG_PADDING);
-    const auto layout = svg::Layout(dimensions, ORIGIN);
-    svg::Document document("test.svg", layout);
-
-    for (; !m_draw_commands.empty(); m_draw_commands.pop()) {
-        const auto& [z1, z2, shape] = m_draw_commands.top();
-        shape->offset(svg::Point(SVG_PADDING / 2, SVG_PADDING / 2));
-        document << *shape;
-    }
-
-    if (document.save()) {
-        Report("File saved successfully");
-    }
-    else {
-        Report("Failed to save the file");
-    }
-}
-
 void Exporter::StartPolyLine()
 {
     if (!m_is_enabled) return;
     Report("Starting PolyLine");
-    //m_polyline = svg::Polyline(STROKE_BLACK);
     m_polyline_points.clear();
 }
 
@@ -115,13 +114,15 @@ void Exporter::AddPointToPolyLine(double x, double y)
     }
 }
 
-void Exporter::AddPolyLine(const int z)
+void Exporter::FinishPolyLine(const int z,
+                              const std::tuple<unsigned char, unsigned char, unsigned char, unsigned char>& color)
 {
     if (!m_is_enabled) return;
     Report("Adding PolyLine");
+    const svg::Color svg_color(color);
     m_draw_commands.push(
         {
             z, PRIORITY_LINE,
-            std::make_unique<svg::Polyline>(m_polyline_points, svg::Fill(), STROKE_BLACK)
+            std::make_unique<svg::Polyline>(m_polyline_points, svg::Fill(), svg::Stroke(1, svg_color))
         });
 }

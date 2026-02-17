@@ -34,7 +34,8 @@ void App::GUICanvasDrawPaths(ImDrawList* draw_list, const ImVec2 origin, const f
         // One path can have multiple ends defined by the user => one [[path]] can define multiple result_paths.
         // Every result_path will be defined as vector of points Vec<Pos2> (start point, maybe some Pathpoints, end point).
         // Vector of these vectors will be given to the draw command.
-        std::vector<std::vector<ImVec2>> result_paths; //TODO no need to store this
+        std::vector<std::vector<ImVec2>> result_paths;
+        // (This could be rewritten w/o the need to store all of this in `result_paths` because each iteration is independent)
 
         // Each inner vector starts with the start point; or, if shift != 0 && start point is relative, with OG start point followed by a shifted start point
         if (!do_start_shift) {
@@ -142,7 +143,7 @@ void App::GUICanvasDrawPaths(ImDrawList* draw_list, const ImVec2 origin, const f
                 result_pathpoints.push_back(end);
             }
 
-            // DRAW
+            // DRAW current path
             if (result_pathpoints.size() >= 2) {
                 // Line from all the points
                 draw_list->AddPolyline(result_pathpoints.data(), result_pathpoints.size(), color, 0, zoom_level);
@@ -163,6 +164,14 @@ void App::GUICanvasDrawPaths(ImDrawList* draw_list, const ImVec2 origin, const f
                                  color);
                 }
             }
+        }
+        // [[path]] to SVG
+        for (const auto& result_path : result_paths) {
+            m_exporter.StartPolyLine();
+            for (const auto& point : result_path) {
+                m_exporter.AddPointToPolyLine((point.x - origin.x) / zoom_level, (point.y - origin.y) / zoom_level);
+            }
+            m_exporter.FinishPolyLine(z, path.color);
         }
     }
 }
