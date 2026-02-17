@@ -32,6 +32,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef SIMPLE_SVG_HPP
 #define SIMPLE_SVG_HPP
 
+#include <format>
 #include <fstream>
 #include <iostream>
 #include <memory>
@@ -239,6 +240,15 @@ class Color : public Serializeable
     Color(int r, int g, int b) : transparent(false), red(r), green(g), blue(b)
     {
     }
+
+    explicit Color(const std::tuple<unsigned char, unsigned char, unsigned char, unsigned char>& tup) :
+        transparent(false),
+        red(std::get<0>(tup)),
+        green(std::get<1>(tup)),
+        blue(std::get<2>(tup))
+    {
+    }
+
     explicit Color(Defaults color)
         : transparent(false), red(0), green(0), blue(0)
     {
@@ -322,19 +332,22 @@ class Color : public Serializeable
 class Fill : public Serializeable
 {
    public:
-    Fill() : color(Color::Transparent) {}
-    explicit Fill(Color::Defaults color) : color(color) {}
-    explicit Fill(const Color &color) : color(color) {}
+    Fill() : color(Color::Transparent), alpha(0.0) {}
+    explicit Fill(const Color::Defaults color, const double alpha) : color(color), alpha(alpha) {}
+    explicit Fill(const Color &color, const double alpha) : color(color), alpha(alpha) {}
+    explicit Fill(const std::tuple<unsigned char, unsigned char, unsigned char, unsigned char>& tup) : color(Color(tup)), alpha(std::get<3>(tup) / 255.0) {}
 
     std::string toString(Layout const &layout) const override
     {
         std::stringstream ss;
         ss << attribute("fill", color.toString(layout));
+        ss << attribute("style", std::format("fill-opacity:{}", alpha));
         return ss.str();
     }
 
    private:
     Color color;
+    double alpha;
 };
 
 class Stroke : public Serializeable
@@ -624,7 +637,7 @@ class Polygon : public Shape
     }
 
     explicit Polygon(Stroke const &stroke = Stroke())
-        : Shape(Fill(Color::Transparent), stroke)
+        : Shape(Fill(Color::Transparent, 0.0), stroke)
     {
     }
     Polygon &operator<<(Point const &point)
@@ -670,7 +683,7 @@ class Path : public Shape
     }
 
     explicit Path(Stroke const &stroke = Stroke())
-        : Shape(Fill(Color::Transparent), stroke)
+        : Shape(Fill(Color::Transparent, 0.0), stroke)
     {
         startNewSubPath();
     }
@@ -733,7 +746,7 @@ class Polyline : public Shape
     }
 
     explicit Polyline(Stroke const &stroke = Stroke())
-        : Shape(Fill(Color::Transparent), stroke)
+        : Shape(Fill(Color::Transparent, 0.0), stroke)
     {
     }
 
@@ -915,7 +928,7 @@ class LineChart : public Shape
         double height = dimensions->height * 1.1;
 
         // Draw the axis.
-        Polyline axis(Fill(Color::Transparent), axis_stroke);
+        Polyline axis(Fill(Color::Transparent, 0.0), axis_stroke);
         axis << Point(margin.width, margin.height + height)
              << Point(margin.width, margin.height)
              << Point(margin.width + width, margin.height);
@@ -932,7 +945,7 @@ class LineChart : public Shape
         for (unsigned i = 0; i < shifted_polyline.points.size(); ++i)
             vertices.push_back(Circle(
                 shifted_polyline.points[i], getDimensions()->height / 30.0,
-                Fill(Color::Black)));  // Use Fill instead of direct Color
+                Fill(Color::Black, 1.0)));  // Use Fill instead of direct Color
 
         return shifted_polyline.toString(layout) +
                vectorToString(vertices, layout);

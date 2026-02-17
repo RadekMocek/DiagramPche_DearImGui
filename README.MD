@@ -1,5 +1,12 @@
 # DiagramPche :: Dear ImGui
 
+## TODO
+
+* `CanvasDrawPath.cpp`: use `ImDrawList::AddPolyline`
+* SVG export: multiline text
+* SVG export: paths
+* SVG export: arrows
+
 ## Problems
 
 * InputTextMultiline problems:
@@ -18,7 +25,7 @@
 * [Inconsolata](https://levien.com/type/myfonts/inconsolata.html) ([SIL Open Font](https://github.com/google/fonts/blob/main/ofl/inconsolata/OFL.txt))
 * [toml++](https://github.com/marzer/tomlplusplus) ([MIT](https://github.com/marzer/tomlplusplus/blob/master/LICENSE))
 * [stb](https://github.com/nothings/stb) ([MIT](https://github.com/nothings/stb/blob/master/LICENSE))
-* [simple-svg](https://github.com/adishavit/simple-svg) ([BSD-3-Clause](https://github.com/adishavit/simple-svg/blob/master/LICENSE))
+* [simple-svg](https://github.com/adishavit/simple-svg) ([BSD-3-Clause](https://github.com/adishavit/simple-svg/blob/master/LICENSE)), modified to support alpha channel
 
 <!--
 NODE:

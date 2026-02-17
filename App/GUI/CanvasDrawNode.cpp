@@ -92,17 +92,19 @@ void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, const f
         const ImVec2 draw_bottom_right = origin + aabr_bottom_right;
 
         // Do the actual drawing of the rectangle
-        draw_list->ChannelsSetCurrent(DLUserChannelToRealChannel(node.z, true));
+        const auto z = DLUserChannelToRealChannel(node.z, true);
+        draw_list->ChannelsSetCurrent(z);
 
         draw_list->AddRectFilled(draw_top_left,
                                  draw_bottom_right,
                                  GetColorFromTuple(node.color),
                                  0,
                                  0);
-        m_exporter.AddRect(draw_top_left.x, draw_top_left.y, node_width, node_height);
 
-        constexpr auto COLOR_NODE = IM_COL32(0, 0, 0, 255);
-        draw_list->AddRect(draw_top_left, draw_bottom_right, COLOR_NODE, 0, 0, zoom_level);
+        constexpr auto COLOR_NODE_EDGE = IM_COL32(0, 0, 0, 255);
+        draw_list->AddRect(draw_top_left, draw_bottom_right, COLOR_NODE_EDGE, 0, 0, zoom_level);
+
+        m_exporter.AddRect(z, aabr_top_left.x, aabr_top_left.y, node_width, node_height, node.color);
 
         // Draw the label
         const auto label_left_x = draw_top_left.x + node_padding;
@@ -170,7 +172,9 @@ void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, const f
         draw_list->AddText(m_font_inconsolata_medium,
                            static_cast<float>(font_size),
                            draw_label_position,
-                           COLOR_NODE,
+                           COLOR_NODE_EDGE,
                            label_c_str);
+
+        m_exporter.AddText(z, draw_label_position.x - origin.x, draw_label_position.y - origin.y, node.value);
     }
 }
