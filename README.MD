@@ -2,19 +2,17 @@
 
 ## TODO
 
-* ~~`CanvasDrawPath.cpp`: use `ImDrawList::AddPolyline`~~
-* ~~SVG export: multiline text~~
-* ~~SVG export: paths~~
-* SVG export: arrows
+* [x] SVG export ability (Nodes, Multiline text, Paths, Arrow tips)
+* [ ] SVG export proper dialog
 
 ## Problems
 
 * InputTextMultiline problems:
   * Loses focus on AltGR
-  * Shift + mousewheel allows you to do small amount of horizontal scroll (make an issue?)
-    * `ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));` resolves it, but not ideal
+  * Shift + mousewheel allows you to do small amount of horizontal scroll ([9249](https://github.com/ocornut/imgui/issues/9249))
   * Horizontal scrolling is problematic [...](https://github.com/hoffstadt/DearPyGui/issues/2381#issuecomment-2303922790)
 * Error highlight breaks on tab
+* Hacky SVG edit
 
 ## Dependencies
 

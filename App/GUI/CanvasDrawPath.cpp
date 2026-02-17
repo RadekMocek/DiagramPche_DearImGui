@@ -5,8 +5,14 @@
 
 void App::GUICanvasDrawPaths(ImDrawList* draw_list, const ImVec2 origin, const float zoom_level)
 {
+    // For SVG export → `Exporter.DrawCommand.same_z_priority`. Arrow tips should be on the same exact "SVG layer" as their path.
+    // If there were multiple colliding paths, then without this, tips could be sorted differently than their corresponsing paths
+    // (and that could be seen if colliding paths have different colors).
+    int path_number = 0;
+
     for (const auto& path : m_parser.m_result_paths) {
         // Setup
+        path_number++;
         const auto z = DLUserChannelToRealChannel(path.z, false);
         draw_list->ChannelsSetCurrent(z);
 
@@ -171,7 +177,25 @@ void App::GUICanvasDrawPaths(ImDrawList* draw_list, const ImVec2 origin, const f
             for (const auto& point : result_path) {
                 m_exporter.AddPointToPolyLine((point.x - origin.x) / zoom_level, (point.y - origin.y) / zoom_level);
             }
-            m_exporter.FinishPolyLine(z, path.color);
+            m_exporter.FinishPolyLine(z, path_number, path.color);
+            if (result_path.size() >= 2) {
+                if (path.do_start_arrow) {
+                    m_exporter.AddArrowTip(z, path_number,
+                                           (result_path[1].x - origin.x) / zoom_level,
+                                           (result_path[1].y - origin.y) / zoom_level,
+                                           (result_path[0].x - origin.x) / zoom_level,
+                                           (result_path[0].y - origin.y) / zoom_level,
+                                           path.color);
+                }
+                if (path.do_end_arrow) {
+                    m_exporter.AddArrowTip(z, path_number,
+                                           (result_path[result_path.size() - 2].x - origin.x) / zoom_level,
+                                           (result_path[result_path.size() - 2].y - origin.y) / zoom_level,
+                                           (result_path[result_path.size() - 1].x - origin.x) / zoom_level,
+                                           (result_path[result_path.size() - 1].y - origin.y) / zoom_level,
+                                           path.color);
+                }
+            }
         }
     }
 }

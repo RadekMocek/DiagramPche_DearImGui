@@ -10,7 +10,6 @@ private:
     static constexpr auto SVG_PADDING = 50.0f;
     static constexpr auto PRIORITY_RECT = 0;
     static constexpr auto PRIORITY_TEXT = 1;
-    static constexpr auto PRIORITY_LINE = 1;
 
     const svg::Stroke STROKE_BLACK = svg::Stroke(1, svg::Color::Black);
     const svg::Fill FILL_BLACK = svg::Fill(svg::Color::Black, 1.0);
@@ -56,5 +55,10 @@ public:
     // Line
     void StartPolyLine();
     void AddPointToPolyLine(double x, double y);
-    void FinishPolyLine(int z, const std::tuple<unsigned char, unsigned char, unsigned char, unsigned char>& color);
+    void FinishPolyLine(int z, int z2,
+                        const std::tuple<unsigned char, unsigned char, unsigned char, unsigned char>& color);
+
+    // ArrowTip
+    void AddArrowTip(int z, int z2, double p1_x, double p1_y, double p2_x, double p2_y,
+                     const std::tuple<unsigned char, unsigned char, unsigned char, unsigned char>& color);
 };

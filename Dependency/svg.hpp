@@ -32,6 +32,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef SIMPLE_SVG_HPP
 #define SIMPLE_SVG_HPP
 
+#include <cmath>
 #include <format>
 #include <fstream>
 #include <iostream>
@@ -109,6 +110,22 @@ struct Point
     Point operator-(const Point &other) const
     {
         return Point(x - other.x, y - other.y);
+    }
+
+    Point operator*(const int c) const
+    {
+        return Point(x * c, y * c);
+    }
+
+    static Point normalized(const Point &other)
+    {
+        const auto magnitude = std::sqrt((other.x * other.x) + (other.y * other.y));
+        return Point(other.x / magnitude, other.y / magnitude);
+    }
+
+    static Point orthogonalized(const Point &other)
+    {
+        return Point(-other.y, other.x);
     }
 };
 inline optional<Point> getMinPoint(std::vector<Point> const &points)
@@ -336,18 +353,25 @@ class Fill : public Serializeable
     explicit Fill(const Color::Defaults color, const double alpha) : color(color), alpha(alpha) {}
     explicit Fill(const Color &color, const double alpha) : color(color), alpha(alpha) {}
     explicit Fill(const std::tuple<unsigned char, unsigned char, unsigned char, unsigned char>& tup) : color(Color(tup)), alpha(std::get<3>(tup) / 255.0) {}
+    explicit Fill(const double alpha): color(Color::Transparent), alpha(alpha / 255.0), do_stroke_hack(true) {}
 
     std::string toString(Layout const &layout) const override
     {
         std::stringstream ss;
         ss << attribute("fill", color.toString(layout));
-        ss << attribute("style", std::format("fill-opacity:{}", alpha));
+        if (do_stroke_hack) {
+            ss << attribute("style", std::format("stroke-opacity:{}", alpha));
+        }
+        else {
+            ss << attribute("style", std::format("fill-opacity:{}", alpha));
+        }
         return ss.str();
     }
 
    private:
     Color color;
     double alpha;
+    bool do_stroke_hack = false;
 };
 
 class Stroke : public Serializeable

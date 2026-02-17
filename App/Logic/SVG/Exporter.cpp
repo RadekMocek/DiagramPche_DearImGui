@@ -1,6 +1,8 @@
 #include "Exporter.hpp"
+#include "../../Config.hpp"
 
-#define Report(x) std::cout << "SVGExporter> " << x << '\n'
+#define ReportD(x) //std::cout << "SVGExporter> " << x << '\n'
+#define ReportF(x) std::cout << "SVGExporter> " << x << '\n'
 
 void Exporter::Start()
 {
@@ -31,10 +33,10 @@ void Exporter::Save()
     }
 
     if (document.save()) {
-        Report("File saved successfully");
+        ReportF("File saved successfully");
     }
     else {
-        Report("Failed to save the file");
+        ReportF("Failed to save the file");
     }
 }
 
@@ -42,7 +44,7 @@ void Exporter::AddRect(const int z, const double x, const double y, const double
                        const std::tuple<unsigned char, unsigned char, unsigned char, unsigned char>& color)
 {
     if (!m_is_enabled) return;
-    //Report("Adding rect: " << x << " " << y << " " << width << " " << height << " ...");
+    ReportD("Adding rect: " << x << " " << y << " " << width << " " << height << " ...");
     m_draw_commands.push({
         z, PRIORITY_RECT,
         std::make_unique<svg::Rectangle>(svg::Point(x, y), width, height, svg::Fill(color), STROKE_BLACK)
@@ -65,7 +67,7 @@ void Exporter::AddRect(const int z, const double x, const double y, const double
 void Exporter::AddText(const int z, const double x, const double y, const std::string& value)
 {
     if (!m_is_enabled) return;
-    //Report("Adding text: '" << value << "'");
+    ReportD("Adding text: '" << value << "'");
 
     //TODO magic numbers
     const auto font = svg::Font(17, "Inconsolata");
@@ -90,14 +92,14 @@ void Exporter::AddText(const int z, const double x, const double y, const std::s
 void Exporter::StartPolyLine()
 {
     if (!m_is_enabled) return;
-    Report("Starting PolyLine");
+    ReportD("== Starting PolyLine ==");
     m_polyline_points.clear();
 }
 
 void Exporter::AddPointToPolyLine(double x, double y)
 {
     if (!m_is_enabled) return;
-    Report("Adding point [" << x << ", " << y << "] to PolyLine");
+    ReportD("Adding point [" << x << ", " << y << "] to PolyLine");
     m_polyline_points.emplace_back(x, y);
 
     if (x < m_boundaries_min_x) {
@@ -114,15 +116,37 @@ void Exporter::AddPointToPolyLine(double x, double y)
     }
 }
 
-void Exporter::FinishPolyLine(const int z,
+void Exporter::FinishPolyLine(const int z, const int z2,
                               const std::tuple<unsigned char, unsigned char, unsigned char, unsigned char>& color)
 {
     if (!m_is_enabled) return;
-    Report("Adding PolyLine");
+    ReportD("== PolyLine done ==");
     const svg::Color svg_color(color);
     m_draw_commands.push(
         {
-            z, PRIORITY_LINE,
-            std::make_unique<svg::Polyline>(m_polyline_points, svg::Fill(), svg::Stroke(1, svg_color))
+            z, z2,
+            std::make_unique<svg::Polyline>(m_polyline_points, svg::Fill(std::get<3>(color)), svg::Stroke(1, svg_color))
         });
+}
+
+void Exporter::AddArrowTip(
+    const int z, const int z2, const double p1_x, const double p1_y, const double p2_x, const double p2_y,
+    const std::tuple<unsigned char, unsigned char, unsigned char, unsigned char>& color)
+{
+    if (!m_is_enabled) return;
+    ReportD("(Adding arrow tip)");
+
+    const svg::Point p1(p1_x, p1_y);
+    const svg::Point p2(p2_x, p2_y);
+
+    const auto p2_to_p1 = svg::Point::normalized(p1 - p2);
+    const auto point_slightly_before_p2 = p2 + p2_to_p1 * TIP_ARROW_LENGTH;
+    const auto p2_orthogonal_addition = svg::Point::orthogonalized(p2_to_p1) * TIP_ARROW_SPAN;
+
+    svg::Polygon polygon{svg::Fill(color), svg::Stroke()};
+    polygon
+        << p2
+        << point_slightly_before_p2 - p2_orthogonal_addition
+        << point_slightly_before_p2 + p2_orthogonal_addition;
+    m_draw_commands.push({z, z2, std::make_unique<svg::Polygon>(polygon)});
 }

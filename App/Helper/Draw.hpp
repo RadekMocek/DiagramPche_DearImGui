@@ -4,6 +4,8 @@
 
 #include "imgui.h"
 
+#include "../Config.hpp"
+
 inline ImVec2 ImVec2Normalized(const ImVec2 vec)
 {
     const auto magnitude = sqrtf((vec.x * vec.x) + (vec.y * vec.y));
@@ -23,10 +25,9 @@ inline void DrawArrowTip(
     const ImU32 color
 )
 {
-    // TODO magic numbers
     const auto p2_to_p1 = ImVec2Normalized(p1 - p2);
-    const auto point_slightly_before_p2 = p2 + p2_to_p1 * 12 * zoom_level;
-    const auto p2_orthogonal_addition = ImVec2Orthogonalized(p2_to_p1) * 4 * zoom_level;
+    const auto point_slightly_before_p2 = p2 + p2_to_p1 * TIP_ARROW_LENGTH * zoom_level;
+    const auto p2_orthogonal_addition = ImVec2Orthogonalized(p2_to_p1) * TIP_ARROW_SPAN * zoom_level;
     draw_list->AddTriangleFilled(p2,
                                  point_slightly_before_p2 - p2_orthogonal_addition,
                                  point_slightly_before_p2 + p2_orthogonal_addition,

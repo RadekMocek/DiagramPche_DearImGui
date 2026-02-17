@@ -22,3 +22,6 @@ constexpr int CANVAS_FONT_SIZE_MIN = 6;
 constexpr int CANVAS_FONT_SIZE_MAX = 30;
 
 constexpr float NODE_BORDER_OFFSET_BASE = 18.0f;
+
+constexpr int TIP_ARROW_LENGTH = 12;
+constexpr int TIP_ARROW_SPAN = 4;
