@@ -99,19 +99,19 @@ void App::GUICanvasDrawPaths(ImDrawList* draw_list, const ImVec2 origin, const f
                     break;
                 // AABRs in `m_canvas_nodes` are stored "zoomed and absolute", so they take zoom_level into account, but not origin.
                 // So we have to add origin here, later code depends on "originated" Pathpoint.
-                case REFERENCE:
+                case PPTYPE_REFERENCE:
                     if (const auto it = m_canvas_nodes.find(pathpoint.x_parent_id); it != m_canvas_nodes.end()) {
                         curr.x += it->second.GetExactPointFromPivot(pathpoint.x_parent_pivot).x + origin.x;
                     }
                     break;
                 // Start, End, and Prev are "originated", so we mustn't add origin here
-                case START:
+                case PPTYPE_START:
                     curr.x += start.x;
                     break;
-                case END:
+                case PPTYPE_END:
                     curr.x += shifted_end.x;
                     break;
-                case PREVIOUS:
+                case PPTYPE_PREVIOUS:
                     curr.x += prev.x;
                     break;
                 }
@@ -120,18 +120,18 @@ void App::GUICanvasDrawPaths(ImDrawList* draw_list, const ImVec2 origin, const f
                 case PPTYPE_ABSOLUTE:
                     curr.y += origin.y;
                     break;
-                case REFERENCE:
+                case PPTYPE_REFERENCE:
                     if (const auto it = m_canvas_nodes.find(pathpoint.y_parent_id); it != m_canvas_nodes.end()) {
                         curr.y += it->second.GetExactPointFromPivot(pathpoint.y_parent_pivot).y + origin.y;
                     }
                     break;
-                case START:
+                case PPTYPE_START:
                     curr.y += start.y;
                     break;
-                case END:
+                case PPTYPE_END:
                     curr.y += shifted_end.y;
                     break;
-                case PREVIOUS:
+                case PPTYPE_PREVIOUS:
                     curr.y += prev.y;
                     break;
                 }
@@ -266,18 +266,18 @@ void App::GUICanvasDrawPaths(ImDrawList* draw_list, const ImVec2 origin, const f
                 switch (pathpoint.x_type) {
                 case PPTYPE_ABSOLUTE:
                     break;
-                case REFERENCE:
+                case PPTYPE_REFERENCE:
                     if (const auto it = m_canvas_nodes.find(pathpoint.x_parent_id); it != m_canvas_nodes.end()) {
                         curr.x += it->second.GetExactPointFromPivot(pathpoint.x_parent_pivot).x;
                     }
                     break;
-                case START:
+                case PPTYPE_START:
                     curr.x += start.x;
                     break;
-                case END:
+                case PPTYPE_END:
                     curr.x += end.x;
                     break;
-                case PREVIOUS:
+                case PPTYPE_PREVIOUS:
                     curr.x += prev.x;
                     break;
                 }
@@ -285,18 +285,18 @@ void App::GUICanvasDrawPaths(ImDrawList* draw_list, const ImVec2 origin, const f
                 switch (pathpoint.y_type) {
                 case PPTYPE_ABSOLUTE:
                     break;
-                case REFERENCE:
+                case PPTYPE_REFERENCE:
                     if (const auto it = m_canvas_nodes.find(pathpoint.y_parent_id); it != m_canvas_nodes.end()) {
                         curr.y += it->second.GetExactPointFromPivot(pathpoint.y_parent_pivot).y;
                     }
                     break;
-                case START:
+                case PPTYPE_START:
                     curr.y += start.y;
                     break;
-                case END:
+                case PPTYPE_END:
                     curr.y += end.y;
                     break;
-                case PREVIOUS:
+                case PPTYPE_PREVIOUS:
                     curr.y += prev.y;
                     break;
                 }

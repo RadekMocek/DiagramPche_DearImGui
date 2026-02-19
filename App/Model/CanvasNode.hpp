@@ -15,23 +15,23 @@ struct CanvasNode
         switch (pivot) {
         default:
             // Unreachable (?), fallthrough
-        case TOPLEFT:
+        case PIVOT_TOPLEFT:
             return top_left;
-        case TOP:
+        case PIVOT_TOP:
             return {center.x, top_left.y};
-        case TOPRIGHT:
+        case PIVOT_TOPRIGHT:
             return {bottom_right.x, top_left.y};
-        case RIGHT:
+        case PIVOT_RIGHT:
             return {bottom_right.x, center.y};
-        case BOTTOMRIGHT:
+        case PIVOT_BOTTOMRIGHT:
             return bottom_right;
-        case BOTTOM:
+        case PIVOT_BOTTOM:
             return {center.x, bottom_right.y};
-        case BOTTOMLEFT:
+        case PIVOT_BOTTOMLEFT:
             return {top_left.x, bottom_right.y};
-        case LEFT:
+        case PIVOT_LEFT:
             return {top_left.x, center.y};
-        case CENTER:
+        case PIVOT_CENTER:
             return center;
         }
     }

@@ -30,23 +30,23 @@ struct Path
         switch (pivot) {
         default:
             // Unreachable (?), fallthrough
-        case CENTER:
+        case PIVOT_CENTER:
             return {0, 0};
-        case TOPLEFT:
+        case PIVOT_TOPLEFT:
             return {-sf, -sf};
-        case TOP:
+        case PIVOT_TOP:
             return {0, -sf};
-        case TOPRIGHT:
+        case PIVOT_TOPRIGHT:
             return {+sf, -sf};
-        case RIGHT:
+        case PIVOT_RIGHT:
             return {+sf, 0};
-        case BOTTOMRIGHT:
+        case PIVOT_BOTTOMRIGHT:
             return {+sf, +sf};
-        case BOTTOM:
+        case PIVOT_BOTTOM:
             return {0, +sf};
-        case BOTTOMLEFT:
+        case PIVOT_BOTTOMLEFT:
             return {-sf, +sf};
-        case LEFT:
+        case PIVOT_LEFT:
             return {-sf, 0};
         }
     }

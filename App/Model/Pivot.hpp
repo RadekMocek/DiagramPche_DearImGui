@@ -4,28 +4,28 @@
 
 enum Pivot
 {
-    TOPLEFT,
-    TOP,
-    TOPRIGHT,
-    RIGHT,
-    BOTTOMRIGHT,
-    BOTTOM,
-    BOTTOMLEFT,
-    LEFT,
-    CENTER
+    PIVOT_TOPLEFT,
+    PIVOT_TOP,
+    PIVOT_TOPRIGHT,
+    PIVOT_RIGHT,
+    PIVOT_BOTTOMRIGHT,
+    PIVOT_BOTTOM,
+    PIVOT_BOTTOMLEFT,
+    PIVOT_LEFT,
+    PIVOT_CENTER
 };
 
 inline std::optional<Pivot> GetPivotFromString(const std::string& pivot_str)
 {
-    if (pivot_str == "top-left") return TOPLEFT;
-    if (pivot_str == "top") return TOP;
-    if (pivot_str == "top-right") return TOPRIGHT;
-    if (pivot_str == "right") return RIGHT;
-    if (pivot_str == "bottom-right") return BOTTOMRIGHT;
-    if (pivot_str == "bottom") return BOTTOM;
-    if (pivot_str == "bottom-left") return BOTTOMLEFT;
-    if (pivot_str == "left") return LEFT;
-    if (pivot_str == "center") return CENTER;
+    if (pivot_str == "top-left") return PIVOT_TOPLEFT;
+    if (pivot_str == "top") return PIVOT_TOP;
+    if (pivot_str == "top-right") return PIVOT_TOPRIGHT;
+    if (pivot_str == "right") return PIVOT_RIGHT;
+    if (pivot_str == "bottom-right") return PIVOT_BOTTOMRIGHT;
+    if (pivot_str == "bottom") return PIVOT_BOTTOM;
+    if (pivot_str == "bottom-left") return PIVOT_BOTTOMLEFT;
+    if (pivot_str == "left") return PIVOT_LEFT;
+    if (pivot_str == "center") return PIVOT_CENTER;
     return std::nullopt;
 }
 

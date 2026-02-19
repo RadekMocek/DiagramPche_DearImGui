@@ -42,33 +42,33 @@ void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, const f
         ImVec2 pivot_offset(0, 0);
 
         switch (node.pivot) {
-        case TOPLEFT:
+        case PIVOT_TOPLEFT:
             break;
-        case TOP:
+        case PIVOT_TOP:
             pivot_offset.x -= node_width / 2;
             break;
-        case TOPRIGHT:
+        case PIVOT_TOPRIGHT:
             pivot_offset.x -= node_width;
             break;
-        case RIGHT:
+        case PIVOT_RIGHT:
             pivot_offset.x -= node_width;
             pivot_offset.y -= node_height / 2;
             break;
-        case BOTTOMRIGHT:
+        case PIVOT_BOTTOMRIGHT:
             pivot_offset.x -= node_width;
             pivot_offset.y -= node_height;
             break;
-        case BOTTOM:
+        case PIVOT_BOTTOM:
             pivot_offset.x -= node_width / 2;
             pivot_offset.y -= node_height;
             break;
-        case BOTTOMLEFT:
+        case PIVOT_BOTTOMLEFT:
             pivot_offset.y -= node_height;
             break;
-        case LEFT:
+        case PIVOT_LEFT:
             pivot_offset.y -= node_height / 2;
             break;
-        case CENTER:
+        case PIVOT_CENTER:
             pivot_offset.x -= node_width / 2;
             pivot_offset.y -= node_height / 2;
             break;
@@ -121,51 +121,51 @@ void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, const f
             // Custom width/height => `label_pos` makes sense
             const ImVec2 draw_center = origin + canvas_node.center; // Helper variable
             switch (node.label_position) {
-            case TOPLEFT:
+            case PIVOT_TOPLEFT:
                 break;
-            case TOP:
+            case PIVOT_TOP:
                 draw_label_position = {
                     draw_center.x - label_size.x / 2,
                     label_top_y
                 };
                 break;
-            case TOPRIGHT:
+            case PIVOT_TOPRIGHT:
                 draw_label_position = {
                     draw_bottom_right.x - label_size.x - node_padding,
                     label_top_y
                 };
                 break;
-            case RIGHT:
+            case PIVOT_RIGHT:
                 draw_label_position = {
                     draw_bottom_right.x - label_size.x - node_padding,
                     draw_center.y - label_size.y / 2
                 };
                 break;
-            case BOTTOMRIGHT:
+            case PIVOT_BOTTOMRIGHT:
                 draw_label_position = {
                     draw_bottom_right.x - label_size.x - node_padding,
                     draw_bottom_right.y - label_size.y - node_padding
                 };
                 break;
-            case BOTTOM:
+            case PIVOT_BOTTOM:
                 draw_label_position = {
                     draw_center.x - label_size.x / 2,
                     draw_bottom_right.y - label_size.y - node_padding
                 };
                 break;
-            case BOTTOMLEFT:
+            case PIVOT_BOTTOMLEFT:
                 draw_label_position = {
                     label_left_x,
                     draw_bottom_right.y - label_size.y - node_padding
                 };
                 break;
-            case LEFT:
+            case PIVOT_LEFT:
                 draw_label_position = {
                     label_left_x,
                     draw_center.y - label_size.y / 2
                 };
                 break;
-            case CENTER:
+            case PIVOT_CENTER:
                 draw_label_position = {
                     draw_center.x - label_size.x / 2,
                     draw_center.y - label_size.y / 2

@@ -19,7 +19,7 @@ struct Node
     Point position{};
 
     // = Pivot =
-    Pivot pivot = TOPLEFT;
+    Pivot pivot = PIVOT_TOPLEFT;
 
     // = Color =
     std::tuple<unsigned char, unsigned char, unsigned char, unsigned char> color = {255, 255, 255, 255};
@@ -29,7 +29,7 @@ struct Node
     int height{};
 
     // = Label pos =
-    Pivot label_position = CENTER;
+    Pivot label_position = PIVOT_CENTER;
 
     // = Z =
     int z = DL_USER_CHANNEL_DEFAULT_NODE;

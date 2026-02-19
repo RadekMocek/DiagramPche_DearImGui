@@ -120,8 +120,8 @@ void Parser::ParsePathpointXOrY(const toml::array* pathpoint_arr_ptr, const bool
 
     const std::string id_str = pathpoint_arr_ptr->at(0 + arr_offset).as_string()->value_or("");
 
-    PathpointType type = REFERENCE;
-    Pivot pivot = CENTER;
+    PathpointType type = PPTYPE_REFERENCE;
+    Pivot pivot = PIVOT_CENTER;
     if (id_str.empty()) { // Empty ID => not a REFERENCE pathpoint type
         if (const auto type_opt =
                 GetPathpointTypeFromString(pathpoint_arr_ptr->at(1 + arr_offset).as_string()->value_or(""));
