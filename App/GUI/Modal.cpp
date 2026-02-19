@@ -68,6 +68,12 @@ void App::GUIModal()
         ImGui::SameLine();
         ImGui::RadioButton("Open", &m_action_after_export_choice, ActionAfterExport_OpenFile);
 
+#ifndef _WIN32
+        ImGui::Text((m_action_after_export_choice == ActionAfterExport_DoNothing)
+                        ? ""
+                        : "Package `xdg-utils` will be used for that.");
+#endif
+
         ImGui::Dummy(ImVec2(0.0f, 20.0f));
 
         ImGui::BeginDisabled(!can_export);

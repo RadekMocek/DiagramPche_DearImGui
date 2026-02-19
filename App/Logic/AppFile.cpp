@@ -33,13 +33,18 @@ void App::ShowFileInFileManager(const std::string& filename)
         CoTaskMemFree(pidl);
     }
 #else
-    // This opens new window everytime, even if window with same path already exists.
-    // It also cannot select the file in the folder.
-    // I could call something like "nemo {absolute_path} &", but because of the '&' at the end,
-    // I cannot get the error code to check if nemo is not installed and use some fallback option.
-    // (Without the '&' it freezes my app until nemo is closed)
-    // Using fork-exec is probably the solution to this problem, but I'm not going to that rabbit hole right now.
-    std::system(std::format("xdg-open {}", absolute_path.parent_path().string()).c_str());
+    if (access("/usr/bin/nemo", X_OK) == 0) {
+        // Nemo is the Cinnamon's default file manager, by calling this instead of `xdg-open`, it highlights the file.
+        // Sadly, it still opens new window every time, even when window with that path already exists.
+        std::system(std::format("nemo --existing-window {} >/dev/null 2>&1", absolute_path.string()).c_str());
+        // This could be done for every file manager, but I only use Mint right now so there's no way of testing it.
+    }
+    else {
+        // This opens new window everytime, even if window with same path already exists. It also can't select the file in the folder.
+        // `xdg-utils` is usually installed so this is a good fallback option.
+        std::system(std::format("xdg-open {}", absolute_path.parent_path().string()).c_str());
+        std::cout << "JO";
+    }
 #endif
 }
 
