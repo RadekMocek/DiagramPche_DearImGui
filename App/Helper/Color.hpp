@@ -24,3 +24,12 @@ GetTupleFromString(const std::string& color_str)
     }
     return {0, 0, 0, 0};
 }
+
+/*
+constexpr std::string TupleToRGBAHex(const std::tuple<unsigned char, unsigned char, unsigned char, unsigned char>& tup)
+{
+char result[10];
+std::sprintf(result, "#%02X%02X%02X%02X", std::get<0>(tup), std::get<1>(tup), std::get<2>(tup), std::get<3>(tup));
+return result;
+}
+*/

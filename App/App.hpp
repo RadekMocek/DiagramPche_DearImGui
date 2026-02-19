@@ -6,6 +6,7 @@
 
 #include <cstdio>
 #include <string>
+#include <iostream>
 
 #define GL_SILENCE_DEPRECATION
 #if defined(IMGUI_IMPL_OPENGL_ES2)
@@ -37,6 +38,12 @@ public:
     void Run();
 
 private:
+    // Helper structs / enums =
+    enum ActionAfterExport
+    {
+        ActionAfterExport_DoNothing, ActionAfterExport_OpenFolder, ActionAfterExport_OpenFile
+    };
+
     // = Members =
     GLFWwindow* m_window{};
     const ImVec4 m_clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
@@ -46,8 +53,7 @@ private:
     const char* m_window_title = "Untitled – DiagramPche :: Dear ImGui";
     const bool m_is_dark_mode = false;
 
-    bool m_do_show_demo_window{};
-    bool m_is_about_popup_queued{};
+    bool m_do_show_demo_window = false;
 
     // Body
     std::string m_source{};
@@ -59,7 +65,15 @@ private:
     ImVec2 m_scrolling{};
     std::unordered_map<std::string, CanvasNode> m_canvas_nodes{};
 
+    // Modals
+    bool m_is_queued_popup_about = false;
+    bool m_is_queued_popup_export = false;
+    bool m_is_queued_popup_error = false;
+    std::string m_modal_error_message{};
+
     Exporter m_exporter{};
+    std::string m_path_export;
+    int m_action_after_export_choice;
 
     // = Functions =
     // Boilerplate
@@ -76,5 +90,17 @@ private:
     void GUICanvasDrawNodes(ImDrawList* draw_list, ImVec2 origin, float zoom_level, int font_size);
     void GUICanvasDrawPaths(ImDrawList* draw_list, ImVec2 origin, float zoom_level);
 
+    void GUIModal();
+
+    // File
     void LoadSourceFromFile(const char* filename);
+    static void ShowFileInFileManager(const std::string& filename);
+    static void OpenFile(const std::string& filename);
+
+    //
+    void ShowErrorModal(const std::string& error_message)
+    {
+        m_is_queued_popup_error = true;
+        m_modal_error_message = error_message;
+    }
 };

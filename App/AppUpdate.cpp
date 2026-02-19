@@ -15,25 +15,22 @@ void App::Update()
         ImGui::PopFont();
     }
 
-    // .: About modal :.
-    constexpr auto MODAL_ABOUT_NAME = "About##modal";
-
-    if (m_is_about_popup_queued) {
-        m_is_about_popup_queued = false;
-        ImGui::OpenPopup(MODAL_ABOUT_NAME);
-    }
-    // (Always center this window when appearing)
-    const ImVec2 center = ImGui::GetMainViewport()->GetCenter();
-    ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
-    if (ImGui::BeginPopupModal(MODAL_ABOUT_NAME, nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
-        ImGui::Text("DiagramPche :: Dear ImGui");
-        ImGui::TextLinkOpenURL("github.com/RadekMocek/DiagramPche_DearImGui",
-                               "https://github.com/RadekMocek/DiagramPche_DearImGui");
-        ImGui::Dummy(ImVec2(0.0f, 20.0f));
-        if (ImGui::Button("Close", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
-        ImGui::EndPopup();
+    // Must be called before modals because Export modal starts the exporter
+    if (m_exporter.is_enabled()) {
+        if (m_exporter.Save()) {
+            if (m_action_after_export_choice == ActionAfterExport_OpenFolder) {
+                ShowFileInFileManager(m_path_export);
+            }
+            else if (m_action_after_export_choice == ActionAfterExport_OpenFile) {
+                OpenFile(m_path_export);
+            }
+        }
+        else {
+            ShowErrorModal(
+                "SVG file could not be created.\nMaybe the specified path contained some non-existing directories or forbidden characters?");
+        }
     }
 
-    // ...
-    m_exporter.Save();
+    // .: Modals :.
+    GUIModal();
 }

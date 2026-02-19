@@ -14,6 +14,9 @@ private:
     const svg::Stroke STROKE_BLACK = svg::Stroke(1, svg::Color::Black);
     const svg::Fill FILL_BLACK = svg::Fill(svg::Color::Black, 1.0);
 
+    svg::Font FONT = svg::Font(18, "Inconsolata");
+    double LINE_HEIGHT = svg::Text(svg::Point(0, 0), "A", FILL_BLACK, FONT).getBoundingBox().size.height;
+
     struct DrawCommand
     {
         int z;
@@ -31,6 +34,7 @@ private:
     };
 
     bool m_is_enabled{};
+    std::string m_path;
     std::priority_queue<DrawCommand> m_draw_commands;
 
     double m_boundaries_min_x{};
@@ -41,9 +45,11 @@ private:
     std::vector<svg::Point> m_polyline_points{};
 
 public:
+    [[nodiscard]] bool is_enabled() const { return m_is_enabled; }
+
     //
-    void Start();
-    void Save();
+    void Start(const std::string& path);
+    bool Save();
 
     // Rectangle
     void AddRect(int z, double x, double y, double width, double height,

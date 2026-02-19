@@ -3,6 +3,10 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "../Dependency/stb_image.h"
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
 void App::GLFWErrorCallback(const int error, const char* description)
 {
     fprintf(stderr, "GLFW Error %d: %s\n", error, description);
@@ -10,6 +14,17 @@ void App::GLFWErrorCallback(const int error, const char* description)
 
 bool App::Init()
 {
+#ifdef _WIN32
+    // Initializing the COM library for use by this thread so I can use `SHParseDisplayName` and `SHOpenFolderAndSelectItems` later.
+    // With those functions I can open explorer with highlighted item (1) and reuse existing explorer window if it already has same path opened (2).
+    // I was able to come up with simplier solutions, but they were capable of either (1) or (2), not both.
+    // Without calling this, it still works, but docs say you have to call this, so idk.
+    // Docs also say you have to uninit this later, so I do that at the end of `App::Run()`.
+    if (const HRESULT hr_com_init = CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED); hr_com_init != S_OK) {
+        std::cerr << "CoInitializeEx != S_OK\n";
+    }
+#endif
+
     glfwSetErrorCallback(GLFWErrorCallback);
     if (!glfwInit()) {
         return false;
@@ -160,4 +175,9 @@ void App::Run()
 
     glfwDestroyWindow(m_window);
     glfwTerminate();
+
+#ifdef _WIN32
+    // See begin of `App::Init()`.
+    CoUninitialize();
+#endif
 }

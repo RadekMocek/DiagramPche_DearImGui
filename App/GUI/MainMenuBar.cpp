@@ -8,8 +8,8 @@ void App::GUIMainMenuBar()
     // .: File :.
     if (ImGui::BeginMenu("File")) {
         // . Export to SVG .
-        if (ImGui::MenuItem("Export to SVG (WIP)")) {
-            m_exporter.Start();
+        if (ImGui::MenuItem("Export to SVG")) {
+            m_is_queued_popup_export = true;
         }
         // . Exit .
         if (ImGui::MenuItem("Exit", "Alt+F4")) {
@@ -56,7 +56,7 @@ void App::GUIMainMenuBar()
         }
         // . About .
         if (ImGui::MenuItem("About")) {
-            m_is_about_popup_queued = true;
+            m_is_queued_popup_about = true;
         }
         // .::.
         ImGui::EndMenu();

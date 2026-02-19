@@ -13,6 +13,7 @@
   * Horizontal scrolling is problematic [...](https://github.com/hoffstadt/DearPyGui/issues/2381#issuecomment-2303922790)
 * Error highlight breaks on tab
 * Hacky SVG edit
+  * It seems that only modern web browsers support svg fill transparency via rgba(r,g,b,a) or #RRGGBBAA, so I'm using the style="..." option, which the svg library wasn't made for, hence the "hack"
 
 ## Dependencies
 

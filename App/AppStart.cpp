@@ -1,3 +1,5 @@
+#include <filesystem>
+
 #include "App.hpp"
 #include "Config.hpp"
 
@@ -20,21 +22,22 @@ void App::Start()
     //ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf");
     //IM_ASSERT(font != nullptr);
 
-    const ImGuiIO& io = ImGui::GetIO();
+    ImGuiIO& io = ImGui::GetIO();
 
     m_font_inconsolata_medium = io.Fonts->AddFontFromFileTTF("./Resource/Font/Inconsolata-Medium.ttf",
                                                              FONT_SIZE_DEFAULT);
 
     IM_ASSERT(m_font_inconsolata_medium != nullptr);
 
+    // App config
+    io.ConfigWindowsMoveFromTitleBarOnly = true;
+
     // = Initialize all non-font members =
-
-    m_do_show_demo_window = false;
-    m_is_about_popup_queued = false;
-
     m_do_show_grid = true;
-
     m_scrolling = SCROLLING_DEFAULT;
+
+    m_path_export = (std::filesystem::current_path() / "zzz_diagram.svg").string();
+    m_action_after_export_choice = ActionAfterExport_DoNothing;
 
     m_source = R"""([variables]
 w = 110
