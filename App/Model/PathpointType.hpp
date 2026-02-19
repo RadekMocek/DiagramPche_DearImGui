@@ -3,7 +3,7 @@
 enum PathpointType
 {
     REFERENCE,
-    ABSOLUTE,
+    PPTYPE_ABSOLUTE,
     START,
     END,
     PREVIOUS
@@ -11,7 +11,7 @@ enum PathpointType
 
 constexpr std::optional<PathpointType> GetPathpointTypeFromString(const std::string& type_str)
 {
-    if (type_str.empty()) return ABSOLUTE;
+    if (type_str.empty()) return PPTYPE_ABSOLUTE;
     if (type_str == "start") return START;
     if (type_str == "end") return END;
     if (type_str == "prev") return PREVIOUS;

@@ -25,10 +25,15 @@ bool App::Init()
     }
 #endif
 
+    std::cout << "RAM OK\n";
+    std::cout << "ROM OK\n";
+
     glfwSetErrorCallback(GLFWErrorCallback);
     if (!glfwInit()) {
+        std::cerr << "!glfwInit()\n";
         return false;
     }
+    std::cout << "GLFW OK\n";
 
     // Decide GL+GLSL versions
 #if defined(IMGUI_IMPL_OPENGL_ES2)
@@ -83,6 +88,14 @@ bool App::Init()
     if (!gladLoaderLoadGL()) {
         return false;
     }
+    std::cout << "GLAD OK\n";
+
+    // Native dialogs
+    if (NFD_Init() != NFD_OKAY) {
+        std::cerr << "NFD_Init() != NFD_OKAY :: " << NFD_GetError() << '\n';
+        return false;
+    }
+    std::cout << "NFDE OK\n";
 
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
@@ -113,6 +126,8 @@ bool App::Init()
     ImGui_ImplGlfw_InstallEmscriptenCallbacks(m_window, "#canvas");
 #endif
     ImGui_ImplOpenGL3_Init(glsl_version);
+
+    std::cout << "DEAR IMGUI OK\n";
 
     return true;
 }
@@ -172,6 +187,8 @@ void App::Run()
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
+
+    NFD_Quit();
 
     glfwDestroyWindow(m_window);
     glfwTerminate();

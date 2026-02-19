@@ -22,11 +22,17 @@ set(FT_DISABLE_PNG ON CACHE BOOL "" FORCE)
 set(FT_DISABLE_HARFBUZZ ON CACHE BOOL "" FORCE)
 set(FT_DISABLE_BROTLI ON CACHE BOOL "" FORCE)
 
+# NFDe :: use portal instead of gtk for file dialogs
+if (UNIX AND NOT APPLE)
+    set(NFD_PORTAL ON CACHE BOOL "" FORCE)
+endif ()
+
 # Dependencies
 add_subdirectory(Dependency/glfw-3.3.10)
 add_subdirectory(Dependency/glad)
 add_subdirectory(Dependency/imgui)
 add_subdirectory(Dependency/freetype-VER-2-13-3)
+add_subdirectory(Dependency/nativefiledialog-extended-1.3.0)
 
 # Executable setup
 file(GLOB_RECURSE SOURCES
@@ -38,16 +44,17 @@ add_executable("${BINARY_NAME}"
         ${SOURCES}
 )
 
-if(MSVC)
+if (MSVC)
     target_compile_definitions("${CMAKE_PROJECT_NAME}" PUBLIC _CRT_SECURE_NO_WARNINGS)
     set_target_properties("${CMAKE_PROJECT_NAME}" PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup") # No console
-endif()
+endif ()
 
 target_link_libraries("${BINARY_NAME}"
         glfw
         glad
         imgui
         freetype
+        nfd
 )
 
 # Copy resources folder

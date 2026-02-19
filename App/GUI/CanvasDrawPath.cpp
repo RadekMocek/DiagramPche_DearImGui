@@ -94,7 +94,7 @@ void App::GUICanvasDrawPaths(ImDrawList* draw_list, const ImVec2 origin, const f
                 // X
                 switch (pathpoint.x_type) {
                 // Absolute coordinates are, by definition, not "originated"
-                case ABSOLUTE:
+                case PPTYPE_ABSOLUTE:
                     curr.x += origin.x;
                     break;
                 // AABRs in `m_canvas_nodes` are stored "zoomed and absolute", so they take zoom_level into account, but not origin.
@@ -117,7 +117,7 @@ void App::GUICanvasDrawPaths(ImDrawList* draw_list, const ImVec2 origin, const f
                 }
                 // Same for Y
                 switch (pathpoint.y_type) {
-                case ABSOLUTE:
+                case PPTYPE_ABSOLUTE:
                     curr.y += origin.y;
                     break;
                 case REFERENCE:
@@ -264,7 +264,7 @@ void App::GUICanvasDrawPaths(ImDrawList* draw_list, const ImVec2 origin, const f
                 // For both coordinates apply the Pathpoint type
                 // X
                 switch (pathpoint.x_type) {
-                case ABSOLUTE:
+                case PPTYPE_ABSOLUTE:
                     break;
                 case REFERENCE:
                     if (const auto it = m_canvas_nodes.find(pathpoint.x_parent_id); it != m_canvas_nodes.end()) {
@@ -283,7 +283,7 @@ void App::GUICanvasDrawPaths(ImDrawList* draw_list, const ImVec2 origin, const f
                 }
                 // Y
                 switch (pathpoint.y_type) {
-                case ABSOLUTE:
+                case PPTYPE_ABSOLUTE:
                     break;
                 case REFERENCE:
                     if (const auto it = m_canvas_nodes.find(pathpoint.y_parent_id); it != m_canvas_nodes.end()) {

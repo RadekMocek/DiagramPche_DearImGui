@@ -18,6 +18,7 @@ void App::GUIModal()
     ImGui::PushStyleColor(ImGuiCol_PopupBg, IM_COL32(240, 240, 240, 255));
 
     // .: Export modal :.
+    // .:==============:.
     constexpr auto MODAL_EXPORT_NAME = "Export to SVG##modal";
     static bool do_overwrite_export;
     static bool is_overwrite_export_needed;
@@ -32,7 +33,11 @@ void App::GUIModal()
             do_overwrite_export = false;
         }
         ImGui::SameLine();
-        if (ImGui::Button("Browse...")) {}
+        if (ImGui::Button("Browse...")) {
+            if (const auto dialog_result = SaveSVGDialog(); dialog_result.has_value()) {
+                m_path_export = dialog_result.value();
+            }
+        }
 
         ImGui::Dummy(SMALL_SKIP);
         ImGui::SeparatorText("Overwrite guard");
@@ -90,6 +95,7 @@ void App::GUIModal()
     }
 
     // .: About modal :.
+    // .:=============:.
     constexpr auto MODAL_ABOUT_NAME = "About##modal";
     if (m_is_queued_popup_about) {
         m_is_queued_popup_about = false;
@@ -106,6 +112,7 @@ void App::GUIModal()
     }
 
     // .: Error modal :.
+    // .:=============:.
     constexpr auto MODAL_ERROR_NAME = "Error##modal";
     if (m_is_queued_popup_error) {
         m_is_queued_popup_error = false;

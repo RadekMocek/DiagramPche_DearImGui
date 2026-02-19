@@ -36,7 +36,7 @@ void App::Start()
     m_do_show_grid = true;
     m_scrolling = SCROLLING_DEFAULT;
 
-    m_path_export = (std::filesystem::current_path() / "zzz_diagram.svg").string();
+    m_path_export = (std::filesystem::current_path() / "diagram.svg").string();
     m_action_after_export_choice = ActionAfterExport_DoNothing;
 
     m_source = R"""([variables]

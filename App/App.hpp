@@ -12,9 +12,21 @@
 #if defined(IMGUI_IMPL_OPENGL_ES2)
 #include <GLES2/gl2.h>
 #endif
+
+// For glad to work, if it is imported after this (which it is in this project)
 #define GLFW_INCLUDE_NONE
+// For native dialogs to work (fingers crossed)
+#ifdef _WIN32
+#define GLFW_EXPOSE_NATIVE_WIN32
+#else
+#define GLFW_EXPOSE_NATIVE_X11
+#endif
 #include <GLFW/glfw3.h>
+
 #include <glad/gl.h>
+
+#include <nfd.h>
+#include <nfd_glfw3.h>
 
 // To link with VS2010-era libraries, VS2015+ requires linking with legacy_stdio_definitions.lib, which we do using this pragma.
 #if defined(_MSC_VER) && (_MSC_VER >= 1900) && !defined(IMGUI_DISABLE_WIN32_FUNCTIONS)
@@ -96,6 +108,12 @@ private:
     void LoadSourceFromFile(const char* filename);
     static void ShowFileInFileManager(const std::string& filename);
     static void OpenFile(const std::string& filename);
+    // Dialog
+    void SetParentWindow(nfdwindowhandle_t* dialog_args_parent) const;
+    std::optional<std::string> SaveSVGDialog() const;
+    std::optional<std::string> SaveFileDialog(const nfdu8char_t* default_name,
+                                              const nfdu8filteritem_t* filters,
+                                              nfdfiltersize_t n_filters) const;
 
     //
     void ShowErrorModal(const std::string& error_message)

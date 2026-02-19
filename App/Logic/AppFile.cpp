@@ -43,7 +43,6 @@ void App::ShowFileInFileManager(const std::string& filename)
         // This opens new window everytime, even if window with same path already exists. It also can't select the file in the folder.
         // `xdg-utils` is usually installed so this is a good fallback option.
         std::system(std::format("xdg-open {}", absolute_path.parent_path().string()).c_str());
-        std::cout << "JO";
     }
 #endif
 }
