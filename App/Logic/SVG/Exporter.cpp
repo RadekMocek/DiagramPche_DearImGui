@@ -19,8 +19,8 @@ bool Exporter::Save()
     if (!m_is_enabled) return false;
     m_is_enabled = false;
 
-    const svg::Dimensions dimensions(m_boundaries_max_x - m_boundaries_min_x + SVG_PADDING,
-                                     m_boundaries_max_y - m_boundaries_min_y + SVG_PADDING);
+    const svg::Dimensions dimensions(m_boundaries_max_x - m_boundaries_min_x + 2 * SVG_PADDING,
+                                     m_boundaries_max_y - m_boundaries_min_y + 2 * SVG_PADDING);
 
     const auto layout = svg::Layout(dimensions, ORIGIN);
 
@@ -28,7 +28,7 @@ bool Exporter::Save()
 
     for (; !m_draw_commands.empty(); m_draw_commands.pop()) {
         const auto& [z1, z2, shape] = m_draw_commands.top();
-        shape->offset(svg::Point(SVG_PADDING / 2 - m_boundaries_min_x, SVG_PADDING / 2 - m_boundaries_min_y));
+        shape->offset(svg::Point(SVG_PADDING - m_boundaries_min_x, SVG_PADDING - m_boundaries_min_y));
         document << *shape;
     }
 
@@ -140,6 +140,7 @@ void Exporter::AddArrowTip(
 }
 
 // --- --- --- --- --- --- --- ---
+/*
 void Exporter::DebugPrint() const
 {
     std::cout << "m_boundaries_max_x: " << m_boundaries_max_x << '\n';
@@ -155,3 +156,4 @@ void Exporter::DebugPrint() const
 
     std::cout << '\n';
 }
+*/

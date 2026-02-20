@@ -7,7 +7,7 @@
 class Exporter
 {
 private:
-    static constexpr auto SVG_PADDING = 50.0f;
+    static constexpr auto SVG_PADDING = 25.0f;
     static constexpr auto PRIORITY_RECT = 0;
     static constexpr auto PRIORITY_TEXT = 1;
 
@@ -44,7 +44,7 @@ private:
 
     std::vector<svg::Point> m_polyline_points{};
 
-    void DebugPrint() const;
+    //void DebugPrint() const;
 
 public:
     [[nodiscard]] bool is_enabled() const { return m_is_enabled; }
