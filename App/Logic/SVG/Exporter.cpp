@@ -6,10 +6,10 @@ void Exporter::Start(const std::string& path)
     m_is_enabled = true;
     m_path = path;
     m_draw_commands = std::priority_queue<DrawCommand>();
-    m_boundaries_min_x = 0;
-    m_boundaries_min_y = 0;
-    m_boundaries_max_x = 0;
-    m_boundaries_max_y = 0;
+    m_boundaries_min_x = std::numeric_limits<double>::max();
+    m_boundaries_min_y = std::numeric_limits<double>::max();
+    m_boundaries_max_x = std::numeric_limits<double>::min();
+    m_boundaries_max_y = std::numeric_limits<double>::min();
 }
 
 bool Exporter::Save()
@@ -21,13 +21,14 @@ bool Exporter::Save()
 
     const svg::Dimensions dimensions(m_boundaries_max_x - m_boundaries_min_x + SVG_PADDING,
                                      m_boundaries_max_y - m_boundaries_min_y + SVG_PADDING);
+
     const auto layout = svg::Layout(dimensions, ORIGIN);
 
     svg::Document document(m_path, layout);
 
     for (; !m_draw_commands.empty(); m_draw_commands.pop()) {
         const auto& [z1, z2, shape] = m_draw_commands.top();
-        shape->offset(svg::Point(SVG_PADDING / 2, SVG_PADDING / 2));
+        shape->offset(svg::Point(SVG_PADDING / 2 - m_boundaries_min_x, SVG_PADDING / 2 - m_boundaries_min_y));
         document << *shape;
     }
 
@@ -136,4 +137,21 @@ void Exporter::AddArrowTip(
         << point_slightly_before_p2 - p2_orthogonal_addition
         << point_slightly_before_p2 + p2_orthogonal_addition;
     m_draw_commands.push({z, z2, std::make_unique<svg::Polygon>(polygon)});
+}
+
+// --- --- --- --- --- --- --- ---
+void Exporter::DebugPrint() const
+{
+    std::cout << "m_boundaries_max_x: " << m_boundaries_max_x << '\n';
+    std::cout << "m_boundaries_min_x: " << m_boundaries_min_x << '\n';
+    std::cout << "m_boundaries_max_y: " << m_boundaries_max_y << '\n';
+    std::cout << "m_boundaries_min_y: " << m_boundaries_min_y << '\n';
+
+    std::cout << "width = " << m_boundaries_max_x << "-" << m_boundaries_min_x
+        << " = " << m_boundaries_max_x - m_boundaries_min_x << '\n';
+
+    std::cout << "height = " << m_boundaries_max_y << "-" << m_boundaries_min_y
+        << " = " << m_boundaries_max_y - m_boundaries_min_y << '\n';
+
+    std::cout << '\n';
 }

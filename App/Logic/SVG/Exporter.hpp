@@ -44,6 +44,8 @@ private:
 
     std::vector<svg::Point> m_polyline_points{};
 
+    void DebugPrint() const;
+
 public:
     [[nodiscard]] bool is_enabled() const { return m_is_enabled; }
 
