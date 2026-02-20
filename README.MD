@@ -3,7 +3,7 @@
 ## TODO
 
 * [x] SVG export ability (Nodes, Multiline text, Paths, Arrow tips)
-* [ ] SVG export proper dialog
+* [x] SVG export proper dialog
 
 ## Problems
 
@@ -26,6 +26,24 @@
 * [stb](https://github.com/nothings/stb) ([MIT](https://github.com/nothings/stb/blob/master/LICENSE))
 * [simple-svg](https://github.com/adishavit/simple-svg) ([BSD-3-Clause](https://github.com/adishavit/simple-svg/blob/master/LICENSE)) (modified)
 * [Native File Dialog Extended](https://github.com/btzy/nativefiledialog-extended) ([zlib](https://github.com/btzy/nativefiledialog-extended/blob/master/LICENSE))
+
+## Building locally
+
+### Debian based distros
+
+```bash
+sudo apt install cmake ninja-build libdbus-1-dev
+
+cmake -S . -B build
+
+cmake --build build
+```
+
+### Windows
+
+* The most straightforward way is probably to use an IDE:
+  * In CLion, go to _File_ → _Open..._ and select repo's root directory
+  * In Visual Studio's launcher, click on the _Open a local folder_ button and select repo's root directory
 
 <!--
 NODE:

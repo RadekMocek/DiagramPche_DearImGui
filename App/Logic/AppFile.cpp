@@ -36,13 +36,13 @@ void App::ShowFileInFileManager(const std::string& filename)
     if (access("/usr/bin/nemo", X_OK) == 0) {
         // Nemo is the Cinnamon's default file manager, by calling this instead of `xdg-open`, it highlights the file.
         // Sadly, it still opens new window every time, even when window with that path already exists.
-        std::system(std::format("nemo --existing-window {} >/dev/null 2>&1", absolute_path.string()).c_str());
+        std::system(std::format("nemo --existing-window {} >/dev/null 2>&1 &", absolute_path.string()).c_str());
         // This could be done for every file manager, but I only use Mint right now so there's no way of testing it.
     }
     else {
         // This opens new window everytime, even if window with same path already exists. It also can't select the file in the folder.
         // `xdg-utils` is usually installed so this is a good fallback option.
-        std::system(std::format("xdg-open {}", absolute_path.parent_path().string()).c_str());
+        std::system(std::format("xdg-open {} >/dev/null 2>&1", absolute_path.parent_path().string()).c_str());
     }
 #endif
 }
@@ -53,6 +53,6 @@ void App::OpenFile(const std::string& filename)
 #ifdef _WIN32
     ShellExecuteW(nullptr, L"open", absolute_path.wstring().c_str(), nullptr, nullptr, SW_SHOWNORMAL);
 #else
-    std::system(std::format("xdg-open {}", absolute_path.string()).c_str());
+    std::system(std::format("xdg-open {} >/dev/null 2>&1", absolute_path.string()).c_str());
 #endif
 }

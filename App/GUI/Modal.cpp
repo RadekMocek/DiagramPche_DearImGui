@@ -20,13 +20,17 @@ void App::GUIModal()
     // .: Export modal :.
     // .:==============:.
     constexpr auto MODAL_EXPORT_NAME = "Export to SVG##modal";
+    static bool _is_popup_export_open = true; // To enable modal close button
     static bool do_overwrite_export;
     static bool is_overwrite_export_needed;
     static bool can_export = true;
     if (m_is_queued_popup_export) {
+        m_is_queued_popup_export = false;
+        _is_popup_export_open = true;
+        do_overwrite_export = false;
         ImGui::OpenPopup(MODAL_EXPORT_NAME);
     }
-    if (ImGui::BeginPopupModal(MODAL_EXPORT_NAME, &m_is_queued_popup_export, ImGuiWindowFlags_AlwaysAutoResize)) {
+    if (ImGui::BeginPopupModal(MODAL_EXPORT_NAME, &_is_popup_export_open, ImGuiWindowFlags_AlwaysAutoResize)) {
         ImGui::SeparatorText("Location");
         if (ImGui::InputTextWithHint("##path to SVG", "input path to SVG here", &m_path_export,
                                      ImGuiInputTextFlags_ElideLeft)) {
@@ -86,7 +90,7 @@ void App::GUIModal()
             m_exporter.Start(m_path_export);
             // SVG export starts here, but the SVG will be created along with the canvas drawing in the next loop.
             // So the function to actually save the SVG and do action after export is located before this code (see `AppUpdate.cpp`).
-            m_is_queued_popup_export = false;
+            ImGui::CloseCurrentPopup();
         }
         ImGui::EndDisabled();
 
