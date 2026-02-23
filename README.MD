@@ -11,7 +11,7 @@
 
 * InputTextMultiline problems:
   * Loses focus on AltGR
-  * Shift + mousewheel allows you to do small amount of horizontal scroll ([9249](https://github.com/ocornut/imgui/issues/9249))
+  * ~~Shift + mousewheel allows you to do small amount of horizontal scroll ([9249](https://github.com/ocornut/imgui/issues/9249))~~
   * Horizontal scrolling is problematic [...](https://github.com/hoffstadt/DearPyGui/issues/2381#issuecomment-2303922790)
 * Error highlight breaks on tab
 * Hacky SVG edit

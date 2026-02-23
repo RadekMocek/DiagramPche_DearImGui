@@ -4,7 +4,7 @@ project(imgui)
 
 add_library(imgui)
 
-set(IMGUI_DIR "imgui-1.92.5")
+set(IMGUI_DIR "imgui-1.92.6")
 
 target_sources(imgui PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/${IMGUI_DIR}/imgui.cpp"

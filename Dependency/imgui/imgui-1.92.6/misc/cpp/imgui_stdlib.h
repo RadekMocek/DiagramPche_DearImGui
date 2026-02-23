@@ -22,7 +22,9 @@
 #pragma once
 
 #include "imgui.h"
+
 #ifndef IMGUI_DISABLE
+
 #include <string>
 
 namespace ImGui

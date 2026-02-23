@@ -8,7 +8,7 @@ Don't forget to:
   * add '#include "imgui.h"' above '#ifndef IMGUI_DISABLE' ?
 #>
 
-$dir = ".\imgui-1.92.5"
+$dir = ".\imgui-1.92.6"
 
 # Delete examples
 Get-Item -LiteralPath "${dir}\examples" -ErrorAction SilentlyContinue | Remove-Item -Recurse
