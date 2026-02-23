@@ -40,6 +40,7 @@ void App::GUIModal()
         if (ImGui::Button("Browse...")) {
             if (const auto dialog_result = SaveSVGDialog(); dialog_result.has_value()) {
                 m_path_export = dialog_result.value();
+                do_overwrite_export = false;
             }
         }
 
