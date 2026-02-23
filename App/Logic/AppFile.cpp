@@ -19,7 +19,7 @@ void App::LoadSourceFromFile(const char* filename)
 
     std::erase(m_source, '\r'); // \r\n → \n
 
-    m_scrolling = SCROLLING_DEFAULT;
+    ResetCanvasScrollingAndZoom();
 }
 
 void App::ShowFileInFileManager(const std::string& filename)

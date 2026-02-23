@@ -5,7 +5,6 @@
 * [x] SVG export ability (Nodes, Multiline text, Paths, Arrow tips)
 * [x] SVG export proper dialog
 * [ ] Try reseting the scrolling and zoom_level just before SVG export ⇒ cleaner code
-* [ ] Reorder calls in canvas loop (first user interaction, then drawing) ⇒ 0 frame delay, smoother scrolling
 
 ## Problems
 

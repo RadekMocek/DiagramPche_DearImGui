@@ -36,10 +36,17 @@ void App::Start()
 
     // = Initialize all non-font members =
     m_do_show_grid = true;
-    m_scrolling = SCROLLING_DEFAULT;
+    ResetCanvasScrollingAndZoom();
 
     m_path_export = (std::filesystem::current_path() / "diagram.svg").string();
     m_action_after_export_choice = ActionAfterExport_DoNothing;
 
     m_source = WELCOME_TOML;
+}
+
+void App::ResetCanvasScrollingAndZoom()
+{
+    m_scrolling = SCROLLING_DEFAULT;
+    m_canvas_font_size = CANVAS_FONT_SIZE_BASE;
+    m_canvas_zoom_level = 1.0f;
 }

@@ -1,5 +1,4 @@
 #include <algorithm>
-#include <cmath>
 
 #include "../App.hpp"
 #include "../Helper/DrawLayer.hpp"
@@ -9,11 +8,6 @@
 void App::GUICanvas()
 {
     static ImGuiIO& io = ImGui::GetIO(); // For getting the mouse position
-
-    // .: State :.
-    // .:=======:.
-    static int font_size = CANVAS_FONT_SIZE_BASE;
-    static float zoom_level = 1.0f;
 
     // .: Prepare ground for the canvas :.
     // .:===============================:.
@@ -28,12 +22,9 @@ void App::GUICanvas()
                       ImGuiWindowFlags_None);
     ImGui::PopStyleVar();
 
-    // Determine canvas size
+    // Determine canvas position (window absolute)
     const auto canvas_top_left = ImGui::GetCursorScreenPos(); // ImDrawList API uses screen coordinates!
     const auto canvas_bottom_right = ImVec2(canvas_top_left.x + canvas_size.x, canvas_top_left.y + canvas_size.y);
-
-    // Canvas origin position (window absolute)
-    const ImVec2 origin(canvas_top_left.x + m_scrolling.x, canvas_top_left.y + m_scrolling.y);
 
     // .: User interaction :.
     // .:==================:.
@@ -41,13 +32,12 @@ void App::GUICanvas()
     ImGui::InvisibleButton("Canvas", canvas_size, ImGuiButtonFlags_MouseButtonLeft | ImGuiButtonFlags_MouseButtonRight);
     const bool is_hovered = ImGui::IsItemHovered(); // Hovered (hot item)
     const bool is_active = ImGui::IsItemActive(); // Held
-    const ImVec2 mouse_pos_in_canvas(io.MousePos.x - origin.x, io.MousePos.y - origin.y);
 
     // Mousewheel to adjust the zoom level
     if (is_hovered) {
-        const int font_size_unclamped = font_size + io.MouseWheel * CANVAS_FONT_SIZE_STEP;
-        font_size = std::clamp(font_size_unclamped, CANVAS_FONT_SIZE_MIN, CANVAS_FONT_SIZE_MAX);
-        zoom_level = font_size / static_cast<float>(CANVAS_FONT_SIZE_BASE);
+        const int font_size_unclamped = m_canvas_font_size + io.MouseWheel * CANVAS_FONT_SIZE_STEP;
+        m_canvas_font_size = std::clamp(font_size_unclamped, CANVAS_FONT_SIZE_MIN, CANVAS_FONT_SIZE_MAX);
+        m_canvas_zoom_level = m_canvas_font_size / static_cast<float>(CANVAS_FONT_SIZE_BASE);
     }
 
     // RMB drag to move the canvas ("scrolling")
@@ -59,14 +49,17 @@ void App::GUICanvas()
         m_scrolling.y += io.MouseDelta.y;
     }
 
+    // Calculate canvas "origin" (position + scrolling), used for drawing
+    const ImVec2 origin(canvas_top_left.x + m_scrolling.x, canvas_top_left.y + m_scrolling.y);
+
     // .: Draw on canvas :.
     // .:================:.
     ImDrawList* draw_list = ImGui::GetWindowDrawList(); // Enables us to draw primitives
 
-    // Draw grid
+    // == Draw grid ==
     draw_list->PushClipRect(canvas_top_left, canvas_bottom_right, true);
     if (m_do_show_grid) {
-        const float GRID_STEP = GRID_STEP_BASE * zoom_level;
+        const float GRID_STEP = GRID_STEP_BASE * m_canvas_zoom_level;
 
         for (float x = fmodf(m_scrolling.x, GRID_STEP); x < canvas_size.x; x += GRID_STEP) { // NOLINT(*-flp30-c)
             draw_list->AddLine(ImVec2(canvas_top_left.x + x, canvas_top_left.y),
@@ -81,7 +74,7 @@ void App::GUICanvas()
         }
     }
 
-    // = Draw the diagram =
+    // == Draw diagram ==
 
     // AABR = axis aligned bounding rectangle :)
     // This map is used to store some additional info about nodes and also to keep track about which nodes were already drawn.
@@ -94,13 +87,14 @@ void App::GUICanvas()
     // (We use 2*z for nodes and 2*z+1 for paths)
     draw_list->ChannelsSplit(N_DL_REAL_CHANNELS);
     // Default draw layer for nodes is 4 (Model → Node.hpp → int z)
-    GUICanvasDrawNodes(draw_list, origin, zoom_level, font_size);
+    GUICanvasDrawNodes(draw_list, origin, m_canvas_zoom_level, m_canvas_font_size);
     // Default layer for paths is 5 (Model → Path.hpp → int z)
-    GUICanvasDrawPaths(draw_list, origin, zoom_level);
+    GUICanvasDrawPaths(draw_list, origin, m_canvas_zoom_level);
     draw_list->ChannelsMerge();
 
     // .: User AABR interaction :.
     // .:=======================:.
+    const ImVec2 mouse_pos_in_canvas(io.MousePos.x - origin.x, io.MousePos.y - origin.y);
 
     // Show tooltip with Node ID on hover
     if (is_hovered) {

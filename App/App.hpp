@@ -76,6 +76,8 @@ private:
     bool m_do_show_grid{};
     ImVec2 m_scrolling{};
     std::unordered_map<std::string, CanvasNode> m_canvas_nodes{};
+    int m_canvas_font_size{};
+    float m_canvas_zoom_level{};
 
     // Modals
     bool m_is_queued_popup_about = false;
@@ -101,6 +103,7 @@ private:
     void GUICanvas();
     void GUICanvasDrawNodes(ImDrawList* draw_list, ImVec2 origin, float zoom_level, int font_size);
     void GUICanvasDrawPaths(ImDrawList* draw_list, ImVec2 origin, float zoom_level);
+    void ResetCanvasScrollingAndZoom();
 
     void GUIModal();
 
