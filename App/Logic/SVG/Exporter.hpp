@@ -47,7 +47,7 @@ private:
     //void DebugPrint() const;
 
 public:
-    [[nodiscard]] bool is_enabled() const { return m_is_enabled; }
+    [[nodiscard]] bool IsEnabled() const { return m_is_enabled; }
 
     //
     void Start(const std::string& path);

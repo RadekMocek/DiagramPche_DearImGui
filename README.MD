@@ -4,7 +4,7 @@
 
 * [x] SVG export ability (Nodes, Multiline text, Paths, Arrow tips)
 * [x] SVG export proper dialog
-* [ ] Try reseting the scrolling and zoom_level just before SVG export ⇒ cleaner code
+* [x] Try reseting the scrolling and zoom_level just before SVG export ⇒ cleaner code
 
 ## Problems
 

@@ -49,6 +49,12 @@ void App::GUICanvas()
         m_scrolling.y += io.MouseDelta.y;
     }
 
+    // If we are creating a SVG this frame, we reset zoom_level here so we don't have have to "revert it" in the SVG.
+    // This is the place to do it because we already handled the user interaction this frame (RMB scroll and MW zoom).
+    if (m_exporter.IsEnabled()) {
+        ResetCanvasScrollingAndZoom();
+    }
+
     // Calculate canvas "origin" (position + scrolling), used for drawing
     const ImVec2 origin(canvas_top_left.x + m_scrolling.x, canvas_top_left.y + m_scrolling.y);
 

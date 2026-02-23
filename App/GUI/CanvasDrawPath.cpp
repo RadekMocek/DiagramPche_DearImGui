@@ -175,24 +175,24 @@ void App::GUICanvasDrawPaths(ImDrawList* draw_list, const ImVec2 origin, const f
         for (const auto& result_path : result_paths) {
             m_exporter.StartPolyLine();
             for (const auto& point : result_path) {
-                m_exporter.AddPointToPolyLine((point.x - origin.x) / zoom_level, (point.y - origin.y) / zoom_level);
+                m_exporter.AddPointToPolyLine(point.x, point.y);
             }
             m_exporter.FinishPolyLine(z, path_number, path.color);
             if (result_path.size() >= 2) {
                 if (path.do_start_arrow) {
                     m_exporter.AddArrowTip(z, path_number,
-                                           (result_path[1].x - origin.x) / zoom_level,
-                                           (result_path[1].y - origin.y) / zoom_level,
-                                           (result_path[0].x - origin.x) / zoom_level,
-                                           (result_path[0].y - origin.y) / zoom_level,
+                                           result_path[1].x,
+                                           result_path[1].y,
+                                           result_path[0].x,
+                                           result_path[0].y,
                                            path.color);
                 }
                 if (path.do_end_arrow) {
                     m_exporter.AddArrowTip(z, path_number,
-                                           (result_path[result_path.size() - 2].x - origin.x) / zoom_level,
-                                           (result_path[result_path.size() - 2].y - origin.y) / zoom_level,
-                                           (result_path[result_path.size() - 1].x - origin.x) / zoom_level,
-                                           (result_path[result_path.size() - 1].y - origin.y) / zoom_level,
+                                           result_path[result_path.size() - 2].x,
+                                           result_path[result_path.size() - 2].y,
+                                           result_path[result_path.size() - 1].x,
+                                           result_path[result_path.size() - 1].y,
                                            path.color);
                 }
             }

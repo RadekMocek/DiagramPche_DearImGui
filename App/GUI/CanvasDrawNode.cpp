@@ -105,10 +105,10 @@ void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, const f
         draw_list->AddRect(draw_top_left, draw_bottom_right, COLOR_NODE_EDGE, 0, 0, zoom_level);
 
         m_exporter.AddRect(z,
-                           aabr_top_left.x / zoom_level,
-                           aabr_top_left.y / zoom_level,
-                           node_width / zoom_level,
-                           node_height / zoom_level,
+                           draw_top_left.x,
+                           draw_top_left.y,
+                           node_width,
+                           node_height,
                            node.color);
 
         // Draw the label
@@ -181,8 +181,8 @@ void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, const f
                            label_c_str);
 
         m_exporter.AddText(z,
-                           (draw_label_position.x - origin.x) / zoom_level,
-                           (draw_label_position.y - origin.y) / zoom_level,
+                           draw_label_position.x,
+                           draw_label_position.y,
                            node.value);
     }
 }

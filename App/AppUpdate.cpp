@@ -16,7 +16,7 @@ void App::Update()
     }
 
     // Must be called before modals because Export modal starts the exporter
-    if (m_exporter.is_enabled()) {
+    if (m_exporter.IsEnabled()) {
         if (m_exporter.Save()) {
             if (m_action_after_export_choice == ActionAfterExport_OpenFolder) {
                 ShowFileInFileManager(m_path_export);
