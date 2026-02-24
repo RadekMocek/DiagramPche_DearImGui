@@ -5,6 +5,7 @@ set(BINARY_NAME "DiagramPche_DearImGui")
 
 # Project setup
 project("${PROJECT_NAME}")
+#set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_BUILD_TYPE Release)
 set(CMAKE_CXX_STANDARD 20)
 

@@ -49,8 +49,9 @@ void App::GUITextEditor(const float textedit_width)
 
         // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
         // [!] using `umgui_internal.h` to make EH work with TextInput Horizontal scroll
-        const auto input_text_state = ImGui::GetInputTextState(textedit_real_id);
-        EH_x_start -= input_text_state->Scroll.x;
+        if (const auto* input_text_state = ImGui::GetInputTextState(textedit_real_id); input_text_state != nullptr) {
+            EH_x_start -= input_text_state->Scroll.x;
+        }
         // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
         const auto EH_top_left = textedit_top_left + ImVec2(EH_x_start, EH_y_start);

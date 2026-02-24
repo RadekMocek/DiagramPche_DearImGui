@@ -2,8 +2,6 @@
 
 ## TODO
 
-* __SEGFAULTS when there is an error in alt text editor and we switch to vanilla text editor somewhere inside this block <https://github.com/RadekMocek/DiagramPche_DearImGui/blob/464653a778b28335e8a46029e2061973ef3b9333/App/GUI/TextEditor.cpp#L29>__
-
 * [x] View → Jump to canvas origin
 * [ ] Canvas zooming: anchor under mouse
 * [ ] Save/SaveAs + Load TOML dialogs
@@ -20,7 +18,7 @@
 <br>
 
 * Settings window:
-  * [ ] Switch between vanilla and 3rd party text editor (without SEGFAULT :))
+  * [x] Switch between vanilla and 3rd party text editor
   * [ ] Remember settings
 
 ## Problems
@@ -82,23 +80,3 @@ cmake --build build
 * The most straightforward way is probably to use an IDE:
   * In CLion, go to _File_ → _Open..._ and select root directory of this repository
   * In Visual Studio's launcher, click on the _Open a local folder_ button and select root directory of this repository
-
-<!--
-NODE:
-*   Rich text? text=["abcd","red12b","defghi","green13i"]; nebo [[style]]
-    that covers text color, size, [bold/italic/...]
-
-*   rectangle round corners
-*   rectangle edge color
-*   rectangle edge style (dotted?)
-
-*   other shapes than rectangle
-*   custom image
-
-PATH:     
-     * path style: dotted/...
-     * path style: thickness
-     * path style: color
-     * path ends (arrows etc.)
-     * curves?
--->
