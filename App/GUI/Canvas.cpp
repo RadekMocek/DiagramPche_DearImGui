@@ -33,13 +33,6 @@ void App::GUICanvas()
     const bool is_hovered = ImGui::IsItemHovered(); // Hovered (hot item)
     const bool is_active = ImGui::IsItemActive(); // Held
 
-    // Mousewheel to adjust the zoom level
-    if (is_hovered) {
-        const int font_size_unclamped = m_canvas_font_size + io.MouseWheel * CANVAS_FONT_SIZE_STEP;
-        m_canvas_font_size = std::clamp(font_size_unclamped, CANVAS_FONT_SIZE_MIN, CANVAS_FONT_SIZE_MAX);
-        m_canvas_zoom_level = m_canvas_font_size / static_cast<float>(CANVAS_FONT_SIZE_BASE);
-    }
-
     // RMB drag to move the canvas ("scrolling")
     // Pan (we use a zero mouse threshold when there's no context menu)
     // You may decide to make that threshold dynamic based on whether the mouse is hovering something etc.
@@ -49,14 +42,33 @@ void App::GUICanvas()
         m_scrolling.y += io.MouseDelta.y;
     }
 
+    // Calculate canvas "origin" (position + scrolling), used for drawing
+    ImVec2 origin(canvas_top_left.x + m_scrolling.x, canvas_top_left.y + m_scrolling.y);
+    ImVec2 mouse_pos_in_canvas(io.MousePos.x - origin.x, io.MousePos.y - origin.y);
+
+    // Mousewheel to adjust the zoom level
+    if (is_hovered && io.MouseWheel != 0) {
+        const auto old_zoom = m_canvas_zoom_level;
+
+        const int font_size_unclamped = m_canvas_font_size + io.MouseWheel * CANVAS_FONT_SIZE_STEP;
+        m_canvas_font_size = std::clamp(font_size_unclamped, CANVAS_FONT_SIZE_MIN, CANVAS_FONT_SIZE_MAX);
+        m_canvas_zoom_level = m_canvas_font_size / static_cast<float>(CANVAS_FONT_SIZE_BASE);
+
+        // Zoom anchor under mouse
+        if (const auto new_zoom = m_canvas_zoom_level; old_zoom != new_zoom) {
+            const auto ratio = new_zoom / old_zoom;
+            m_scrolling.x += mouse_pos_in_canvas.x * (1.0f - ratio);
+            m_scrolling.y += mouse_pos_in_canvas.y * (1.0f - ratio);
+            origin = {canvas_top_left.x + m_scrolling.x, canvas_top_left.y + m_scrolling.y};
+            mouse_pos_in_canvas = {io.MousePos.x - origin.x, io.MousePos.y - origin.y};
+        }
+    }
+
     // If we are creating a SVG this frame, we reset zoom_level here so we don't have have to "revert it" in the SVG.
     // This is the place to do it because we already handled the user interaction this frame (RMB scroll and MW zoom).
     if (m_exporter.IsEnabled()) {
         ResetCanvasScrollingAndZoom();
     }
-
-    // Calculate canvas "origin" (position + scrolling), used for drawing
-    const ImVec2 origin(canvas_top_left.x + m_scrolling.x, canvas_top_left.y + m_scrolling.y);
 
     // .: Draw on canvas :.
     // .:================:.
@@ -100,8 +112,6 @@ void App::GUICanvas()
 
     // .: User AABR interaction :.
     // .:=======================:.
-    const ImVec2 mouse_pos_in_canvas(io.MousePos.x - origin.x, io.MousePos.y - origin.y);
-
     // Show tooltip with Node ID on hover
     if (is_hovered) {
         static std::string tooltip;

@@ -3,7 +3,7 @@
 ## TODO
 
 * [x] View → Jump to canvas origin
-* [ ] Canvas zooming: anchor under mouse
+* [x] Canvas zooming: anchor under mouse
 * [ ] Save/SaveAs + Load TOML dialogs
 * [ ] Confirm unsaved exit
 * [ ] Change window name according to opened document
