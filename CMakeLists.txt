@@ -33,6 +33,7 @@ add_subdirectory(Dependency/glad)
 add_subdirectory(Dependency/imgui)
 add_subdirectory(Dependency/freetype-VER-2-13-3)
 add_subdirectory(Dependency/nativefiledialog-extended-1.3.0)
+add_subdirectory(Dependency/ImGuiColorTextEdit)
 
 # Executable setup
 file(GLOB_RECURSE SOURCES
@@ -55,6 +56,7 @@ target_link_libraries("${BINARY_NAME}"
         imgui
         freetype
         nfd
+        imguicolortextedit
 )
 
 # Copy resources folder

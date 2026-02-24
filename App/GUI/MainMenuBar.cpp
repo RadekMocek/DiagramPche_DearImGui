@@ -24,6 +24,10 @@ void App::GUIMainMenuBar()
         if (ImGui::MenuItem("Grid", nullptr, m_do_show_grid)) {
             m_do_show_grid = !m_do_show_grid;
         }
+        // . Jump to canvas origin .
+        if (ImGui::MenuItem("Jump to canvas origin")) {
+            ResetCanvasScrollingAndZoom();
+        }
         // .::.
         ImGui::EndMenu();
     }

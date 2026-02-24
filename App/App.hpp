@@ -4,6 +4,8 @@
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
 
+#include "TextEditor.h"
+
 #include <cstdio>
 #include <string>
 #include <iostream>
@@ -72,6 +74,9 @@ private:
     float m_body_split_ratio = 0.5f;
     Parser m_parser{};
 
+    // Text editor
+    TextEditor m_alt_editor;
+
     // Canvas
     bool m_do_show_grid{};
     ImVec2 m_scrolling{};
@@ -99,6 +104,7 @@ private:
     void GUIMainMenuBar();
     void GUIBody();
     void GUITextEditor(float textedit_width);
+    void GUITextEditorAlt(float textedit_width);
 
     void GUICanvas();
     void GUICanvasDrawNodes(ImDrawList* draw_list, ImVec2 origin, float zoom_level, int font_size);

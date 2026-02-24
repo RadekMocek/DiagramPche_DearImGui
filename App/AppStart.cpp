@@ -31,10 +31,19 @@ void App::Start()
 
     IM_ASSERT(m_font_inconsolata_medium != nullptr);
 
-    // App config
+    // = App config =
+    // Cannot move windows by dragging their body, only titlebar counts, just like god intended
     io.ConfigWindowsMoveFromTitleBarOnly = true;
 
-    // = Initialize all non-font members =
+    // = Alternative text editor =
+    const auto alt_editor_language = TextEditor::LanguageDefinition::NSOLD();
+    m_alt_editor.SetLanguageDefinition(alt_editor_language);
+    m_alt_editor.SetPalette(TextEditor::GetDiagramPchePalette());
+    m_alt_editor.SetShowWhitespaces(false);
+    m_alt_editor.SetTabSize(1);
+    m_alt_editor.SetText(WELCOME_TOML);
+
+    // = Initialize all other members =
     m_do_show_grid = true;
     ResetCanvasScrollingAndZoom();
 

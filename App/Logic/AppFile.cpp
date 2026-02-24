@@ -19,6 +19,8 @@ void App::LoadSourceFromFile(const char* filename)
 
     std::erase(m_source, '\r'); // \r\n → \n
 
+    m_alt_editor.SetText(m_source);
+
     ResetCanvasScrollingAndZoom();
 }
 

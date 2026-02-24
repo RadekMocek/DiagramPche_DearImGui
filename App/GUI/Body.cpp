@@ -32,7 +32,8 @@ void App::GUIBody()
     const ImVec2 content_region_available = ImGui::GetContentRegionAvail();
     const auto textedit_width = content_region_available.x * m_body_split_ratio;
     // - TextEdit
-    GUITextEditor(textedit_width);
+    //GUITextEditor(textedit_width);
+    GUITextEditorAlt(textedit_width);
     // - Separator
     ImGui::SameLine();
     ImGui::InvisibleButton("BodySeparator", ImVec2(4.0f, content_region_available.y - BOTTOM_BAR_HEIGHT));

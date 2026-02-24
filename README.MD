@@ -2,16 +2,29 @@
 
 ## TODO
 
-* [x] SVG export ability (Nodes, Multiline text, Paths, Arrow tips)
-* [x] SVG export proper dialog
-* [x] Try reseting the scrolling and zoom_level just before SVG export ⇒ cleaner code
+* [ ] __Error message in bottom bar: center the vertical align__
+* [x] View → Jump to canvas origin
+* [ ] Canvas zooming: anchor under mouse
+* [ ] Save/SaveAs + Load TOML dialogs
+* [ ] Confirm unsaved exit
+* [ ] Change window name according to opened document
+* [ ] Change the cursor type while dragging the canvas
+* [x] Code editor syntax highlight
+
+<br>
+
+* Settings window:
+  * [ ] Switch between vanilla and 3rd party text editor
+  * [ ] Remember settings
 
 ## Problems
 
 * InputTextMultiline problems:
   * Loses focus on AltGR
-  * ~~Shift + mousewheel allows you to do small amount of horizontal scroll ([9249](https://github.com/ocornut/imgui/issues/9249))~~
   * Horizontal scrolling is problematic [...](https://github.com/hoffstadt/DearPyGui/issues/2381#issuecomment-2303922790)
+  * Scrollbar flashing while typing
+* ImGuiColorTextEdit problems:
+  * Scrolling by holding up/down arrow key weird "jumpy" behavior
 * Error highlight breaks on tab
 * Hacky SVG edit
   * It seems that only modern web browsers support svg fill transparency via rgba(r,g,b,a) or #RRGGBBAA, so I'm using the style="..." option, which the svg library wasn't made for, hence the "hack"
@@ -24,12 +37,24 @@
 * [FreeType](https://gitlab.freedesktop.org/freetype/freetype) ([Custom](https://gitlab.freedesktop.org/freetype/freetype/-/blob/master/docs/FTL.TXT))
 * [toml++](https://github.com/marzer/tomlplusplus) ([MIT](https://github.com/marzer/tomlplusplus/blob/master/LICENSE))
 * [stb](https://github.com/nothings/stb) ([MIT](https://github.com/nothings/stb/blob/master/LICENSE))
-* [simple-svg](https://github.com/adishavit/simple-svg), modified ([BSD-3-Clause](https://github.com/adishavit/simple-svg/blob/master/LICENSE))
+* [simple-svg](https://github.com/adishavit/simple-svg), ([BSD-3-Clause](https://github.com/adishavit/simple-svg/blob/master/LICENSE))
 * [Native File Dialog Extended](https://github.com/btzy/nativefiledialog-extended) ([zlib](https://github.com/btzy/nativefiledialog-extended/blob/master/LICENSE))
+* [ImGuiColorTextEdit](https://github.com/BalazsJako/ImGuiColorTextEdit) ([MIT](https://github.com/BalazsJako/ImGuiColorTextEdit/blob/master/LICENSE))
 
 <br>
 
 * [Inconsolata](https://levien.com/type/myfonts/inconsolata.html) ([SIL Open Font](https://github.com/google/fonts/blob/main/ofl/inconsolata/OFL.txt))
+
+<br>
+
+* Changes done to _simple-svg_:
+  * Modified to support transparency (dirty)
+* Changes done to _ImGuiColorTextEdit_:
+  * Added support for NSOLD (the diagram language)
+  * Added a custom color palette
+  * Disabled line numbers
+  * Disabled error tooltips
+  * Removed `ImGuiWindowFlags_AlwaysHorizontalScrollbar` flag
 
 ## Building locally
 
