@@ -9,9 +9,9 @@ void App::Update()
     GUIBody();
 
     // .: Show the big demo window if enabled :.
-    if (m_do_show_demo_window) {
+    if (m_do_show_window_demo) {
         ImGui::PushFont(nullptr, 16.0f);
-        ImGui::ShowDemoWindow(&m_do_show_demo_window); // Putting the bool here will add close button to the demo window
+        ImGui::ShowDemoWindow(&m_do_show_window_demo); // Putting the bool here will add close button to the demo window
         ImGui::PopFont();
     }
 
@@ -30,6 +30,9 @@ void App::Update()
                 "SVG file could not be created.\nMaybe the specified path contained some non-existing directories or forbidden characters?");
         }
     }
+
+    // .: Modeless windows :.
+    if (m_do_show_window_preferences) GUIWinPreferences();
 
     // .: Modals :.
     GUIModal();

@@ -67,14 +67,13 @@ private:
     const char* m_window_title = "Untitled – DiagramPche :: Dear ImGui";
     const bool m_is_dark_mode = false;
 
-    bool m_do_show_demo_window = false;
-
     // Body
     std::string m_source{};
     float m_body_split_ratio = 0.5f;
     Parser m_parser{};
 
     // Text editor
+    bool m_do_use_alt_editor = true;
     TextEditor m_alt_editor;
 
     // Canvas
@@ -84,6 +83,10 @@ private:
     int m_canvas_font_size{};
     float m_canvas_zoom_level{};
 
+    // Modeless
+    bool m_do_show_window_demo = false;
+    bool m_do_show_window_preferences = false;
+
     // Modals
     bool m_is_queued_popup_about = false;
     bool m_is_queued_popup_export = false;
@@ -92,7 +95,7 @@ private:
 
     Exporter m_exporter{};
     std::string m_path_export;
-    int m_action_after_export_choice;
+    int m_action_after_export_choice{};
 
     // = Functions =
     // Boilerplate
@@ -110,6 +113,8 @@ private:
     void GUICanvasDrawNodes(ImDrawList* draw_list, ImVec2 origin, float zoom_level, int font_size);
     void GUICanvasDrawPaths(ImDrawList* draw_list, ImVec2 origin, float zoom_level);
     void ResetCanvasScrollingAndZoom();
+
+    void GUIWinPreferences();
 
     void GUIModal();
 

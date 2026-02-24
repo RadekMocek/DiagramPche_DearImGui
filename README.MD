@@ -2,7 +2,8 @@
 
 ## TODO
 
-* [ ] __Error message in bottom bar: center the vertical align__
+* __SEGFAULTS when there is an error in alt text editor and we switch to vanilla text editor somewhere inside this block <https://github.com/RadekMocek/DiagramPche_DearImGui/blob/464653a778b28335e8a46029e2061973ef3b9333/App/GUI/TextEditor.cpp#L29>__
+
 * [x] View → Jump to canvas origin
 * [ ] Canvas zooming: anchor under mouse
 * [ ] Save/SaveAs + Load TOML dialogs
@@ -13,8 +14,13 @@
 
 <br>
 
+* Canvas features:
+  * [ ] Ctrl+Click to jump to node defintion in editor
+
+<br>
+
 * Settings window:
-  * [ ] Switch between vanilla and 3rd party text editor
+  * [ ] Switch between vanilla and 3rd party text editor (without SEGFAULT :))
   * [ ] Remember settings
 
 ## Problems

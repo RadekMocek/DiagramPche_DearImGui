@@ -11,6 +11,10 @@ void App::GUIMainMenuBar()
         if (ImGui::MenuItem("Export to SVG")) {
             m_is_queued_popup_export = true;
         }
+        // . Preferences .
+        if (ImGui::MenuItem("Preferences", nullptr, m_do_show_window_preferences)) {
+            m_do_show_window_preferences = !m_do_show_window_preferences;
+        }
         // . Exit .
         if (ImGui::MenuItem("Exit", "Alt+F4")) {
             glfwSetWindowShouldClose(m_window, GLFW_TRUE);
@@ -42,8 +46,8 @@ void App::GUIMainMenuBar()
             ImGui::EndMenu();
         }
         // . Dear ImGui demo window .
-        if (ImGui::MenuItem("Dear ImGui demo window", nullptr, m_do_show_demo_window)) {
-            m_do_show_demo_window = !m_do_show_demo_window;
+        if (ImGui::MenuItem("Dear ImGui demo window", nullptr, m_do_show_window_demo)) {
+            m_do_show_window_demo = !m_do_show_window_demo;
         }
         // .::.
         ImGui::EndMenu();

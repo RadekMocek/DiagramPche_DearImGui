@@ -5,7 +5,7 @@
 constexpr auto FONT_SIZE_DEFAULT = 20.0f;
 constexpr auto FONT_SIZE_MAIN_MENU_BAR = 16.0f;
 
-constexpr auto BOTTOM_BAR_HEIGHT = 24.0f;
+constexpr auto BOTTOM_BAR_HEIGHT = FONT_SIZE_DEFAULT;
 
 constexpr auto COLOR_ERROR = IM_COL32(211, 1, 2, 255);
 constexpr auto COLOR_ERROR_HIGHLIGHT = IM_COL32(211, 1, 2, 80);
