@@ -15,13 +15,12 @@ void App::GUITextEditorAlt(const float textedit_width)
     m_alt_editor.Render("##SourceAlt");
     m_source = m_alt_editor.GetText();
 
+    m_alt_editor.GetErrorMarkersRef().clear();
     if (m_parser.m_is_error) {
-        TextEditor::ErrorMarkers markers;
-        markers.insert(std::make_pair<int, std::string>(
-            m_parser.m_error_source_region.begin.line,
-            m_parser.m_error_description.c_str()
+        m_alt_editor.GetErrorMarkersRef().insert(std::make_pair<int, std::string>(
+            static_cast<int>(m_parser.m_error_source_region.begin.line),
+            "" // Error highlight tooltip is turned off so no need to set this
         ));
-        m_alt_editor.SetErrorMarkers(markers);
     }
 
     // --- --- --- --- --- --- --- ---

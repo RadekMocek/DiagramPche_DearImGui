@@ -55,6 +55,7 @@
   * Disabled line numbers
   * Disabled error tooltips
   * Removed `ImGuiWindowFlags_AlwaysHorizontalScrollbar` flag
+  * Added `GetErrorMarkersRef` function
 
 ## Building locally
 

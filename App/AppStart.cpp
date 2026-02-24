@@ -36,8 +36,7 @@ void App::Start()
     io.ConfigWindowsMoveFromTitleBarOnly = true;
 
     // = Alternative text editor =
-    const auto alt_editor_language = TextEditor::LanguageDefinition::NSOLD();
-    m_alt_editor.SetLanguageDefinition(alt_editor_language);
+    m_alt_editor.SetLanguageDefinition(TextEditor::LanguageDefinition::NSOLD());
     m_alt_editor.SetPalette(TextEditor::GetDiagramPchePalette());
     m_alt_editor.SetShowWhitespaces(false);
     m_alt_editor.SetTabSize(1);
