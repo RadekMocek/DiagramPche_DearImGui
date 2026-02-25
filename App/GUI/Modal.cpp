@@ -133,9 +133,20 @@ void App::GUIModal()
     if (ImGui::BeginPopupModal(MODAL_UNSAVEDWARN_NAME, nullptr, FLAGS_AUTOSIZE_AND_NOINI)) {
         ImGui::Text("Do you want to save changes to '%s'?", m_source_filename.value_or("Untitled").c_str());
         ImGui::Dummy(BIG_SKIP);
+
+        ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(64.8f/255.0f*10.0f, 23.2f/255.0f*10.0f, 79.7f/255.0f*10.0f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(64.8f/255.0f, 73.6f/255.0f, 98.0f/255.0f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(64.8f/255.0f, 94.0f/255.0f, 98.0f/255.0f));
         ImGui::Button("Save", BUTTON_WIDER);
+        ImGui::PopStyleColor(3);
+
         ImGui::SameLine();
+        ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.0f/255.0f, 23.2f/255.0f, 79.7f/255.0f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(0.0f/255.0f, 73.6f/255.0f, 98.0f/255.0f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(0.0f/255.0f, 94.0f/255.0f, 98.0f/255.0f));
         ImGui::Button("Discard", BUTTON_WIDER);
+        ImGui::PopStyleColor(3);
+
         ImGui::SameLine();
         if (ImGui::Button("Cancel", BUTTON_WIDER)) { ImGui::CloseCurrentPopup(); }
         // --- --- --- ---
