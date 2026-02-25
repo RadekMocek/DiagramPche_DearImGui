@@ -14,9 +14,9 @@ void App::GUIWinPreferences()
         if (do_use_alt_editor) {
             m_alt_editor.SetText(m_source);
         }
-        else {
-            m_source = m_alt_editor.GetText();
-        }
+        /*else {
+            m_source = m_alt_editor.GetText(); // This gets called every frame so shouldn't be needed to call here as well
+        }*/
         m_do_use_alt_editor = do_use_alt_editor;
     }
 

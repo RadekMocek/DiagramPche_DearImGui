@@ -36,4 +36,14 @@ void App::Update()
 
     // .: Modals :.
     GUIModal();
+
+    //
+    static std::string window_title;
+    window_title.clear();
+    if (m_is_source_dirty) {
+        window_title.push_back('*');
+    }
+    window_title += m_source_filename.value_or("Untitled");
+    window_title += " – DiagramPche :: Dear ImGui";
+    SetWindowTitle(window_title.c_str());
 }

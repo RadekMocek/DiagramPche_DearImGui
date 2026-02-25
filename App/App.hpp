@@ -57,7 +57,6 @@ private:
     // = Members =
     GLFWwindow* m_window{};
     ImFont* m_font_inconsolata_medium = nullptr;
-    const char* m_window_title = "Untitled – DiagramPche :: Dear ImGui";
     const bool m_is_dark_mode = false;
     float m_body_split_ratio = 0.5f;
 
@@ -116,7 +115,7 @@ private:
 
     // File
     void LoadSourceFromFile(const char* filename, bool is_example);
-    bool SaveSourceToFile(const char* filename);
+    bool SaveSourceToFile(const char* filename) const;
     void SaveSourceToFileFromDialog();
     static void ShowFileInFileManager(const std::string& filename);
     static void OpenFile(const std::string& filename);
@@ -135,5 +134,10 @@ private:
     {
         m_is_queued_popup_error = true;
         m_modal_error_message = error_message;
+    }
+
+    void SetWindowTitle(const char* title) const
+    {
+        glfwSetWindowTitle(m_window, title);
     }
 };

@@ -72,7 +72,7 @@ bool App::Init()
     // Valid on GLFW 3.3+ only
     m_window = glfwCreateWindow(static_cast<int>(1280 * main_scale),
                                 static_cast<int>(800 * main_scale),
-                                m_window_title,
+                                "Untitled – DiagramPche :: Dear ImGui",
                                 nullptr,
                                 nullptr);
     if (m_window == nullptr) {
@@ -109,8 +109,9 @@ bool App::Init()
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad; // Enable Gamepad Controls
 
     // Setup Dear ImGui style
+    // ReSharper disable once CppDFAConstantConditions
     if (m_is_dark_mode) {
-        ImGui::StyleColorsDark();
+        //ImGui::StyleColorsDark();
     }
     else {
         ImGui::StyleColorsLight();

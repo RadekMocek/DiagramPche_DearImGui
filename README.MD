@@ -5,10 +5,10 @@
 * General:
   * [x] View → Jump to canvas origin
   * Saving/loading:
-    * [ ] New, Open, Save, Save as
+    * [x] New, Open, Save, Save as
     * [ ] Confirm unsaved exit
     * [ ] Confirm unsaved open, including loading a debug diagram or an example
-    * [ ] Change window name according to opened document
+    * [x] Change window name according to opened document (incl. star for unsaved)
   * [x] Code editor syntax highlight
   * [ ] Klávesové zkratky (<kbd>Alt</kbd> pro navigaci v MainMenuBar, <kbd>Ctrl</kbd>+<kbd>S</kbd> pro uložení atd.)
 * Canvas features:
