@@ -84,6 +84,7 @@ private:
     // Modals
     bool m_is_queued_popup_about = false;
     bool m_is_queued_popup_export = false;
+    bool m_is_queued_popup_unsavedwarn = false;
     bool m_is_queued_popup_error = false;
     std::string m_modal_error_message{};
 

@@ -9,16 +9,22 @@ void App::GUIModal()
 {
     constexpr auto SMALL_SKIP = ImVec2(0.0f, 6.0f);
     constexpr auto BIG_SKIP = ImVec2(0.0f, 20.0f);
+    constexpr auto BUTTON_WIDER = ImVec2(120, 0);
+
+    constexpr auto FLAGS_AUTOSIZE_AND_NOINI = ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings;
 
     // (For centering modals when they appear)
-    const ImVec2 center = ImGui::GetMainViewport()->GetCenter();
-    ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+    const auto Center = [] {
+        const ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+        ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+    };
 
     // (Make modal bg color same as normal window color)
     ImGui::PushStyleColor(ImGuiCol_PopupBg, IM_COL32(240, 240, 240, 255));
 
     // .: Export modal :.
     // .:==============:.
+    Center();
     constexpr auto MODAL_EXPORT_NAME = "Export to SVG##modal";
     static bool _is_popup_export_open = true; // To enable modal close button
     static bool do_overwrite_export;
@@ -30,7 +36,7 @@ void App::GUIModal()
         do_overwrite_export = false;
         ImGui::OpenPopup(MODAL_EXPORT_NAME);
     }
-    if (ImGui::BeginPopupModal(MODAL_EXPORT_NAME, &_is_popup_export_open, ImGuiWindowFlags_AlwaysAutoResize)) {
+    if (ImGui::BeginPopupModal(MODAL_EXPORT_NAME, &_is_popup_export_open, FLAGS_AUTOSIZE_AND_NOINI)) {
         ImGui::SeparatorText("Location");
         if (ImGui::InputTextWithHint("##path to SVG", "input path to SVG here", &m_path_export,
                                      ImGuiInputTextFlags_ElideLeft)) {
@@ -84,8 +90,7 @@ void App::GUIModal()
                         : "Package `xdg-utils` will be used for that.");
 #endif
 
-        ImGui::Dummy(ImVec2(0.0f, 20.0f));
-
+        ImGui::Dummy(BIG_SKIP);
         ImGui::BeginDisabled(!can_export);
         if (ImGui::Button("Export")) {
             m_exporter.Start(m_path_export);
@@ -101,34 +106,56 @@ void App::GUIModal()
 
     // .: About modal :.
     // .:=============:.
+    Center();
     constexpr auto MODAL_ABOUT_NAME = "About##modal";
     if (m_is_queued_popup_about) {
         m_is_queued_popup_about = false;
         ImGui::OpenPopup(MODAL_ABOUT_NAME);
     }
-    if (ImGui::BeginPopupModal(MODAL_ABOUT_NAME, nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
+    if (ImGui::BeginPopupModal(MODAL_ABOUT_NAME, nullptr, FLAGS_AUTOSIZE_AND_NOINI)) {
         ImGui::Text("DiagramPche :: Dear ImGui");
         ImGui::TextLinkOpenURL("github.com/RadekMocek/DiagramPche_DearImGui",
                                "https://github.com/RadekMocek/DiagramPche_DearImGui");
         ImGui::Dummy(BIG_SKIP);
-        if (ImGui::Button("Close", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
+        if (ImGui::Button("Close", BUTTON_WIDER)) { ImGui::CloseCurrentPopup(); }
+        // --- --- --- ---
+        ImGui::EndPopup();
+    }
+
+    // .: Unsaved file warning modal :.
+    // .:============================:.
+    Center();
+    constexpr auto MODAL_UNSAVEDWARN_NAME = "You have unsaved changes##modal";
+    if (m_is_queued_popup_unsavedwarn) {
+        m_is_queued_popup_unsavedwarn = false;
+        ImGui::OpenPopup(MODAL_UNSAVEDWARN_NAME);
+    }
+    if (ImGui::BeginPopupModal(MODAL_UNSAVEDWARN_NAME, nullptr, FLAGS_AUTOSIZE_AND_NOINI)) {
+        ImGui::Text("Do you want to save changes to '%s'?", m_source_filename.value_or("Untitled").c_str());
+        ImGui::Dummy(BIG_SKIP);
+        ImGui::Button("Save", BUTTON_WIDER);
+        ImGui::SameLine();
+        ImGui::Button("Discard", BUTTON_WIDER);
+        ImGui::SameLine();
+        if (ImGui::Button("Cancel", BUTTON_WIDER)) { ImGui::CloseCurrentPopup(); }
         // --- --- --- ---
         ImGui::EndPopup();
     }
 
     // .: Error modal :.
     // .:=============:.
+    Center();
     constexpr auto MODAL_ERROR_NAME = "Error##modal";
     if (m_is_queued_popup_error) {
         m_is_queued_popup_error = false;
         ImGui::OpenPopup(MODAL_ERROR_NAME);
     }
-    if (ImGui::BeginPopupModal(MODAL_ERROR_NAME, nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
+    if (ImGui::BeginPopupModal(MODAL_ERROR_NAME, nullptr, FLAGS_AUTOSIZE_AND_NOINI)) {
         ImGui::PushStyleColor(ImGuiCol_Text, COLOR_ERROR);
         ImGui::Text("%s", m_modal_error_message.c_str());
         ImGui::PopStyleColor();
         ImGui::Dummy(BIG_SKIP);
-        if (ImGui::Button("RIP", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
+        if (ImGui::Button("RIP", BUTTON_WIDER)) { ImGui::CloseCurrentPopup(); }
         // --- --- --- ---
         ImGui::EndPopup();
     }
