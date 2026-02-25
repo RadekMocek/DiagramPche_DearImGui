@@ -3,7 +3,7 @@
 #include "imgui.h"
 
 constexpr auto FONT_SIZE_DEFAULT = 20.0f;
-constexpr auto FONT_SIZE_MAIN_MENU_BAR = 16.0f;
+constexpr auto FONT_SIZE_MAIN_MENU_BAR = 18.0f;
 
 constexpr auto BOTTOM_BAR_HEIGHT = FONT_SIZE_DEFAULT;
 

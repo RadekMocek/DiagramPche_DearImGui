@@ -2,21 +2,19 @@
 
 ## TODO
 
-* [x] View → Jump to canvas origin
-* [x] Canvas zooming: anchor under mouse
-* [ ] Save/SaveAs + Load TOML dialogs
-* [ ] Confirm unsaved exit
-* [ ] Change window name according to opened document
-* [ ] Change the cursor type while dragging the canvas
-* [x] Code editor syntax highlight
-
-<br>
-
+* General:
+  * [x] View → Jump to canvas origin
+  * Saving/loading:
+    * [ ] New, Open, Save, Save as
+    * [ ] Confirm unsaved exit
+    * [ ] Confirm unsaved open, including loading a debug diagram or an example
+    * [ ] Change window name according to opened document
+  * [x] Code editor syntax highlight
+  * [ ] Klávesové zkratky (<kbd>Alt</kbd> pro navigaci v MainMenuBar, <kbd>Ctrl</kbd>+<kbd>S</kbd> pro uložení atd.)
 * Canvas features:
-  * [ ] Ctrl+Click to jump to node defintion in editor
-
-<br>
-
+  * [x] Canvas zooming: anchor under mouse
+  * [ ] Change the cursor type while dragging the canvas
+  * [ ] Ctrl+Click to jump to node definition in editor
 * Settings window:
   * [x] Switch between vanilla and 3rd party text editor
   * [ ] Remember settings
@@ -29,6 +27,7 @@
   * Scrollbar flashing while typing
 * ImGuiColorTextEdit problems:
   * Scrolling by holding up/down arrow key weird "jumpy" behavior
+  * No Ctrl + Backspace for removing the whole word (same for Delete)
 * Error highlight breaks on tab
 * Hacky SVG edit
   * It seems that only modern web browsers support svg fill transparency via rgba(r,g,b,a) or #RRGGBBAA, so I'm using the style="..." option, which the svg library wasn't made for, hence the "hack"
@@ -57,7 +56,7 @@
   * Added support for NSOLD (the diagram language)
   * Added a custom color palette
   * Disabled line numbers
-  * Disabled error tooltips
+  * Disabled error and identifier tooltips
   * Removed `ImGuiWindowFlags_AlwaysHorizontalScrollbar` flag
   * Added `GetErrorMarkersRef` function
 

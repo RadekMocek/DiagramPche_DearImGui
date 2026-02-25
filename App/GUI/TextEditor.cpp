@@ -18,10 +18,12 @@ void App::GUITextEditor(const float textedit_width)
     ImGui::BeginChild("SourceParent", textedit_size, flags);
     ImGui::PopStyleVar();
 
-    ImGui::InputTextMultiline(TEXTEDIT_ID,
-                              &m_source,
-                              ImGui::GetContentRegionAvail(),
-                              ImGuiInputTextFlags_AllowTabInput);
+    if (ImGui::InputTextMultiline(TEXTEDIT_ID,
+                                  &m_source,
+                                  ImGui::GetContentRegionAvail(),
+                                  ImGuiInputTextFlags_AllowTabInput)) {
+        m_is_source_dirty = true;
+    }
 
     const auto textedit_real_id = ImGui::GetID(TEXTEDIT_ID);
 
@@ -47,12 +49,12 @@ void App::GUITextEditor(const float textedit_width)
         auto EH_x_start = char_width_x * error_x_start + char_width_x / 2;
         const auto EH_y_start = (error_y - 1) * text_line_height - textedit_scroll_offset_y + text_line_height / 8;
 
-        // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+        // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
         // [!] using `umgui_internal.h` to make EH work with TextInput Horizontal scroll
         if (const auto* input_text_state = ImGui::GetInputTextState(textedit_real_id); input_text_state != nullptr) {
             EH_x_start -= input_text_state->Scroll.x;
         }
-        // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+        // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
         const auto EH_top_left = textedit_top_left + ImVec2(EH_x_start, EH_y_start);
         const auto EH_bottom_right = EH_top_left + ImVec2(char_width_x * error_x_length, text_line_height);

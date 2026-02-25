@@ -1,5 +1,8 @@
 #include "App.hpp"
 
+#include "backends/imgui_impl_glfw.h"
+#include "backends/imgui_impl_opengl3.h"
+
 #define STB_IMAGE_IMPLEMENTATION
 #include "../Dependency/stb_image.h"
 
@@ -134,6 +137,8 @@ bool App::Init()
 
 void App::Run()
 {
+    constexpr auto clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+
     // User start
     Start();
 
@@ -171,9 +176,10 @@ void App::Run()
         int display_w, display_h;
         glfwGetFramebufferSize(m_window, &display_w, &display_h);
         glViewport(0, 0, display_w, display_h);
-        glClearColor(m_clear_color.x * m_clear_color.w, m_clear_color.y * m_clear_color.w,
-                     m_clear_color.z * m_clear_color.w,
-                     m_clear_color.w);
+        glClearColor(clear_color.x * clear_color.w,
+                     clear_color.y * clear_color.w,
+                     clear_color.z * clear_color.w,
+                     clear_color.w);
         glClear(GL_COLOR_BUFFER_BIT);
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 

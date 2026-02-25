@@ -13,25 +13,13 @@ const TextEditor::LanguageDefinition& TextEditor::LanguageDefinition::NSOLD()
             langDef.mKeywords.insert(std::string(k));
         }
         //
-        constexpr std::pair<std::string_view, std::string_view> identifiers[] = {
-            {"value", "Value of the node"},
-            {"xy", "Position of the node"},
-            {"pivot", "Node's pivot"},
-            {"color", "Color of the node or path"},
-            {"size", "Size of the node"},
-            {"label_pos", "Position of the node's label"},
-            {"z", "Z-depth value"},
-            {"start", "Position of the path's starting point"},
-            {"end", "Position of the path's ending point"},
-            {"ends", "Positions of all of the path's ending points"},
-            {"points", "Path points between start and end(s)"},
-            {"shift", "Offset of path's start and end points"},
-            {"tips", "Appearence of path's ends"},
+        constexpr std::string_view identifiers[] = {
+            "value", "xy", "pivot", "color", "size", "label_pos", "z", "start", "end", "ends", "points", "shift",
+            "tips",
         };
-        for (auto [name, decl] : identifiers) {
+        for (auto i : identifiers) {
             Identifier id;
-            id.mDeclaration = decl;
-            langDef.mIdentifiers.insert(std::make_pair(std::string(name), id));
+            langDef.mIdentifiers.insert(std::make_pair(std::string(i), id));
         }
 
         langDef.mTokenRegexStrings.push_back(

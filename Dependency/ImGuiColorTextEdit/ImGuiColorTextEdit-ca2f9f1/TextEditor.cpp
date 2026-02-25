@@ -1092,6 +1092,7 @@ void TextEditor::Render()
 		}
 
 		// Draw a tooltip on known identifiers/preprocessor symbols
+		/*
 		if (ImGui::IsMousePosValid())
 		{
 			auto id = GetWordAt(ScreenPosToCoordinates(ImGui::GetMousePos()));
@@ -1116,6 +1117,7 @@ void TextEditor::Render()
 				}
 			}
 		}
+		*/
 	}
 
 

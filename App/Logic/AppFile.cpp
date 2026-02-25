@@ -7,7 +7,7 @@
 #include <shlobj.h>
 #endif
 
-void App::LoadSourceFromFile(const char* filename)
+void App::LoadSourceFromFile(const char* filename, const bool is_example)
 {
     if (std::ifstream stream(filename, std::ios::in | std::ios::binary); stream) {
         stream.seekg(0, std::ios::end);
@@ -22,6 +22,33 @@ void App::LoadSourceFromFile(const char* filename)
     m_alt_editor.SetText(m_source);
 
     ResetCanvasScrollingAndZoom();
+
+    m_source_filename = (is_example) ? std::nullopt : std::optional<std::string>{filename};
+    m_is_source_dirty = false;
+}
+
+bool App::SaveSourceToFile(const char* filename)
+{
+    if (m_do_use_alt_editor) {
+        m_source = m_alt_editor.GetText();
+    }
+
+    if (std::ofstream file(filename); file.is_open()) {
+        file << m_source;
+        return true;
+    }
+    return false;
+    // file.close() should be called automatically out of scope
+}
+
+void App::SaveSourceToFileFromDialog()
+{
+    if (const auto path = SaveTOMLDialog(); path.has_value()) {
+        if (SaveSourceToFile(path.value().c_str())) {
+            m_source_filename = path;
+            m_is_source_dirty = false;
+        }
+    }
 }
 
 void App::ShowFileInFileManager(const std::string& filename)

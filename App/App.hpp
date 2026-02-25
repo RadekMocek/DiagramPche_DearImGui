@@ -1,14 +1,9 @@
 #pragma once
 
-#include "imgui.h"
-#include "backends/imgui_impl_glfw.h"
-#include "backends/imgui_impl_opengl3.h"
-
-#include "TextEditor.h"
-
-#include <cstdio>
 #include <string>
-#include <iostream>
+
+#include "imgui.h"
+#include "TextEditor.h"
 
 #define GL_SILENCE_DEPRECATION
 #if defined(IMGUI_IMPL_OPENGL_ES2)
@@ -23,11 +18,12 @@
 #else
 #define GLFW_EXPOSE_NATIVE_X11
 #endif
+
 #include <GLFW/glfw3.h>
-
+// ReSharper disable once CppUnusedIncludeDirective
 #include <glad/gl.h>
-
 #include <nfd.h>
+// ReSharper disable once CppUnusedIncludeDirective
 #include <nfd_glfw3.h>
 
 // To link with VS2010-era libraries, VS2015+ requires linking with legacy_stdio_definitions.lib, which we do using this pragma.
@@ -60,20 +56,19 @@ private:
 
     // = Members =
     GLFWwindow* m_window{};
-    const ImVec4 m_clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-
     ImFont* m_font_inconsolata_medium = nullptr;
-
     const char* m_window_title = "Untitled – DiagramPche :: Dear ImGui";
     const bool m_is_dark_mode = false;
-
-    // Body
-    std::string m_source{};
     float m_body_split_ratio = 0.5f;
+
+    // TOML source related
     Parser m_parser{};
+    std::string m_source{};
+    std::optional<std::string> m_source_filename = std::nullopt;
+    bool m_is_source_dirty{}; // Dirty == edited without saving to disk
 
     // Text editor
-    bool m_do_use_alt_editor = true;
+    bool m_do_use_alt_editor{};
     TextEditor m_alt_editor;
 
     // Canvas
@@ -93,6 +88,7 @@ private:
     bool m_is_queued_popup_error = false;
     std::string m_modal_error_message{};
 
+    // SVG export
     Exporter m_exporter{};
     std::string m_path_export;
     int m_action_after_export_choice{};
@@ -119,15 +115,20 @@ private:
     void GUIModal();
 
     // File
-    void LoadSourceFromFile(const char* filename);
+    void LoadSourceFromFile(const char* filename, bool is_example);
+    bool SaveSourceToFile(const char* filename);
+    void SaveSourceToFileFromDialog();
     static void ShowFileInFileManager(const std::string& filename);
     static void OpenFile(const std::string& filename);
+
     // Dialog
     void SetParentWindow(nfdwindowhandle_t* dialog_args_parent) const;
     std::optional<std::string> SaveSVGDialog() const;
+    std::optional<std::string> SaveTOMLDialog() const;
     std::optional<std::string> SaveFileDialog(const nfdu8char_t* default_name,
                                               const nfdu8filteritem_t* filters,
                                               nfdfiltersize_t n_filters) const;
+    std::optional<std::string> OpenTOMLDialog() const;
 
     //
     void ShowErrorModal(const std::string& error_message)

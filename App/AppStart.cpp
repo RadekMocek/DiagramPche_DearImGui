@@ -36,6 +36,7 @@ void App::Start()
     io.ConfigWindowsMoveFromTitleBarOnly = true;
 
     // = Alternative text editor =
+    m_do_use_alt_editor = true;
     m_alt_editor.SetLanguageDefinition(TextEditor::LanguageDefinition::NSOLD());
     m_alt_editor.SetPalette(TextEditor::GetDiagramPchePalette());
     m_alt_editor.SetShowWhitespaces(false);
@@ -50,6 +51,7 @@ void App::Start()
     m_action_after_export_choice = ActionAfterExport_DoNothing;
 
     m_source = WELCOME_TOML;
+    m_is_source_dirty = false;
 }
 
 void App::ResetCanvasScrollingAndZoom()
