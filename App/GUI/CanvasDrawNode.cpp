@@ -27,8 +27,8 @@ void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, const f
                                      : label_size.y + 2 * node_padding;
 
         // Get node position, this is from the line `xy = [number, number]`
-        const auto node_x = static_cast<float>(node.position.x) * zoom_level;
-        const auto node_y = static_cast<float>(node.position.y) * zoom_level;
+        const ImVec2 node_pos(static_cast<float>(node.position.x) * zoom_level,
+                              static_cast<float>(node.position.y) * zoom_level);
 
         // Move node according to its parent, if the user had set some; this is where we use stored AABR from `canvas_nodes`
         ImVec2 parent_offset(0, 0);
@@ -75,8 +75,7 @@ void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, const f
         }
 
         // Calculate and store the AABR
-        const ImVec2 aabr_top_left(node_x + parent_offset.x + pivot_offset.x,
-                                   node_y + parent_offset.y + pivot_offset.y);
+        const auto aabr_top_left = node_pos + parent_offset + pivot_offset;
         const ImVec2 aabr_bottom_right(aabr_top_left.x + node_width,
                                        aabr_top_left.y + node_height);
 
@@ -88,8 +87,8 @@ void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, const f
                                     aabr_top_left.y + node_height / 2);
 
         // By adding origin (canvas position in window + scrolling) to AABR we get proper drawing coordinates
-        const ImVec2 draw_top_left = origin + aabr_top_left;
-        const ImVec2 draw_bottom_right = origin + aabr_bottom_right;
+        const auto draw_top_left = origin + aabr_top_left;
+        const auto draw_bottom_right = origin + aabr_bottom_right;
 
         // Do the actual drawing of the rectangle
         const auto z = DLUserChannelToRealChannel(node.z, true);
@@ -119,7 +118,7 @@ void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, const f
         // Custom label position?
         if (node.width > 0 || node.height > 0) {
             // Custom width/height => `label_pos` makes sense
-            const ImVec2 draw_center = origin + canvas_node.center; // Helper variable
+            const auto draw_center = origin + canvas_node.center; // Helper variable
             switch (node.label_position) {
             case PIVOT_TOPLEFT:
                 break;

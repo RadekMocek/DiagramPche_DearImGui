@@ -18,6 +18,8 @@
 * Settings window:
   * [x] Switch between vanilla and 3rd party text editor
   * [ ] Remember settings
+* Dear ImGui specific:
+  * [ ] ImGuiColorTextEdit: tabsize==1 does not make it space, try to make tab just insert 4 spaces
 
 ## Problems
 

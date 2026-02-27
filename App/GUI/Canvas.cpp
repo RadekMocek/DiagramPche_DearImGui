@@ -24,7 +24,7 @@ void App::GUICanvas()
 
     // Determine canvas position (window absolute)
     const auto canvas_top_left = ImGui::GetCursorScreenPos(); // ImDrawList API uses screen coordinates!
-    const auto canvas_bottom_right = ImVec2(canvas_top_left.x + canvas_size.x, canvas_top_left.y + canvas_size.y);
+    const auto canvas_bottom_right = canvas_top_left + canvas_size;
 
     // .: User interaction :.
     // .:==================:.
@@ -43,8 +43,8 @@ void App::GUICanvas()
     }
 
     // Calculate canvas "origin" (position + scrolling), used for drawing
-    ImVec2 origin(canvas_top_left.x + m_scrolling.x, canvas_top_left.y + m_scrolling.y);
-    ImVec2 mouse_pos_in_canvas(io.MousePos.x - origin.x, io.MousePos.y - origin.y);
+    auto origin = canvas_top_left + m_scrolling;
+    auto mouse_pos_in_canvas = io.MousePos - origin;
 
     // Mousewheel to adjust the zoom level
     if (is_hovered && io.MouseWheel != 0) {
@@ -57,10 +57,9 @@ void App::GUICanvas()
         // Zoom anchor under mouse
         if (const auto new_zoom = m_canvas_zoom_level; old_zoom != new_zoom) {
             const auto ratio = new_zoom / old_zoom;
-            m_scrolling.x += mouse_pos_in_canvas.x * (1.0f - ratio);
-            m_scrolling.y += mouse_pos_in_canvas.y * (1.0f - ratio);
-            origin = {canvas_top_left.x + m_scrolling.x, canvas_top_left.y + m_scrolling.y};
-            mouse_pos_in_canvas = {io.MousePos.x - origin.x, io.MousePos.y - origin.y};
+            m_scrolling += mouse_pos_in_canvas * (1.0f - ratio);
+            origin = canvas_top_left + m_scrolling;
+            mouse_pos_in_canvas = io.MousePos - origin;
         }
     }
 
