@@ -33,3 +33,15 @@ std::sprintf(result, "#%02X%02X%02X%02X", std::get<0>(tup), std::get<1>(tup), st
 return result;
 }
 */
+
+inline void SetButtonColors(const ImU32 COLOR_NORMAL, const ImU32 COLOR_HOVER, const ImU32 COLOR_CLICK)
+{
+    ImGui::PushStyleColor(ImGuiCol_Button, COLOR_NORMAL);
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, COLOR_HOVER);
+    ImGui::PushStyleColor(ImGuiCol_ButtonActive, COLOR_CLICK);
+}
+
+inline void ResetButtonColors()
+{
+    ImGui::PopStyleColor(3);
+}

@@ -4,6 +4,7 @@
 
 #include "../App.hpp"
 #include "../Config.hpp"
+#include "../Helper/Color.hpp"
 
 void App::GUIModal()
 {
@@ -12,6 +13,13 @@ void App::GUIModal()
     constexpr auto BUTTON_WIDER = ImVec2(120, 0);
 
     constexpr auto FLAGS_AUTOSIZE_AND_NOINI = ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings;
+
+    constexpr auto COLOR_GOOD_NORMAL = IM_COL32(174, 219, 152, 255);
+    constexpr auto COLOR_GOOD_HOVER = IM_COL32(114, 224, 59, 255);
+    constexpr auto COLOR_GOOD_CLICK = IM_COL32(84, 224, 13, 255);
+    constexpr auto COLOR_BAD_NORMAL = IM_COL32(219, 152, 152, 255);
+    constexpr auto COLOR_BAD_HOVER = IM_COL32(224, 59, 59, 255);
+    constexpr auto COLOR_BAD_CLICK = IM_COL32(224, 13, 13, 255);
 
     // (For centering modals when they appear)
     const auto Center = [] {
@@ -131,21 +139,25 @@ void App::GUIModal()
         ImGui::OpenPopup(MODAL_UNSAVEDWARN_NAME);
     }
     if (ImGui::BeginPopupModal(MODAL_UNSAVEDWARN_NAME, nullptr, FLAGS_AUTOSIZE_AND_NOINI)) {
-        ImGui::Text("Do you want to save changes to '%s'?", m_source_filename.value_or("Untitled").c_str());
+        ImGui::Text("Do you want to save changes to\n'%s'?", m_source_filename.value_or("Untitled").c_str());
         ImGui::Dummy(BIG_SKIP);
 
-        ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(64.8f/255.0f*10.0f, 23.2f/255.0f*10.0f, 79.7f/255.0f*10.0f));
-        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(64.8f/255.0f, 73.6f/255.0f, 98.0f/255.0f));
-        ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(64.8f/255.0f, 94.0f/255.0f, 98.0f/255.0f));
-        ImGui::Button("Save", BUTTON_WIDER);
-        ImGui::PopStyleColor(3);
+        SetButtonColors(COLOR_GOOD_NORMAL, COLOR_GOOD_HOVER, COLOR_GOOD_CLICK);
+        if (ImGui::Button("Save", BUTTON_WIDER)) {
+            m_is_action_unsavedwarn_queued = true;
+            m_do_action_unsavedwarn_save = true;
+            ImGui::CloseCurrentPopup();
+        }
+        ResetButtonColors();
 
         ImGui::SameLine();
-        ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.0f/255.0f, 23.2f/255.0f, 79.7f/255.0f));
-        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(0.0f/255.0f, 73.6f/255.0f, 98.0f/255.0f));
-        ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(0.0f/255.0f, 94.0f/255.0f, 98.0f/255.0f));
-        ImGui::Button("Discard", BUTTON_WIDER);
-        ImGui::PopStyleColor(3);
+        SetButtonColors(COLOR_BAD_NORMAL, COLOR_BAD_HOVER, COLOR_BAD_CLICK);
+        if (ImGui::Button("Discard", BUTTON_WIDER)) {
+            m_is_action_unsavedwarn_queued = true;
+            m_do_action_unsavedwarn_save = false;
+            ImGui::CloseCurrentPopup();
+        }
+        ResetButtonColors();
 
         ImGui::SameLine();
         if (ImGui::Button("Cancel", BUTTON_WIDER)) { ImGui::CloseCurrentPopup(); }

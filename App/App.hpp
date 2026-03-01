@@ -54,6 +54,11 @@ private:
         ActionAfterExport_DoNothing, ActionAfterExport_OpenFolder, ActionAfterExport_OpenFile
     };
 
+    enum ActionAfterUnsavedWarn
+    {
+        ActionAfterUnsavedWarn_Invalid, ActionAfterUnsavedWarn_OpenFile, ActionAfterUnsavedWarn_LoadExample
+    };
+
     // = Members =
     GLFWwindow* m_window{};
     ImFont* m_font_inconsolata_medium = nullptr;
@@ -86,7 +91,13 @@ private:
     bool m_is_queued_popup_export = false;
     bool m_is_queued_popup_unsavedwarn = false;
     bool m_is_queued_popup_error = false;
+
+    // Modal business
     std::string m_modal_error_message{};
+    bool m_is_action_unsavedwarn_queued = false;
+    bool m_do_action_unsavedwarn_save = false;
+    ActionAfterUnsavedWarn m_action_unsavedwarn_type{};
+    std::string m_action_unsavedwarn_value;
 
     // SVG export
     Exporter m_exporter{};
@@ -115,7 +126,9 @@ private:
     void GUIModal();
 
     // File
+    void HandleRegularOpen();
     void LoadSourceFromFile(const char* filename, bool is_example);
+    void HandleRegularSave();
     bool SaveSourceToFile(const char* filename) const;
     void SaveSourceToFileFromDialog();
     static void ShowFileInFileManager(const std::string& filename);

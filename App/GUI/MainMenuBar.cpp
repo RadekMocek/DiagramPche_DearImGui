@@ -16,20 +16,17 @@ void App::GUIMainMenuBar()
         }
         // . Open .
         if (ImGui::MenuItem("Open")) {
-            if (const auto path = OpenTOMLDialog(); path.has_value()) {
-                LoadSourceFromFile(path.value().c_str(), false);
+            if (!m_is_source_dirty) {
+                HandleRegularOpen();
+            }
+            else {
+                m_action_unsavedwarn_type = ActionAfterUnsavedWarn_OpenFile;
+                m_is_queued_popup_unsavedwarn = true;
             }
         }
         // . Save .
         if (ImGui::MenuItem("Save")) {
-            if (!m_source_filename.has_value()) {
-                SaveSourceToFileFromDialog();
-            }
-            else {
-                if (SaveSourceToFile(m_source_filename.value().c_str())) {
-                    m_is_source_dirty = false;
-                }
-            }
+            HandleRegularSave();
         }
         // . Save as .
         if (ImGui::MenuItem("Save as")) {
@@ -70,7 +67,14 @@ void App::GUIMainMenuBar()
         // .: Render tests :.
         if (ImGui::BeginMenu("Render tests")) {
             if (ImGui::MenuItem("Z-axis, out-of-order")) {
-                LoadSourceFromFile("./Resource/Example/Debug/Z-axis.toml", true);
+                if (!m_is_source_dirty) {
+                    LoadSourceFromFile("./Resource/Example/Debug/Z-axis.toml", true);
+                }
+                else {
+                    m_action_unsavedwarn_type = ActionAfterUnsavedWarn_LoadExample;
+                    m_action_unsavedwarn_value = "./Resource/Example/Debug/Z-axis.toml";
+                    m_is_queued_popup_unsavedwarn = true;
+                }
             }
             // .::.
             ImGui::EndMenu();
@@ -91,7 +95,14 @@ void App::GUIMainMenuBar()
         // .: Examples :.
         if (ImGui::BeginMenu("Examples")) {
             if (ImGui::MenuItem("Example 1")) {
-                LoadSourceFromFile("./Resource/Example/Example1.toml", true);
+                if (!m_is_source_dirty) {
+                    LoadSourceFromFile("./Resource/Example/Example1.toml", true);
+                }
+                else {
+                    m_action_unsavedwarn_type = ActionAfterUnsavedWarn_LoadExample;
+                    m_action_unsavedwarn_value = "./Resource/Example/Example1.toml";
+                    m_is_queued_popup_unsavedwarn = true;
+                }
             }
             // .::.
             ImGui::EndMenu();

@@ -37,7 +37,27 @@ void App::Update()
     // .: Modals :.
     GUIModal();
 
-    //
+    // Post modal actions
+    if (m_is_action_unsavedwarn_queued) {
+        m_is_action_unsavedwarn_queued = false;
+        if (m_do_action_unsavedwarn_save) {
+            HandleRegularSave();
+        }
+        switch (m_action_unsavedwarn_type) {
+        case ActionAfterUnsavedWarn_Invalid:
+            std::cerr << "ActionAfterUnsavedWarn_Invalid\n";
+            break;
+        case ActionAfterUnsavedWarn_OpenFile:
+            HandleRegularOpen();
+            break;
+        case ActionAfterUnsavedWarn_LoadExample:
+            LoadSourceFromFile(m_action_unsavedwarn_value.c_str(), true);
+            break;
+        }
+        m_action_unsavedwarn_type = ActionAfterUnsavedWarn_Invalid;
+    }
+
+    // Update window title
     static std::string window_title;
     window_title.clear();
     if (m_is_source_dirty) {

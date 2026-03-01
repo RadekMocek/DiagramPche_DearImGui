@@ -7,6 +7,13 @@
 #include <shlobj.h>
 #endif
 
+void App::HandleRegularOpen()
+{
+    if (const auto path = OpenTOMLDialog(); path.has_value()) {
+        LoadSourceFromFile(path.value().c_str(), false);
+    }
+}
+
 void App::LoadSourceFromFile(const char* filename, const bool is_example)
 {
     if (std::ifstream stream(filename, std::ios::in | std::ios::binary); stream) {
@@ -25,6 +32,18 @@ void App::LoadSourceFromFile(const char* filename, const bool is_example)
 
     m_source_filename = (is_example) ? std::nullopt : std::optional<std::string>{filename};
     m_is_source_dirty = false;
+}
+
+void App::HandleRegularSave()
+{
+    if (!m_source_filename.has_value()) {
+        SaveSourceToFileFromDialog();
+    }
+    else {
+        if (SaveSourceToFile(m_source_filename.value().c_str())) {
+            m_is_source_dirty = false;
+        }
+    }
 }
 
 bool App::SaveSourceToFile(const char* filename) const

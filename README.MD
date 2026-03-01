@@ -7,7 +7,8 @@
   * Saving/loading:
     * [x] New, Open, Save, Save as
     * [ ] Confirm unsaved exit
-    * [ ] Confirm unsaved open, including loading a debug diagram or an example
+    * [ ] Confirm unsaved new
+    * [x] Confirm unsaved open, including loading a debug diagram or an example
     * [x] Change window name according to opened document (incl. star for unsaved)
   * [x] Code editor syntax highlight
   * [ ] Klávesové zkratky (<kbd>Alt</kbd> pro navigaci v MainMenuBar, <kbd>Ctrl</kbd>+<kbd>S</kbd> pro uložení atd.)
