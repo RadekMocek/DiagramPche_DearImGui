@@ -7,12 +7,36 @@
 #include <shlobj.h>
 #endif
 
+// == Logic for buttons in MainMenuBar ==========================================
+
+void App::HandleRegularNew()
+{
+    m_source.clear();
+    m_alt_editor.SetText(m_source);
+    m_source_filename = std::nullopt;
+    m_is_source_dirty = false;
+}
+
 void App::HandleRegularOpen()
 {
     if (const auto path = OpenTOMLDialog(); path.has_value()) {
         LoadSourceFromFile(path.value().c_str(), false);
     }
 }
+
+void App::HandleRegularSave()
+{
+    if (!m_source_filename.has_value()) {
+        SaveSourceToFileFromDialog();
+    }
+    else {
+        if (SaveSourceToFile(m_source_filename.value().c_str())) {
+            m_is_source_dirty = false;
+        }
+    }
+}
+
+// == Underlying logic ==========================================================
 
 void App::LoadSourceFromFile(const char* filename, const bool is_example)
 {
@@ -32,18 +56,6 @@ void App::LoadSourceFromFile(const char* filename, const bool is_example)
 
     m_source_filename = (is_example) ? std::nullopt : std::optional<std::string>{filename};
     m_is_source_dirty = false;
-}
-
-void App::HandleRegularSave()
-{
-    if (!m_source_filename.has_value()) {
-        SaveSourceToFileFromDialog();
-    }
-    else {
-        if (SaveSourceToFile(m_source_filename.value().c_str())) {
-            m_is_source_dirty = false;
-        }
-    }
 }
 
 bool App::SaveSourceToFile(const char* filename) const
@@ -68,6 +80,8 @@ void App::SaveSourceToFileFromDialog()
         }
     }
 }
+
+// == "Outside of app" logic (open the file in system explorer / image viewer) ==
 
 void App::ShowFileInFileManager(const std::string& filename)
 {

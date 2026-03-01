@@ -7,20 +7,20 @@
   * Saving/loading:
     * [x] New, Open, Save, Save as
     * [ ] Confirm unsaved exit
-    * [ ] Confirm unsaved new
+    * [x] Confirm unsaved new
     * [x] Confirm unsaved open, including loading a debug diagram or an example
     * [x] Change window name according to opened document (incl. star for unsaved)
   * [x] Code editor syntax highlight
   * [ ] Klávesové zkratky (<kbd>Alt</kbd> pro navigaci v MainMenuBar, <kbd>Ctrl</kbd>+<kbd>S</kbd> pro uložení atd.)
 * Canvas features:
   * [x] Canvas zooming: anchor under mouse
-  * [ ] Change the cursor type while dragging the canvas
+  * [x] Change the cursor type while dragging the canvas
   * [ ] Ctrl+Click to jump to node definition in editor
 * Settings window:
   * [x] Switch between vanilla and 3rd party text editor
   * [ ] Remember settings
 * Dear ImGui specific:
-  * [ ] ImGuiColorTextEdit: tabsize==1 does not make it space, try to make tab just insert 4 spaces
+  * [x] ImGuiColorTextEdit: Tab insert 4 spaces
 
 ## Problems
 
@@ -62,6 +62,7 @@
   * Disabled error and identifier tooltips
   * Removed `ImGuiWindowFlags_AlwaysHorizontalScrollbar` flag
   * Added `GetErrorMarkersRef` function
+  * Pressing <kbd>Tab</kbd> inserts four spaces instead of `\t`
 
 ## Building locally
 

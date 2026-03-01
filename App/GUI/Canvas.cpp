@@ -40,6 +40,7 @@ void App::GUICanvas()
         is_active && ImGui::IsMouseDragging(ImGuiMouseButton_Right, mouse_threshold_for_pan)) {
         m_scrolling.x += io.MouseDelta.x;
         m_scrolling.y += io.MouseDelta.y;
+        glfwSetCursor(m_window, m_cursor_crosshair);
     }
 
     // Calculate canvas "origin" (position + scrolling), used for drawing

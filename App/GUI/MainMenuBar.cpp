@@ -9,10 +9,13 @@ void App::GUIMainMenuBar()
     if (ImGui::BeginMenu("File")) {
         // . New .
         if (ImGui::MenuItem("New")) {
-            m_source.clear();
-            m_alt_editor.SetText(m_source);
-            m_source_filename = std::nullopt;
-            m_is_source_dirty = false;
+            if (!m_is_source_dirty) {
+                HandleRegularNew();
+            }
+            else {
+                m_action_unsavedwarn_type = ActionAfterUnsavedWarn_New;
+                m_is_queued_popup_unsavedwarn = true;
+            }
         }
         // . Open .
         if (ImGui::MenuItem("Open")) {

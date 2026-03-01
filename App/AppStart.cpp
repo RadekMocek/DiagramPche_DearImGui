@@ -5,6 +5,8 @@
 
 void App::Start()
 {
+    m_cursor_crosshair = glfwCreateStandardCursor(GLFW_CROSSHAIR_CURSOR);
+
     // = Load Fonts =
     // - If fonts are not explicitly loaded, Dear ImGui will select an embedded font: either AddFontDefaultVector() or AddFontDefaultBitmap().
     //   This selection is based on (style.FontSizeBase * style.FontScaleMain * style.FontScaleDpi) reaching a small threshold.
@@ -40,7 +42,6 @@ void App::Start()
     m_alt_editor.SetLanguageDefinition(TextEditor::LanguageDefinition::NSOLD());
     m_alt_editor.SetPalette(TextEditor::GetDiagramPchePalette());
     m_alt_editor.SetShowWhitespaces(false);
-    m_alt_editor.SetTabSize(1);
     m_alt_editor.SetText(WELCOME_TOML);
 
     // = Initialize all other members =

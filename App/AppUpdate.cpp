@@ -2,6 +2,8 @@
 
 void App::Update()
 {
+    glfwSetCursor(m_window, nullptr);
+
     // .: Main menu bar :.
     GUIMainMenuBar();
 
@@ -46,6 +48,9 @@ void App::Update()
         switch (m_action_unsavedwarn_type) {
         case ActionAfterUnsavedWarn_Invalid:
             std::cerr << "ActionAfterUnsavedWarn_Invalid\n";
+            break;
+        case ActionAfterUnsavedWarn_New:
+            HandleRegularNew();
             break;
         case ActionAfterUnsavedWarn_OpenFile:
             HandleRegularOpen();

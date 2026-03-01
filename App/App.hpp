@@ -56,7 +56,10 @@ private:
 
     enum ActionAfterUnsavedWarn
     {
-        ActionAfterUnsavedWarn_Invalid, ActionAfterUnsavedWarn_OpenFile, ActionAfterUnsavedWarn_LoadExample
+        ActionAfterUnsavedWarn_Invalid,
+        ActionAfterUnsavedWarn_New,
+        ActionAfterUnsavedWarn_OpenFile,
+        ActionAfterUnsavedWarn_LoadExample
     };
 
     // = Members =
@@ -64,6 +67,8 @@ private:
     ImFont* m_font_inconsolata_medium = nullptr;
     const bool m_is_dark_mode = false;
     float m_body_split_ratio = 0.5f;
+
+    GLFWcursor* m_cursor_crosshair;
 
     // TOML source related
     Parser m_parser{};
@@ -126,11 +131,15 @@ private:
     void GUIModal();
 
     // File
+    // - Logic for buttons in MainMenuBar
+    void HandleRegularNew();
     void HandleRegularOpen();
-    void LoadSourceFromFile(const char* filename, bool is_example);
     void HandleRegularSave();
+    // - Underlying logic
+    void LoadSourceFromFile(const char* filename, bool is_example);
     bool SaveSourceToFile(const char* filename) const;
     void SaveSourceToFileFromDialog();
+    // - "Outside of app" logic (open the file in system explorer / image viewer)
     static void ShowFileInFileManager(const std::string& filename);
     static void OpenFile(const std::string& filename);
 
