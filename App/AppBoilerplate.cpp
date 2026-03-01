@@ -15,6 +15,19 @@ void App::GLFWErrorCallback(const int error, const char* description)
     fprintf(stderr, "GLFW Error %d: %s\n", error, description);
 }
 
+/*
+void App::GLFWWindowCloseCallback(GLFWwindow* window)
+{
+    // ReSharper disable once CppTooWideScopeInitStatement
+    const auto this_inst = static_cast<App*>(glfwGetWindowUserPointer(window));
+
+    if (!this_inst->m_should_window_really_close) {
+        glfwSetWindowShouldClose(window, GLFW_FALSE);
+
+    }
+}
+/**/
+
 bool App::Init()
 {
 #ifdef _WIN32
@@ -81,6 +94,8 @@ bool App::Init()
 
     glfwMakeContextCurrent(m_window);
     glfwSwapInterval(1); // Enable vsync
+
+    //glfwSetWindowCloseCallback(m_window, GLFWWindowCloseCallback);
 
     GLFWimage images[1];
     images[0].pixels = stbi_load("./Resource/Icon/icon-256.png", &images[0].width, &images[0].height, nullptr, 4);

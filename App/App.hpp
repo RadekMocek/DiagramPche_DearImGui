@@ -64,11 +64,12 @@ private:
 
     // = Members =
     GLFWwindow* m_window{};
+    bool m_should_window_really_close = false;
+    GLFWcursor* m_cursor_crosshair;
+
     ImFont* m_font_inconsolata_medium = nullptr;
     const bool m_is_dark_mode = false;
     float m_body_split_ratio = 0.5f;
-
-    GLFWcursor* m_cursor_crosshair;
 
     // TOML source related
     Parser m_parser{};
@@ -112,6 +113,7 @@ private:
     // = Functions =
     // Boilerplate
     static void GLFWErrorCallback(int error, const char* description);
+    //static void GLFWWindowCloseCallback(GLFWwindow* window);
     void Start();
     void Update();
 
