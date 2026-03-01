@@ -40,7 +40,13 @@ void App::GUICanvas()
         is_active && ImGui::IsMouseDragging(ImGuiMouseButton_Right, mouse_threshold_for_pan)) {
         m_scrolling.x += io.MouseDelta.x;
         m_scrolling.y += io.MouseDelta.y;
+        // Change cursor shape
         glfwSetCursor(m_window, m_cursor_crosshair);
+        m_is_glfw_cursor_used = true;
+    }
+    else if (m_is_glfw_cursor_used) {
+        glfwSetCursor(m_window, nullptr);
+        m_is_glfw_cursor_used = false;
     }
 
     // Calculate canvas "origin" (position + scrolling), used for drawing
@@ -114,18 +120,33 @@ void App::GUICanvas()
     // .:=======================:.
     // Show tooltip with Node ID on hover
     if (is_hovered) {
-        static std::string tooltip;
-        tooltip.clear();
+        static bool is_some_node_hovered;
+        static std::string hovered_node_key;
+        static int hovered_node_z_mul;
+
+        is_some_node_hovered = false;
+        hovered_node_z_mul = -1;
+
         for (const auto& [key, value] : m_canvas_nodes) {
-            if (value.IsPointInsideIncl(mouse_pos_in_canvas)) {
-                // Remove newlines
-                auto key_copy = key;
-                std::ranges::replace(key_copy, '\n', ' ');
-                tooltip += ", " + key_copy;
+            if (value.z_mul > hovered_node_z_mul && value.IsPointInsideIncl(mouse_pos_in_canvas)) {
+                is_some_node_hovered = true;
+                hovered_node_key = key;
+                hovered_node_z_mul = value.z_mul;
             }
         }
-        if (!tooltip.empty()) {
-            ImGui::SetTooltip("%s", tooltip.substr(2).c_str());
+        if (is_some_node_hovered) {
+            ImGui::SetTooltip("%s", hovered_node_key.c_str());
+
+            if (io.KeyCtrl && ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
+                const auto& hovered_node = m_canvas_nodes[hovered_node_key];
+
+                if (m_do_use_alt_editor) {
+                    m_alt_editor.SetCursorPosition({hovered_node.def_line_num, 0});
+                }
+                else {
+                    ShowErrorModal("Vanilla text editor does not support jumping to node's definition.");
+                }
+            }
         }
     }
 

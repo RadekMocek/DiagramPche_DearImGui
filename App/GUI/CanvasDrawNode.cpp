@@ -6,6 +6,9 @@
 
 void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, const float zoom_level, const int font_size)
 {
+    const auto n_nodes = m_parser.m_result_nodes_pq.size();
+    auto node_n = 0;
+
     const float node_padding = NODE_BORDER_OFFSET_BASE * zoom_level;
 
     for (; !m_parser.m_result_nodes_pq.empty(); m_parser.m_result_nodes_pq.pop()) {
@@ -85,6 +88,8 @@ void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, const f
         canvas_node.bottom_right = aabr_bottom_right;
         canvas_node.center = ImVec2(aabr_top_left.x + node_width / 2,
                                     aabr_top_left.y + node_height / 2);
+        canvas_node.z_mul = node.z * n_nodes + node_n++;
+        canvas_node.def_line_num = node.def_line_num;
 
         // By adding origin (canvas position in window + scrolling) to AABR we get proper drawing coordinates
         const auto draw_top_left = origin + aabr_top_left;

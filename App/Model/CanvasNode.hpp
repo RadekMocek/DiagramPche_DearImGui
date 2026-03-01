@@ -10,6 +10,16 @@ struct CanvasNode
     ImVec2 bottom_right;
     ImVec2 center;
 
+    // = Canvas interaction =
+
+    // Another metric to determine node's z-value. This one is used while interacting with nodes through the canvas.
+    // If more nodes are on top of each other on the z-axis, we need to determine one, that will be chosen e.g. on click.
+    // Preferably the one that was drawn last in the imdrawlist channel with biggest layer.
+    // With this number, bigger means better ("closer" to the cursor).
+    int z_mul;
+
+    int def_line_num{};
+
     [[nodiscard]] constexpr ImVec2 GetExactPointFromPivot(const Pivot pivot) const
     {
         switch (pivot) {

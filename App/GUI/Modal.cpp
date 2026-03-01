@@ -22,7 +22,7 @@ void App::GUIModal()
     constexpr auto COLOR_BAD_CLICK = IM_COL32(224, 13, 13, 255);
 
     // (For centering modals when they appear)
-    const auto Center = [] {
+    const auto CenterNextModal = [] {
         const ImVec2 center = ImGui::GetMainViewport()->GetCenter();
         ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
     };
@@ -32,7 +32,7 @@ void App::GUIModal()
 
     // .: Export modal :.
     // .:==============:.
-    Center();
+    CenterNextModal();
     constexpr auto MODAL_EXPORT_NAME = "Export to SVG##modal";
     static bool _is_popup_export_open = true; // To enable modal close button
     static bool do_overwrite_export;
@@ -114,7 +114,7 @@ void App::GUIModal()
 
     // .: About modal :.
     // .:=============:.
-    Center();
+    CenterNextModal();
     constexpr auto MODAL_ABOUT_NAME = "About##modal";
     if (m_is_queued_popup_about) {
         m_is_queued_popup_about = false;
@@ -132,7 +132,7 @@ void App::GUIModal()
 
     // .: Unsaved file warning modal :.
     // .:============================:.
-    Center();
+    CenterNextModal();
     constexpr auto MODAL_UNSAVEDWARN_NAME = "You have unsaved changes##modal";
     if (m_is_queued_popup_unsavedwarn) {
         m_is_queued_popup_unsavedwarn = false;
@@ -167,7 +167,7 @@ void App::GUIModal()
 
     // .: Error modal :.
     // .:=============:.
-    Center();
+    CenterNextModal();
     constexpr auto MODAL_ERROR_NAME = "Error##modal";
     if (m_is_queued_popup_error) {
         m_is_queued_popup_error = false;

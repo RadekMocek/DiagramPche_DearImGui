@@ -222,4 +222,6 @@ void App::Run()
     // See begin of `App::Init()`.
     CoUninitialize();
 #endif
+
+    std::cout << "Bye!\n";
 }

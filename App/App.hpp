@@ -66,7 +66,9 @@ private:
     // = Members =
     GLFWwindow* m_window{};
     bool m_should_window_really_close = false;
+
     GLFWcursor* m_cursor_crosshair{};
+    bool m_is_glfw_cursor_used = false;
 
     ImFont* m_font_inconsolata_medium = nullptr;
     const bool m_is_dark_mode = false;

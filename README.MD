@@ -15,7 +15,7 @@
 * Canvas features:
   * [x] Canvas zooming: anchor under mouse
   * [x] Change the cursor type while dragging the canvas
-  * [ ] Ctrl+Click to jump to node definition in editor
+  * [x] Ctrl+Click to jump to node definition in text editor
 * Settings window:
   * [x] Switch between vanilla and 3rd party text editor
   * [ ] Remember settings

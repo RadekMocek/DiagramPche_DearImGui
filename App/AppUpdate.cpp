@@ -2,8 +2,6 @@
 
 void App::Update()
 {
-    glfwSetCursor(m_window, nullptr);
-
     // .: Main menu bar :.
     GUIMainMenuBar();
 

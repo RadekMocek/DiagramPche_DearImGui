@@ -37,6 +37,9 @@ struct Node
     // = Other internal =
     int draw_batch_number = 0;
 
+    // = Canvas interaction =
+    int def_line_num{};
+
     // For priority queue
     bool operator<(const Node& other) const
     {
