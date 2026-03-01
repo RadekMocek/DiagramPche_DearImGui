@@ -57,6 +57,7 @@ private:
     enum ActionAfterUnsavedWarn
     {
         ActionAfterUnsavedWarn_Invalid,
+        ActionAfterUnsavedWarn_Exit,
         ActionAfterUnsavedWarn_New,
         ActionAfterUnsavedWarn_OpenFile,
         ActionAfterUnsavedWarn_LoadExample
@@ -65,7 +66,7 @@ private:
     // = Members =
     GLFWwindow* m_window{};
     bool m_should_window_really_close = false;
-    GLFWcursor* m_cursor_crosshair;
+    GLFWcursor* m_cursor_crosshair{};
 
     ImFont* m_font_inconsolata_medium = nullptr;
     const bool m_is_dark_mode = false;
@@ -113,7 +114,7 @@ private:
     // = Functions =
     // Boilerplate
     static void GLFWErrorCallback(int error, const char* description);
-    //static void GLFWWindowCloseCallback(GLFWwindow* window);
+    static void GLFWWindowCloseCallback(GLFWwindow* window);
     void Start();
     void Update();
 

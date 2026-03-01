@@ -6,7 +6,7 @@
   * [x] View → Jump to canvas origin
   * Saving/loading:
     * [x] New, Open, Save, Save as
-    * [ ] Confirm unsaved exit
+    * [x] Confirm unsaved exit (OS close button, alt+f4, mainmenubar option)
     * [x] Confirm unsaved new
     * [x] Confirm unsaved open, including loading a debug diagram or an example
     * [x] Change window name according to opened document (incl. star for unsaved)

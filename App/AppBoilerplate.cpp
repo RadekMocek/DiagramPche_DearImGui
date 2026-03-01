@@ -15,18 +15,17 @@ void App::GLFWErrorCallback(const int error, const char* description)
     fprintf(stderr, "GLFW Error %d: %s\n", error, description);
 }
 
-/*
 void App::GLFWWindowCloseCallback(GLFWwindow* window)
 {
     // ReSharper disable once CppTooWideScopeInitStatement
     const auto this_inst = static_cast<App*>(glfwGetWindowUserPointer(window));
 
-    if (!this_inst->m_should_window_really_close) {
+    if (!this_inst->m_should_window_really_close && this_inst->m_is_source_dirty) {
         glfwSetWindowShouldClose(window, GLFW_FALSE);
-
+        this_inst->m_action_unsavedwarn_type = ActionAfterUnsavedWarn_Exit;
+        this_inst->m_is_queued_popup_unsavedwarn = true;
     }
 }
-/**/
 
 bool App::Init()
 {
@@ -89,13 +88,15 @@ bool App::Init()
                                 nullptr,
                                 nullptr);
     if (m_window == nullptr) {
+        glfwTerminate();
         return false;
     }
+    glfwSetWindowUserPointer(m_window, this);
 
     glfwMakeContextCurrent(m_window);
     glfwSwapInterval(1); // Enable vsync
 
-    //glfwSetWindowCloseCallback(m_window, GLFWWindowCloseCallback);
+    glfwSetWindowCloseCallback(m_window, GLFWWindowCloseCallback);
 
     GLFWimage images[1];
     images[0].pixels = stbi_load("./Resource/Icon/icon-256.png", &images[0].width, &images[0].height, nullptr, 4);

@@ -47,7 +47,13 @@ void App::GUIMainMenuBar()
         ImGui::Separator();
         // . Exit .
         if (ImGui::MenuItem("Exit", "Alt+F4")) {
-            glfwSetWindowShouldClose(m_window, GLFW_TRUE);
+            if (!m_is_source_dirty) {
+                glfwSetWindowShouldClose(m_window, GLFW_TRUE);
+            }
+            else {
+                m_action_unsavedwarn_type = ActionAfterUnsavedWarn_Exit;
+                m_is_queued_popup_unsavedwarn = true;
+            }
         }
         // .::.
         ImGui::EndMenu();

@@ -49,6 +49,10 @@ void App::Update()
         case ActionAfterUnsavedWarn_Invalid:
             std::cerr << "ActionAfterUnsavedWarn_Invalid\n";
             break;
+        case ActionAfterUnsavedWarn_Exit:
+            m_should_window_really_close = true;
+            glfwSetWindowShouldClose(m_window, GLFW_TRUE);
+            break;
         case ActionAfterUnsavedWarn_New:
             HandleRegularNew();
             break;
