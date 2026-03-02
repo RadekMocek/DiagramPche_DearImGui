@@ -135,17 +135,43 @@ void App::GUICanvas()
             }
         }
         if (is_some_node_hovered) {
-            ImGui::SetTooltip("%s", hovered_node_key.c_str());
+            // Tooltip with selected node id
+            //ImGui::SetTooltip("%s", hovered_node_key.c_str());
 
-            if (io.KeyCtrl && ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
+            // Left click on a hovered node
+            if (ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
                 const auto& hovered_node = m_canvas_nodes[hovered_node_key];
-
-                if (m_do_use_alt_editor) {
-                    m_alt_editor.SetCursorPosition({hovered_node.def_line_num, 0});
+                // Ctrl + Leftclick to show node's definition in the text editor
+                if (io.KeyCtrl) {
+                    if (m_do_use_alt_editor) {
+                        m_alt_editor.SetCursorPosition({hovered_node.def_line_num, 0});
+                    }
+                    else {
+                        ShowErrorModal("Vanilla text editor does not support jumping to node's definition.");
+                    }
                 }
+                // Leftclick w/o modifiers to select the node
                 else {
-                    ShowErrorModal("Vanilla text editor does not support jumping to node's definition.");
+                    m_selected_or_hovered_canvas_node_key = hovered_node_key;
+                    m_is_canvas_node_selected = true;
                 }
+            }
+
+            if (!m_is_canvas_node_selected) {
+                m_selected_or_hovered_canvas_node_key = hovered_node_key;
+            }
+        }
+        else {
+            // No node hovered
+            if (m_is_canvas_node_selected) {
+                if (ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
+                    // Left click to an empty space when some node is selected
+                    m_selected_or_hovered_canvas_node_key = std::nullopt;
+                    m_is_canvas_node_selected = false;
+                }
+            }
+            else {
+                m_selected_or_hovered_canvas_node_key = std::nullopt;
             }
         }
     }

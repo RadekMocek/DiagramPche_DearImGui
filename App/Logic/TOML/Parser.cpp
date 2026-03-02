@@ -79,7 +79,7 @@ void Parser::Parse(const std::string& source)
                     // Currently processed Node
                     Node curr_node;
                     curr_node.id = node_id;
-                    curr_node.def_line_num = node_key.source().begin.line - 1;
+                    curr_node.def_line_num = static_cast<int>(node_key.source().begin.line) - 1;
 
                     // Parse `node_value_table` data and set `curr_node` members; or set error message
                     ParseNode(node_value_table, curr_node);
@@ -274,7 +274,7 @@ void Parser::SetColorFromArray(
         };
     }
     else if (const auto* value_str_ptr = value.as_string()) {
-        to_set = GetTupleFromString(value_str_ptr->value_or(""));
+        to_set = GetColorTupleFromString(value_str_ptr->value_or(""));
     }
     else ReportError(value.source(), "An array of four uchars (0–255) or RGBA hex string must follow after 'color='");
 }

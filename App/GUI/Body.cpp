@@ -27,6 +27,9 @@ void App::GUIBody()
     // Do the TOML parse
     m_parser.Parse(m_source);
 
+    // Toolbar
+    GUIToolbar();
+
     // Two main columns with draggable separator between them
     ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
     const ImVec2 content_region_available = ImGui::GetContentRegionAvail();

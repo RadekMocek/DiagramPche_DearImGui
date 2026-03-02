@@ -13,6 +13,10 @@ void App::GUITextEditorAlt(const float textedit_width)
     m_alt_editor.Render("##SourceAlt");
     m_source = m_alt_editor.GetText(); // Diagram gets build from m_source
 
+    if (!m_source.empty() && m_source.back() == '\n') {
+        m_source.pop_back();
+    }
+
     if (m_alt_editor.IsTextChanged()) {
         m_is_source_dirty = true;
     }

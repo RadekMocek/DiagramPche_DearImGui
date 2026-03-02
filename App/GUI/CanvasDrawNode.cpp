@@ -6,7 +6,7 @@
 
 void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, const float zoom_level, const int font_size)
 {
-    const auto n_nodes = m_parser.m_result_nodes_pq.size();
+    const auto n_nodes = static_cast<int>(m_parser.m_result_nodes_pq.size());
     auto node_n = 0;
 
     const float node_padding = NODE_BORDER_OFFSET_BASE * zoom_level;
@@ -77,7 +77,7 @@ void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, const f
             break;
         }
 
-        // Calculate and store the AABR
+        // Prepare data for storing in `m_canvas_nodes` (AABR etc.), used for drawing and canvas interaction later
         const auto aabr_top_left = node_pos + parent_offset + pivot_offset;
         const ImVec2 aabr_bottom_right(aabr_top_left.x + node_width,
                                        aabr_top_left.y + node_height);
@@ -89,7 +89,10 @@ void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, const f
         canvas_node.center = ImVec2(aabr_top_left.x + node_width / 2,
                                     aabr_top_left.y + node_height / 2);
         canvas_node.z_mul = node.z * n_nodes + node_n++;
+        // Opičárna
         canvas_node.def_line_num = node.def_line_num;
+        canvas_node.color = node.color;
+        canvas_node.color_source = node.color_source;
 
         // By adding origin (canvas position in window + scrolling) to AABR we get proper drawing coordinates
         const auto draw_top_left = origin + aabr_top_left;
@@ -99,15 +102,14 @@ void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, const f
         const auto z = DLUserChannelToRealChannel(node.z, true);
         draw_list->ChannelsSetCurrent(z);
 
-        draw_list->AddRectFilled(draw_top_left,
-                                 draw_bottom_right,
-                                 GetColorFromTuple(node.color),
-                                 0,
-                                 0);
+        // Draw inner rectangle
+        const auto node_color = GetImU32FromColorTuple(node.color);
+        draw_list->AddRectFilled(draw_top_left, draw_bottom_right, node_color, 0, 0);
 
         constexpr auto COLOR_NODE_EDGE = IM_COL32(0, 0, 0, 255);
         draw_list->AddRect(draw_top_left, draw_bottom_right, COLOR_NODE_EDGE, 0, 0, zoom_level);
 
+        // Draw outer rectangle (edge)
         m_exporter.AddRect(z,
                            draw_top_left.x,
                            draw_top_left.y,

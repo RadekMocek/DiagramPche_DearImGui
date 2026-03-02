@@ -4,13 +4,21 @@
 
 #include "imgui.h"
 
-constexpr ImU32 GetColorFromTuple(const std::tuple<unsigned char, unsigned char, unsigned char, unsigned char>& tup)
+using ColorTuple = std::tuple<unsigned char, unsigned char, unsigned char, unsigned char>;
+
+constexpr ImU32 GetImU32FromColorTuple(const ColorTuple& tup)
 {
-    return IM_COL32(std::get<0>(tup), std::get<1>(tup), std::get<2>(tup), std::get<3>(tup));
+    const auto [r, g, b, a] = tup;
+    return IM_COL32(r, g, b, a);
 }
 
-constexpr std::tuple<unsigned char, unsigned char, unsigned char, unsigned char>
-GetTupleFromString(const std::string& color_str)
+constexpr ImVec4 GetImVec4FromColorTuple(const ColorTuple& tup)
+{
+    const auto [r, g, b, a] = tup;
+    return ImVec4(r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f);
+}
+
+constexpr ColorTuple GetColorTupleFromString(const std::string& color_str)
 {
     if (color_str.length() == 9 && color_str[0] == '#') {
         unsigned int r = 0, g = 0, b = 0, a = 0;
@@ -26,13 +34,14 @@ GetTupleFromString(const std::string& color_str)
 }
 
 /*
-constexpr std::string TupleToRGBAHex(const std::tuple<unsigned char, unsigned char, unsigned char, unsigned char>& tup)
+constexpr std::string GetRGBAHexFromColorTuple(const ColorTuple& tup)
 {
-char result[10];
-std::sprintf(result, "#%02X%02X%02X%02X", std::get<0>(tup), std::get<1>(tup), std::get<2>(tup), std::get<3>(tup));
-return result;
+    const auto [r, g, b, a] = tup;
+    char result[10];
+    std::sprintf(result, "#%02X%02X%02X%02X", r, g, b, a);
+    return result;
 }
-*/
+/**/
 
 inline void SetButtonColors(const ImU32 COLOR_NORMAL, const ImU32 COLOR_HOVER, const ImU32 COLOR_CLICK)
 {

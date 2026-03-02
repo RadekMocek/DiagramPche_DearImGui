@@ -16,9 +16,13 @@ struct CanvasNode
     // If more nodes are on top of each other on the z-axis, we need to determine one, that will be chosen e.g. on click.
     // Preferably the one that was drawn last in the imdrawlist channel with biggest layer.
     // With this number, bigger means better ("closer" to the cursor).
-    int z_mul;
+    int z_mul{};
 
+    // For jumping to source via Ctrl+LMB
     int def_line_num{};
+
+    std::tuple<unsigned char, unsigned char, unsigned char, unsigned char> color{};
+    std::optional<toml::source_region> color_source{};
 
     [[nodiscard]] constexpr ImVec2 GetExactPointFromPivot(const Pivot pivot) const
     {

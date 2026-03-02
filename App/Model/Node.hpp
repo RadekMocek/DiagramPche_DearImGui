@@ -39,6 +39,7 @@ struct Node
 
     // = Canvas interaction =
     int def_line_num{};
+    std::optional<toml::source_region> color_source = std::nullopt;
 
     // For priority queue
     bool operator<(const Node& other) const

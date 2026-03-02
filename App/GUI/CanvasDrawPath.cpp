@@ -17,7 +17,7 @@ void App::GUICanvasDrawPaths(ImDrawList* draw_list, const ImVec2 origin, const f
         draw_list->ChannelsSetCurrent(z);
 
         // Get the "simple" values from path
-        const auto color = GetColorFromTuple(path.color);
+        const auto color = GetImU32FromColorTuple(path.color);
         const auto shift = path.shift;
 
         // Prepare the start point

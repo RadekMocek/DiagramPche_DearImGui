@@ -90,6 +90,9 @@ private:
     std::unordered_map<std::string, CanvasNode> m_canvas_nodes{};
     int m_canvas_font_size{};
     float m_canvas_zoom_level{};
+    // Canvas interaction
+    std::optional<std::string> m_selected_or_hovered_canvas_node_key = std::nullopt;
+    bool m_is_canvas_node_selected = false;
 
     // Modeless
     bool m_do_show_window_demo = false;
@@ -126,6 +129,7 @@ private:
     void GUITextEditor(float textedit_width);
     void GUITextEditorAlt(float textedit_width);
 
+    void GUIToolbar();
     void GUICanvas();
     void GUICanvasDrawNodes(ImDrawList* draw_list, ImVec2 origin, float zoom_level, int font_size);
     void GUICanvasDrawPaths(ImDrawList* draw_list, ImVec2 origin, float zoom_level);
@@ -156,6 +160,9 @@ private:
                                               const nfdu8filteritem_t* filters,
                                               nfdfiltersize_t n_filters) const;
     std::optional<std::string> OpenTOMLDialog() const;
+
+    // Source editing from canvas interaction
+    std::optional<size_t> GetMSourceIdxFromSourceRegion(const toml::source_position& position);
 
     //
     void ShowErrorModal(const std::string& error_message)

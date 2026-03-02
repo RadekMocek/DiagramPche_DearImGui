@@ -29,6 +29,7 @@ void Parser::ParseNode(const toml::table* node_table, Node& curr_node)
         // == color ==> array of four u8s (rgba) or RGBA hex string ("#xxxxxxxx")
         else if (key_str == "color") {
             SetColorFromArray(value, curr_node.color);
+            curr_node.color_source = value.source();
         }
         // == size ==> array of two items [width, height], where each is specified either by integer or a string with variable name
         else if (key_str == "size") {

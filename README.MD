@@ -4,6 +4,7 @@
 
 * General:
   * [x] View → Jump to canvas origin
+  * [ ] View → Zoom slider
   * Saving/loading:
     * [x] New, Open, Save, Save as
     * [x] Confirm unsaved exit (OS close button, alt+f4, mainmenubar option)
@@ -11,7 +12,7 @@
     * [x] Confirm unsaved open, including loading a debug diagram or an example
     * [x] Change window name according to opened document (incl. star for unsaved)
   * [x] Code editor syntax highlight
-  * [ ] Klávesové zkratky (<kbd>Alt</kbd> pro navigaci v MainMenuBar, <kbd>Ctrl</kbd>+<kbd>S</kbd> pro uložení atd.)
+  * [ ] Klávesové zkratky (<kbd>Alt</kbd> pro navigaci v MainMenuBar, <kbd>Ctrl</kbd>+<kbd>S</kbd> pro uložení, <kbd>Ctrl</kbd>+<kbd>+</kbd> zoom atd.)
 * Canvas features:
   * [x] Canvas zooming: anchor under mouse
   * [x] Change the cursor type while dragging the canvas
@@ -21,6 +22,10 @@
   * [ ] Remember settings
 * Dear ImGui specific:
   * [x] ImGuiColorTextEdit: Tab insert 4 spaces
+  * [ ] Check `CalcTextSizeA` usages
+* TOML Parser:
+  * [ ] __Try this: do not std::move into priority queue, use pq just for determining draw order and nothing more. Why? Diagram won't dissappear if there is an initial TOML parse error and there will be no need for `m_canvas_nodes`__ 
+  * [ ] Benchmark without freetype?
 
 ## Problems
 
@@ -31,6 +36,7 @@
 * ImGuiColorTextEdit problems:
   * Scrolling by holding up/down arrow key weird "jumpy" behavior
   * No Ctrl + Backspace for removing the whole word (same for Delete)
+  * Selecting text by holding LMB and dragging pauses when curosr is out of the widget area
 * Error highlight breaks on tab
 * Hacky SVG edit
   * It seems that only modern web browsers support svg fill transparency via rgba(r,g,b,a) or #RRGGBBAA, so I'm using the style="..." option, which the svg library wasn't made for, hence the "hack"
