@@ -68,6 +68,7 @@ void App::GUIToolbar()
                 const auto length = end - start;
                 const auto new_str = GetRGBAHexFromImVec4(color); // TODO get this from IMGUI somehow?
                 m_source.replace(start, length, std::format("\"{}\"", new_str));
+                //std::cout<<"Replace end\n";
             }
         }
         else {
@@ -78,6 +79,8 @@ void App::GUIToolbar()
             m_alt_editor.SetText(m_source);
         }
     }
+
+    //std::cout<<"Color picker end\n";
 
     //*
     ImGui::SameLine();

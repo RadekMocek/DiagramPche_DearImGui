@@ -33,7 +33,7 @@ constexpr ColorTuple GetColorTupleFromString(const std::string& color_str)
     return {0, 0, 0, 0};
 }
 
-constexpr std::string GetRGBAHexFromImVec4(const ImVec4& vec)
+inline std::string GetRGBAHexFromImVec4(const ImVec4& vec)
 {
     const auto [r, g, b, a] = vec;
     char result[10];

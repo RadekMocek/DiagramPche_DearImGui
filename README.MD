@@ -24,7 +24,7 @@
   * [x] ImGuiColorTextEdit: Tab insert 4 spaces
   * [ ] Check `CalcTextSizeA` usages
 * TOML Parser:
-  * [ ] __Try this: do not std::move into priority queue, use pq just for determining draw order and nothing more. Why? Diagram won't dissappear if there is an initial TOML parse error and there will be no need for `m_canvas_nodes`__ 
+  * [ ] __Try this: do not std::move into priority queue, use pq just for determining draw order and nothing more. Why? Diagram won't dissappear if there is an initial TOML parse error and there will be no need for `m_canvas_nodes`, which also has one frame delay in GUIToolbar (turns out that's not ideal)__
   * [ ] Benchmark without freetype?
 
 ## Problems
