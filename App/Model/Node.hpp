@@ -38,13 +38,6 @@ struct Node
     int draw_batch_number = 0;
 
     // = Canvas interaction =
-    int def_line_num{};
+    toml::source_region node_source{};
     std::optional<toml::source_region> color_source = std::nullopt;
-
-    // For priority queue
-    bool operator<(const Node& other) const
-    {
-        // Negative so lower `draw_batch_number` has priority in priority queue
-        return -draw_batch_number < -other.draw_batch_number;
-    }
 };

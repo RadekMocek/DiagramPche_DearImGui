@@ -46,7 +46,7 @@ inline std::string GetRGBAHexFromImVec4(const ImVec4& vec)
 }
 
 /*
-constexpr std::string GetRGBAHexFromColorTuple(const ColorTuple& tup)
+inline std::string GetRGBAHexFromColorTuple(const ColorTuple& tup)
 {
     const auto [r, g, b, a] = tup;
     char result[10];

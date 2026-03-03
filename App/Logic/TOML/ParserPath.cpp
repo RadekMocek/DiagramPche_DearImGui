@@ -106,7 +106,7 @@ void Parser::ParsePathStartOrEnd(const toml::node& value, Point& to_set)
     SetPositionPointFromArray(value, to_set);
     // Check if the parent id exist, `SetPositionPointFromArray` does not do that because all nodes might not parsed yet when we call it (now they are)
     if (const auto& parent_id = to_set.parent_id;
-        !parent_id.empty() && !m_nodes_map.contains(parent_id)) {
+        !parent_id.empty() && !m_result_nodes.contains(parent_id)) {
         ReportError(to_set.parent_id_source_region,
                     std::format("Path's start/end is referencing non existant id: '{}'", parent_id));
     }
@@ -133,7 +133,7 @@ void Parser::ParsePathpointXOrY(const toml::array* pathpoint_arr_ptr, const bool
         }
     }
     else { // Some ID => pathpoint type is REFERENCE => check if ID is valid and get parent's pivot
-        if (!m_nodes_map.contains(id_str)) {
+        if (!m_result_nodes.contains(id_str)) {
             ReportError(pathpoint_arr_ptr->at(0 + arr_offset).source(),
                         std::format("Pathpoint's x is referencing non existant id: '{}'", id_str));
         }

@@ -53,6 +53,9 @@ void App::Start()
 
     m_source = WELCOME_TOML;
     m_is_source_dirty = false;
+
+    //
+    DEFAULT_TOOLBAR_NODE.color = {114, 144, 154, 200};
 }
 
 void App::ResetCanvasScrollingAndZoom()

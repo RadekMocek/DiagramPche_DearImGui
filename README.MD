@@ -17,6 +17,8 @@
   * [x] Canvas zooming: anchor under mouse
   * [x] Change the cursor type while dragging the canvas
   * [x] Ctrl+Click to jump to node definition in text editor
+  * Canvas toolbar:
+    * [x] Change color node with color picker
 * Settings window:
   * [x] Switch between vanilla and 3rd party text editor
   * [ ] Remember settings
@@ -24,7 +26,7 @@
   * [x] ImGuiColorTextEdit: Tab insert 4 spaces
   * [ ] Check `CalcTextSizeA` usages
 * TOML Parser:
-  * [ ] __Try this: do not std::move into priority queue, use pq just for determining draw order and nothing more. Why? Diagram won't dissappear if there is an initial TOML parse error and there will be no need for `m_canvas_nodes`, which also has one frame delay in GUIToolbar (turns out that's not ideal)__
+  * [x] Refactor TOML parsing: do not std::move into priority queue, use pq just for determining draw order and nothing more
   * [ ] Benchmark without freetype?
 
 ## Problems

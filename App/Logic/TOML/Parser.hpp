@@ -11,8 +11,24 @@
 class Parser
 {
 public:
+    // Helper struct
+    struct NodePriority
+    {
+        int draw_batch_number = 0;
+        std::string id{};
+
+        bool operator<(const NodePriority& other) const
+        {
+            // Negative so lower `draw_batch_number` has priority in priority queue
+            return -draw_batch_number < -other.draw_batch_number;
+        }
+    };
+
     // Parsing results
-    std::priority_queue<Node> m_result_nodes_pq;
+    // [node]
+    std::unordered_map<std::string, Node> m_result_nodes;
+    std::priority_queue<NodePriority> m_result_nodes_pq;
+    // [[path]]
     std::vector<Path> m_result_paths;
 
     // Error report
@@ -24,8 +40,10 @@ public:
     void Parse(const std::string& source);
 
 private:
+    // [variables]
     std::unordered_map<std::string, int> m_variables;
-    std::unordered_map<std::string, Node> m_nodes_map;
+
+    void UpdatePQ();
 
     void ReportError(const toml::source_region& error_source_region, const std::string& error_description);
 

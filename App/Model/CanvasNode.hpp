@@ -21,9 +21,6 @@ struct CanvasNode
     // For jumping to source via Ctrl+LMB
     int def_line_num{};
 
-    std::tuple<unsigned char, unsigned char, unsigned char, unsigned char> color{};
-    std::optional<toml::source_region> color_source{};
-
     [[nodiscard]] constexpr ImVec2 GetExactPointFromPivot(const Pivot pivot) const
     {
         switch (pivot) {

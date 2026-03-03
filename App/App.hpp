@@ -175,4 +175,7 @@ private:
     {
         glfwSetWindowTitle(m_window, title);
     }
+
+    //
+    Node DEFAULT_TOOLBAR_NODE;
 };

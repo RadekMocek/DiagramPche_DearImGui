@@ -1,7 +1,6 @@
 #include "../App.hpp"
 #include "../Config.hpp"
 #include "../Helper/Color.hpp"
-#include "../Helper/Draw.hpp"
 #include "../Helper/DrawLayer.hpp"
 
 void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, const float zoom_level, const int font_size)
@@ -12,7 +11,8 @@ void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, const f
     const float node_padding = NODE_BORDER_OFFSET_BASE * zoom_level;
 
     for (; !m_parser.m_result_nodes_pq.empty(); m_parser.m_result_nodes_pq.pop()) {
-        const auto& node = m_parser.m_result_nodes_pq.top();
+        const auto& [node_draw_batch_number, node_id] = m_parser.m_result_nodes_pq.top();
+        const auto& node = m_parser.m_result_nodes[node_id];
 
         // Dear ImGui text functions take `const char*`
         const auto label_c_str = node.value.c_str();
@@ -89,10 +89,7 @@ void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, const f
         canvas_node.center = ImVec2(aabr_top_left.x + node_width / 2,
                                     aabr_top_left.y + node_height / 2);
         canvas_node.z_mul = node.z * n_nodes + node_n++;
-        // Opičárna
-        canvas_node.def_line_num = node.def_line_num;
-        canvas_node.color = node.color;
-        canvas_node.color_source = node.color_source;
+        canvas_node.def_line_num = node.node_source.begin.line - 1;
 
         // By adding origin (canvas position in window + scrolling) to AABR we get proper drawing coordinates
         const auto draw_top_left = origin + aabr_top_left;

@@ -17,9 +17,8 @@ void Parser::Parse(const std::string& source)
     }
     catch (const toml::parse_error& err) {
         ReportError(err.source(), std::string(err.description()));
-        // By returning here, last valid TOML could be drawn.
-        // But priority queue has been popped empty, and node info was std::moved from the map. So, in current state, it cannot be drawn.
-        // This is true for nodes, paths will be still drawn thanks to this return.
+        // By returning here, and filling PQ with nodes from previous iteration, last valid TOML will be drawn (better than everything dissappearing).
+        UpdatePQ();
         return;
     }
 
@@ -41,9 +40,10 @@ void Parser::Parse(const std::string& source)
 
     // .: Nodes :.
     // .:=======:.
-    // This map is used to store nodes while they are being parsed and then for checking node references and updating their draw order (more info below).
-    // After that, nodes are moved into priority queue, which is used by the canvas to draw them in correct order.
-    m_nodes_map.clear();
+    // This map is used to store nodes while they are being parsed (key == node ID)
+    // and then for checking node references and updating their draw order (more info below).
+    // (After that, node IDs and their draw order is moved into priority queue, which is used by the canvas to draw Nodes in correct order.)
+    m_result_nodes.clear();
 
     // Each node can have its coordinates defined absolutely (xy=[10,10]) or relatively (xy=["some_id","center",10,10]).
     // For the relative option, `xy`'s first two parameters are parent node's ID and parent node's pivot.
@@ -79,7 +79,7 @@ void Parser::Parse(const std::string& source)
                     // Currently processed Node
                     Node curr_node;
                     curr_node.id = node_id;
-                    curr_node.def_line_num = static_cast<int>(node_key.source().begin.line) - 1;
+                    curr_node.node_source = node_key.source();
 
                     // Parse `node_value_table` data and set `curr_node` members; or set error message
                     ParseNode(node_value_table, curr_node);
@@ -100,7 +100,7 @@ void Parser::Parse(const std::string& source)
                         // (Optimization) If dependant's node parent is stable, we can mark dependant node also as stable, and set the `draw_batch_number` one higher
                         // than that of the parent. (We'll be doing this later for every reference pair that does not undergo this optimization.)
                         if (const auto& parent_id = curr_node.position.parent_id; stable_nodes.contains(parent_id)) {
-                            curr_node.draw_batch_number = m_nodes_map.at(parent_id).draw_batch_number + 1;
+                            curr_node.draw_batch_number = m_result_nodes.at(parent_id).draw_batch_number + 1;
                             stable_nodes.insert(curr_node.id);
                         }
                         else {
@@ -112,7 +112,7 @@ void Parser::Parse(const std::string& source)
                     }
 
                     // Add node to the result collection
-                    m_nodes_map.emplace(curr_node.id, std::move(curr_node));
+                    m_result_nodes.emplace(curr_node.id, std::move(curr_node));
                 }
             }
         }
@@ -131,16 +131,16 @@ void Parser::Parse(const std::string& source)
 
         for (const auto& [dep_id, ref_id] : refs) {
             // Check if the referred ID does exist
-            if (!m_is_error && !m_nodes_map.contains(ref_id)) {
-                ReportError(m_nodes_map[dep_id].position.parent_id_source_region,
+            if (!m_is_error && !m_result_nodes.contains(ref_id)) {
+                ReportError(m_result_nodes[dep_id].position.parent_id_source_region,
                             std::format("Node '{}' is referencing non existant id: '{}'", dep_id, ref_id));
             }
 
             if (!stable_nodes.contains(dep_id) // Is p1 unstable and
                 && stable_nodes.contains(ref_id) // is p2 stable?
             ) { // Update the batch number and mark as stable
-                const auto& referred_node = m_nodes_map.at(ref_id);
-                auto& dependant_node = m_nodes_map.at(dep_id);
+                const auto& referred_node = m_result_nodes.at(ref_id);
+                auto& dependant_node = m_result_nodes.at(dep_id);
                 dependant_node.draw_batch_number = referred_node.draw_batch_number + 1;
 
                 stable_nodes.insert(dep_id);
@@ -151,10 +151,10 @@ void Parser::Parse(const std::string& source)
 
     // At this point, if there are still some unresolved references, that means we have a circular reference
     // Pinpointing the exact loop would need aditional logic so we'll just fill the error message with all unstable node IDs
-    if (!m_is_error && stable_nodes.size() < m_nodes_map.size()) {
+    if (!m_is_error && stable_nodes.size() < m_result_nodes.size()) {
         m_error_source_region = {};
         m_error_description = "Circular reference somewhere among:";
-        for (const auto& key : m_nodes_map | std::views::keys) {
+        for (const auto& key : m_result_nodes | std::views::keys) {
             if (!stable_nodes.contains(key)) {
                 m_error_description += std::format(" '{}'", key);
             }
@@ -162,11 +162,8 @@ void Parser::Parse(const std::string& source)
         m_is_error = true;
     }
 
-    // Move nodes from `m_nodes_map` to `m_result_nodes_pq`
-    m_result_nodes_pq = std::priority_queue<Node>();
-    for (auto& value : m_nodes_map | std::views::values) {
-        m_result_nodes_pq.push(std::move(value)); // Moved out of a map, accessing the map now means crash
-    }
+    // Set up `m_result_nodes_pq`
+    UpdatePQ();
 
     // .: Paths :.
     // .:=======:.
@@ -193,6 +190,14 @@ void Parser::ReportError(const toml::source_region& error_source_region, const s
         m_error_source_region = error_source_region;
         m_error_description = error_description;
         m_is_error = true;
+    }
+}
+
+void Parser::UpdatePQ()
+{
+    m_result_nodes_pq = std::priority_queue<NodePriority>();
+    for (auto& [key, value] : m_result_nodes) {
+        m_result_nodes_pq.push({value.draw_batch_number, key});
     }
 }
 
