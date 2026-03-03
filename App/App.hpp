@@ -128,8 +128,7 @@ private:
     void GUIBody();
     void GUITextEditor(float textedit_width);
     void GUITextEditorAlt(float textedit_width);
-
-    void GUIToolbar();
+    void GUIToolbar(float textedit_width);
     void GUICanvas();
     void GUICanvasDrawNodes(ImDrawList* draw_list, ImVec2 origin, float zoom_level, int font_size);
     void GUICanvasDrawPaths(ImDrawList* draw_list, ImVec2 origin, float zoom_level);

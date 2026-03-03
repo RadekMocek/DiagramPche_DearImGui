@@ -10,6 +10,8 @@ constexpr auto BOTTOM_BAR_HEIGHT = FONT_SIZE_DEFAULT;
 constexpr auto COLOR_ERROR = IM_COL32(211, 1, 2, 255);
 constexpr auto COLOR_ERROR_HIGHLIGHT = IM_COL32(211, 1, 2, 80);
 
+constexpr auto SEPARATOR_WIDTH = 4.0f;
+
 // Canvas
 constexpr ImVec2 SCROLLING_DEFAULT = {5.0f, 5.0f};
 

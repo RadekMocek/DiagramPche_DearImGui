@@ -27,14 +27,13 @@ void App::GUIBody()
     // Do the TOML parse
     m_parser.Parse(m_source);
 
-    // Toolbar
-    GUIToolbar();
-
     // Two main columns with draggable separator between them
-    ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
     const ImVec2 content_region_available = ImGui::GetContentRegionAvail();
     const auto textedit_width = content_region_available.x * m_body_split_ratio;
+    // - Toolbar
+    GUIToolbar(textedit_width);
     // - TextEdit
+    ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
     if (!m_do_use_alt_editor) {
         GUITextEditor(textedit_width);
     }
@@ -43,7 +42,7 @@ void App::GUIBody()
     }
     // - Separator
     ImGui::SameLine();
-    ImGui::InvisibleButton("BodySeparator", ImVec2(4.0f, content_region_available.y - BOTTOM_BAR_HEIGHT));
+    ImGui::InvisibleButton("BodySeparator", ImVec2(SEPARATOR_WIDTH, content_region_available.y - BOTTOM_BAR_HEIGHT));
     if (ImGui::IsItemActive()) {
         m_body_split_ratio = (textedit_width + ImGui::GetIO().MouseDelta.x) / content_region_available.x;
         m_body_split_ratio = ImClamp(m_body_split_ratio, 0.1f, 0.9f);

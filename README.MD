@@ -31,12 +31,14 @@
 
 ## Problems
 
+* Design problems:
+  * No undo for changing node's color via the color picker, changing color even clears the history 😬
 * InputTextMultiline problems:
   * Loses focus on AltGR
   * Horizontal scrolling is problematic [...](https://github.com/hoffstadt/DearPyGui/issues/2381#issuecomment-2303922790)
   * Scrollbar flashing while typing
 * ImGuiColorTextEdit problems:
-  * Scrolling by holding up/down arrow key weird "jumpy" behavior
+  * Scrolling by holding up/down arrow key weird "jumpy" behavior, it's even worse with horizontal scroll (right arrow), it does not do that in their demo, but that's older version on older Dear ImGui
   * No Ctrl + Backspace for removing the whole word (same for Delete)
   * Selecting text by holding LMB and dragging pauses when curosr is out of the widget area
 * Error highlight breaks on tab
