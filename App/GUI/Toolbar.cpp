@@ -54,18 +54,21 @@ void App::GUIToolbar()
     if (ImGui::ColorEdit4("Node color", reinterpret_cast<float*>(&color),
                           ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel)) {
         if (color_source.has_value()) {
-            //*
+            //TODO do not change when color is the same?
+
             const auto start_opt = GetMSourceIdxFromSourceRegion(color_source.value().begin);
             const auto end_opt = GetMSourceIdxFromSourceRegion(color_source.value().end);
             if (start_opt.has_value() && end_opt.has_value()) {
-                const auto start = start_opt.value();
-                const auto end = end_opt.value() - 2;
+                const auto start = start_opt.value() - 1;
+                const auto end = end_opt.value() - 1;
+
                 std::cout << "replacing: '" << m_source.substr(start, end - start) << "'\n";
                 std::cout << "start=" << start << " end=" << end << " len=" << (end - start) << "\n";
+
                 const auto length = end - start;
-                m_source.replace(start, length, "#00000000");
+                const auto new_str = GetRGBAHexFromImVec4(color); // TODO get this from IMGUI somehow?
+                m_source.replace(start, length, std::format("\"{}\"", new_str));
             }
-            /**/
         }
         else {
             // TODO color undefined, add one to TOML
@@ -76,7 +79,7 @@ void App::GUIToolbar()
         }
     }
 
-
+    //*
     ImGui::SameLine();
     ImGui::Button("Button :)");
 
@@ -100,7 +103,7 @@ void App::GUIToolbar()
     else {
         ImGui::Text("Zagmolol Bool");
     }
-
+    /**/
     // --- --- --- --- ---
     ImGui::EndDisabled();
     ImGui::EndChild();

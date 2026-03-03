@@ -45,4 +45,12 @@ end = ["world", "bottom", 0, 0]
 shift = 40
 points = [["", "start", 0, "", "end", 0]]
 color = [40, 40, 40, 255]
+
+# Testing section
+
+[node.test_node]
+xy = [300, 300]
+color = [140, 140, 140, 255]
+
+# ---------------
 )";
