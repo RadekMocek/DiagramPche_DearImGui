@@ -41,7 +41,7 @@ void Exporter::AddRect(const int z, const double x, const double y, const double
     if (!m_is_enabled) return;
 
     m_draw_commands.push({
-        z, PRIORITY_RECT,
+        z, PRIORITY_SHAPE,
         std::make_unique<svg::Rectangle>(svg::Point(x, y), width, height, svg::Fill(color), STROKE_BLACK)
     });
 
@@ -57,6 +57,19 @@ void Exporter::AddRect(const int z, const double x, const double y, const double
     if (y + height > m_boundaries_max_y) {
         m_boundaries_max_y = y + height;
     }
+}
+
+void Exporter::AddEllipse(const int z, const double x, const double y, const double width, const double height,
+                          const std::tuple<unsigned char, unsigned char, unsigned char, unsigned char>& color)
+{
+    if (!m_is_enabled) return;
+
+    m_draw_commands.push({
+        z, PRIORITY_SHAPE,
+        std::make_unique<svg::Elipse>(svg::Point(x, y), width, height, svg::Fill(color), STROKE_BLACK)
+    });
+
+    //todo update m_boundaries
 }
 
 void Exporter::AddText(const int z, const double x, const double y, const std::string& value)

@@ -1,9 +1,9 @@
 #include "../App.hpp"
 #include "../Config.hpp"
 
-void App::GUITextEditorAlt(const float textedit_width)
+void App::GUITextEditorAlt(const float textedit_width, const float height)
 {
-    const ImVec2 textedit_size(textedit_width, ImGui::GetContentRegionAvail().y - BOTTOM_BAR_HEIGHT);
+    const ImVec2 textedit_size(textedit_width, height);
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
     constexpr auto flags = ImGuiChildFlags_Borders;
     ImGui::BeginChild("SourceParent", textedit_size, flags);

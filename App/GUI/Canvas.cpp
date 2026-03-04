@@ -5,14 +5,13 @@
 #include "../Model/CanvasNode.hpp"
 #include "../Config.hpp"
 
-void App::GUICanvas()
+void App::GUICanvas(const float height)
 {
     static ImGuiIO& io = ImGui::GetIO(); // For getting the mouse position
 
     // .: Prepare ground for the canvas :.
     // .:===============================:.
-    const auto content_region_available = ImGui::GetContentRegionAvail();
-    const ImVec2 canvas_size(content_region_available.x, content_region_available.y - BOTTOM_BAR_HEIGHT);
+    const ImVec2 canvas_size(ImGui::GetContentRegionAvail().x, height);
 
     // Create a parent for our canvas (with zero padding)
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));

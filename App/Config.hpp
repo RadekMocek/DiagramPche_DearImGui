@@ -34,12 +34,14 @@ offset = 14
 [node.hello]
 value = "Hello,"
 color = "#ff99b880"
+type = "ellipse"
 
 [node.world]
 value = "world!"
 color = "#ffcfb380"
 pivot = "top-left"
 xy = ["hello", "bottom-right", "offset", "offset"]
+type = "diamond"
 
 [[path]]
 start = ["hello", "bottom", 0, 0]
@@ -47,12 +49,6 @@ end = ["world", "bottom", 0, 0]
 shift = 40
 points = [["", "start", 0, "", "end", 0]]
 color = [40, 40, 40, 255]
-
-# Testing section
-
-[node.test_node]
-xy = [300, 300]
-#color = [140, 140, 140, 255]
 
 # ---------------
 )";

@@ -11,7 +11,7 @@ void App::GUIBody()
     constexpr ImGuiWindowFlags flags
         // Main windows must be always on background so it does not get infront of ther modal windows
         = ImGuiWindowFlags_NoBringToFrontOnFocus
-        // = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse
+        // ImGuiWindowFlags_NoDecoration = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse:
         | ImGuiWindowFlags_NoDecoration
         | ImGuiWindowFlags_NoMove
         | ImGuiWindowFlags_NoSavedSettings
@@ -28,21 +28,22 @@ void App::GUIBody()
     m_parser.Parse(m_source);
 
     // Two main columns with draggable separator between them
-    const ImVec2 content_region_available = ImGui::GetContentRegionAvail();
-    const auto textedit_width = content_region_available.x * m_body_split_ratio;
+    const auto textedit_width = ImGui::GetContentRegionAvail().x * m_body_split_ratio;
     // - Toolbar
-    GUIToolbar(textedit_width);
+    GUIToolbar(textedit_width); // This changes GetContentRegionAvail.Y
+    const auto content_region_available = ImGui::GetContentRegionAvail();
+    const auto main_columns_height = content_region_available.y - BOTTOM_BAR_HEIGHT;
     // - TextEdit
     ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
     if (!m_do_use_alt_editor) {
-        GUITextEditor(textedit_width);
+        GUITextEditor(textedit_width, main_columns_height);
     }
     else {
-        GUITextEditorAlt(textedit_width);
+        GUITextEditorAlt(textedit_width, main_columns_height);
     }
     // - Separator
     ImGui::SameLine();
-    ImGui::InvisibleButton("BodySeparator", ImVec2(SEPARATOR_WIDTH, content_region_available.y - BOTTOM_BAR_HEIGHT));
+    ImGui::InvisibleButton("BodySeparator", ImVec2(SEPARATOR_WIDTH, main_columns_height));
     if (ImGui::IsItemActive()) {
         m_body_split_ratio = (textedit_width + ImGui::GetIO().MouseDelta.x) / content_region_available.x;
         m_body_split_ratio = ImClamp(m_body_split_ratio, 0.1f, 0.9f);
@@ -52,7 +53,7 @@ void App::GUIBody()
     }
     ImGui::SameLine();
     // - Canvas
-    GUICanvas();
+    GUICanvas(main_columns_height);
     ImGui::PopStyleVar();
 
     // "Status bar"
@@ -67,7 +68,7 @@ void App::GUIBody()
             ImGui::TextWrapped("%s", m_parser.m_error_description.c_str());
             ImGui::EndTooltip();
         }
-        /**/
+        */
         ImGui::PopStyleColor();
     }
 

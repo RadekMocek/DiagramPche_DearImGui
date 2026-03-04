@@ -8,7 +8,7 @@ class Exporter
 {
 private:
     static constexpr auto SVG_PADDING = 25.0f;
-    static constexpr auto PRIORITY_RECT = 0;
+    static constexpr auto PRIORITY_SHAPE = 0;
     static constexpr auto PRIORITY_TEXT = 1;
 
     const svg::Stroke STROKE_BLACK = svg::Stroke(1, svg::Color::Black);
@@ -53,8 +53,10 @@ public:
     void Start(const std::string& path);
     bool Save();
 
-    // Rectangle
+    // Shapes
     void AddRect(int z, double x, double y, double width, double height,
+                 const std::tuple<unsigned char, unsigned char, unsigned char, unsigned char>& color);
+    void AddEllipse(int z, double x, double y, double width, double height,
                  const std::tuple<unsigned char, unsigned char, unsigned char, unsigned char>& color);
 
     // Text

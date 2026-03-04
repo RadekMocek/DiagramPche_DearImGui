@@ -2,6 +2,7 @@
 
 #include <string>
 
+#include "NodeType.hpp"
 #include "Pivot.hpp"
 #include "Point.hpp"
 #include "../Helper/DrawLayer.hpp"
@@ -33,6 +34,9 @@ struct Node
 
     // = Z =
     int z = DL_USER_CHANNEL_DEFAULT_NODE;
+
+    // = Type =
+    NodeType type = NTYPE_RECTANGLE;
 
     // = Other internal =
     int draw_batch_number = 0;

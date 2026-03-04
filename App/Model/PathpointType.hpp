@@ -1,5 +1,8 @@
 #pragma once
 
+#include <optional>
+#include <string>
+
 enum PathpointType
 {
     PPTYPE_REFERENCE,

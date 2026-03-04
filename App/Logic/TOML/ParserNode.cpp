@@ -53,6 +53,17 @@ void Parser::ParseNode(const toml::table* node_table, Node& curr_node)
         else if (key_str == "z") {
             curr_node.z = GetZFromInt(value, true);
         }
+        // == type ==> node type string
+        else if (key_str == "type") {
+            if (const auto* value_str_ptr = value.as_string()) {
+                if (const auto nodetype_opt = GetNodeTypeFromString(value_str_ptr->value_or(""));
+                    nodetype_opt.has_value()) {
+                    curr_node.type = nodetype_opt.value();
+                }
+                else ReportError(value_str_ptr->source(), NODETYPE_ERROR_MESSAGE);
+            }
+            else ReportError(value.source(), "A string must follow after 'type='");
+        }
         // == Unknown key ==> report error
         else ReportError(key.source(), std::format("Unknown key '{}'", key_str));
     }

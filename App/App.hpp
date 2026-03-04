@@ -126,10 +126,10 @@ private:
     // App specific
     void GUIMainMenuBar();
     void GUIBody();
-    void GUITextEditor(float textedit_width);
-    void GUITextEditorAlt(float textedit_width);
     void GUIToolbar(float textedit_width);
-    void GUICanvas();
+    void GUITextEditor(float textedit_width, float height);
+    void GUITextEditorAlt(float textedit_width, float height);
+    void GUICanvas(float height);
     void GUICanvasDrawNodes(ImDrawList* draw_list, ImVec2 origin, float zoom_level, int font_size);
     void GUICanvasDrawPaths(ImDrawList* draw_list, ImVec2 origin, float zoom_level);
     void ResetCanvasScrollingAndZoom();
