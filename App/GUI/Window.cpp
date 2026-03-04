@@ -1,4 +1,5 @@
 #include "../App.hpp"
+#include "../Helper/GUICombo.hpp"
 
 void App::GUIWinPreferences()
 {
@@ -6,11 +7,11 @@ void App::GUIWinPreferences()
     // --- --- ---
 
     ImGui::SeparatorText("Text editor");
-    static int text_editor_selection = m_do_use_alt_editor ? 1 : 0;
-    if (ImGui::Combo("preferred editor", &text_editor_selection,
-                     "Vanilla (InputTextMultiline)  \0"
-                     "3rd Party (ImGuiColorTextEdit)\0\0")) {
-        const bool do_use_alt_editor = text_editor_selection == 1;
+    const char* items[] = {"Vanilla (InputTextMultiline)  ", "3rd Party (ImGuiColorTextEdit)"};
+    static int item_selected_idx = m_do_use_alt_editor ? 1 : 0;
+
+    if (GUICombo("preferred editor", items, IM_COUNTOF(items), item_selected_idx)) {
+        const bool do_use_alt_editor = item_selected_idx == 1;
         if (do_use_alt_editor) {
             m_alt_editor.SetText(m_source);
         }

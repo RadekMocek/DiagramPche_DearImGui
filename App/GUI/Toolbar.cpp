@@ -5,6 +5,7 @@
 #include "../App.hpp"
 #include "../Config.hpp"
 #include "../Helper/Color.hpp"
+#include "../Helper/GUICombo.hpp"
 
 void App::GUIToolbar(const float textedit_width)
 {
@@ -64,13 +65,11 @@ void App::GUIToolbar(const float textedit_width)
     }
 
     // Place the toolbar in the UI
-    const ImVec2 toolbar2_size(ImGui::GetContentRegionAvail().x, TOOLBAR_HEIGHT);
-
-    ImGui::BeginDisabled(!m_is_canvas_node_selected);
-
     ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(SEPARATOR_WIDTH, 0));
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, TOOLBAR_PADDING);
     ImGui::SameLine();
+    const ImVec2 toolbar2_size(ImGui::GetContentRegionAvail().x, TOOLBAR_HEIGHT);
+    ImGui::BeginDisabled(!m_is_canvas_node_selected);
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, TOOLBAR_PADDING);
     // ReSharper disable once CppDFAUnreachableCode
     ImGui::BeginChild("Toolbar2Parent", toolbar2_size, (DO_SHOW_BORDERS) ? ImGuiChildFlags_Borders : 0);
     ImGui::PopStyleVar(2);
@@ -121,16 +120,9 @@ void App::GUIToolbar(const float textedit_width)
 
     const char* items[] = {"Rectangle", "Oval     ", "Diamond  "};
     static int item_selected_idx = 0;
-
-    if (const char* combo_preview_value = items[item_selected_idx];
-        ImGui::BeginCombo("##ComboPreferredEditor", combo_preview_value, ImGuiComboFlags_WidthFitPreview)) {
-        for (int n = 0; n < IM_COUNTOF(items); n++) {
-            const bool is_sel = item_selected_idx == n;
-            if (ImGui::Selectable(items[n], is_sel)) item_selected_idx = n;
-            if (is_sel) ImGui::SetItemDefaultFocus();
-        }
-        // --- --- --- ---
-        ImGui::EndCombo();
+    if (GUICombo("##ComboNodeShape", items, IM_COUNTOF(items), item_selected_idx,
+                 ImGuiComboFlags_WidthFitPreview)) {
+        std::cout << "value changed\n";
     }
 
     // --- --- --- --- ---
