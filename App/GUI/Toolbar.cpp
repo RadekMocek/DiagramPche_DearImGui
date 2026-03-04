@@ -118,8 +118,20 @@ void App::GUIToolbar(const float textedit_width)
     VerticalSeparator();
     ImGui::Text("Type:");
     ImGui::SameLine();
-    static int sel = 0;
-    ImGui::Combo("preferred editor", &sel, "Rectangle\0Oval\0Diamond\0\0"); // TODO ImGuiComboFlags_WidthFitPreview
+
+    const char* items[] = {"Rectangle", "Oval     ", "Diamond  "};
+    static int item_selected_idx = 0;
+
+    if (const char* combo_preview_value = items[item_selected_idx];
+        ImGui::BeginCombo("##ComboPreferredEditor", combo_preview_value, ImGuiComboFlags_WidthFitPreview)) {
+        for (int n = 0; n < IM_COUNTOF(items); n++) {
+            const bool is_sel = item_selected_idx == n;
+            if (ImGui::Selectable(items[n], is_sel)) item_selected_idx = n;
+            if (is_sel) ImGui::SetItemDefaultFocus();
+        }
+        // --- --- --- ---
+        ImGui::EndCombo();
+    }
 
     // --- --- --- --- ---
     ImGui::EndDisabled();
