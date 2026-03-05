@@ -4,7 +4,9 @@
 
 * General:
   * [x] View → Jump to canvas origin
-  * [ ] View → Zoom slider
+  * [ ] View → Secondary canvas toolbar
+    * [ ] Zoom slider
+    * [ ] Drag'n'Drop new node
   * Saving/loading:
     * [x] New, Open, Save, Save as
     * [x] Confirm unsaved exit (OS close button, alt+f4, mainmenubar option)
@@ -14,17 +16,17 @@
   * [x] Code editor syntax highlight
   * [ ] Klávesové zkratky (<kbd>Alt</kbd> pro navigaci v MainMenuBar, <kbd>Ctrl</kbd>+<kbd>S</kbd> pro uložení, <kbd>Ctrl</kbd>+<kbd>+</kbd> zoom atd.)
 * Pipeline: TOML parse → Draw to canvas / Render to SVG:
-  * [ ] `[node].type = "text"`
-  * [ ] `[node].type = "rectangle"`
-  * [ ] `[node].type = "ellipse"`
-  * [ ] `[node].type = "diamond"`
+  * [x] `[node].type = "text"`
+  * [x] `[node].type = "rectangle"`
+  * [x] `[node].type = "ellipse"`
+  * [x] `[node].type = "diamond"`
 * Canvas features:
   * [x] Canvas zooming: anchor under mouse
   * [x] Change the cursor type while dragging the canvas
   * [x] Ctrl+Click to jump to node definition in text editor
   * Canvas toolbar:
     * [x] Change color node with color picker
-    * [ ] Change node type via Drop-down list
+    * [x] Change node's type via Drop-down list
 * Settings window:
   * [x] Switch between vanilla and 3rd party text editor
   * [ ] Remember settings

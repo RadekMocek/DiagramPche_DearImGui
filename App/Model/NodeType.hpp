@@ -5,10 +5,10 @@
 
 enum NodeType
 {
-    NTYPE_TEXT,
     NTYPE_RECTANGLE,
     NTYPE_ELLIPSE,
     NTYPE_DIAMOND,
+    NTYPE_TEXT,
 };
 
 constexpr std::optional<NodeType> GetNodeTypeFromString(const std::string& type_str)

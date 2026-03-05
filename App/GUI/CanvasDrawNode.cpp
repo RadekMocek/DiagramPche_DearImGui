@@ -195,6 +195,7 @@ void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, const f
                 draw_list->AddEllipseFilled(draw_center, radius, node_imcolor);
                 draw_list->AddEllipse(draw_center, radius, COLOR_NODE_EDGE, 0, 0, zoom_level);
                 // SVG ellipse
+                m_exporter.AddEllipse(z, draw_center.x, draw_center.y, node_width, node_height, node.color);
                 break;
             }
         case NTYPE_DIAMOND:
@@ -207,6 +208,7 @@ void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, const f
             draw_list->AddQuadFilled(top, right, bottom, left, node_imcolor);
             draw_list->AddQuad(top, right, bottom, left, COLOR_NODE_EDGE, zoom_level);
             // SVG diamond
+            m_exporter.AddDiamond(z, draw_center.x, draw_center.y, top.y, right.x, bottom.y, left.x, node.color);
             break;
         }
 

@@ -59,6 +59,7 @@ void Parser::ParseNode(const toml::table* node_table, Node& curr_node)
                 if (const auto nodetype_opt = GetNodeTypeFromString(value_str_ptr->value_or(""));
                     nodetype_opt.has_value()) {
                     curr_node.type = nodetype_opt.value();
+                    curr_node.type_source = value.source();
                 }
                 else ReportError(value_str_ptr->source(), NODETYPE_ERROR_MESSAGE);
             }

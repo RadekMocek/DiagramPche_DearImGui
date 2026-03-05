@@ -51,4 +51,22 @@ points = [["", "start", 0, "", "end", 0]]
 color = [40, 40, 40, 255]
 
 # ---------------
+
+[node.testp]
+xy = [250, 250]
+value = "aaaaa\nbbbbbbbbbbbbb\nccccc\nddddd"
+type = "text"
+
+[node.testm]
+xy = [-250, -250]
+value = "aaaaa\nbbbbb\nccccc\nddddd"
+type = "text"
+
+[node.testr]
+color = "#FFFFFFC0"
+pivot = "center"
+xy = ["testp", "center", 0, 0]
+value = "       "
+z = 5
+type = "rectangle"
 )";

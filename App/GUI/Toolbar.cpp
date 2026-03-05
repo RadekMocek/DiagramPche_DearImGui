@@ -37,8 +37,6 @@ void App::GUIToolbar(const float textedit_width)
 
     static Node& toolbar_node = DEFAULT_TOOLBAR_NODE;
     static std::string node_key_label_value;
-    static ImVec4 color;
-    static ImVec4 color_prev;
 
     // If some node is selected, the toolbar shows its info and allows to change some things (e.g. color via color picker).
     // If no node is selected, the toolbar is disabled, but still shows info if some node is hovered.
@@ -78,8 +76,21 @@ void App::GUIToolbar(const float textedit_width)
     ImGui::AlignTextToFramePadding();
     ImGui::Text("Node ID: %s", node_key_label_value.c_str());
 
+    const auto UpdateAltTextEditIfNeeded = [this] {
+        if (m_do_use_alt_editor) {
+            //const auto cursor_pos = m_alt_editor.GetCursorPosition();
+            m_alt_editor.SetText(m_source);
+            //m_alt_editor.SetCursorPosition(cursor_pos);
+
+            // This resets scroll even if I do the GetCursorPosition + SetCursorPosition ¯\_(ツ)_/¯
+        }
+    };
+
     // .: Color picker :.
     // .:==============:.
+    static ImVec4 color;
+    static ImVec4 color_prev;
+
     VerticalSeparator();
     ImGui::Text("Color:");
     ImGui::SameLine();
@@ -88,41 +99,43 @@ void App::GUIToolbar(const float textedit_width)
                           ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel)) {
         if (toolbar_node.color_source.has_value()) {
             if (color != color_prev) {
-                const auto start_opt = GetMSourceIdxFromSourceRegion(toolbar_node.color_source.value().begin);
-                // ReSharper disable once CppTooWideScopeInitStatement
-                const auto end_opt = GetMSourceIdxFromSourceRegion(toolbar_node.color_source.value().end);
-                if (start_opt.has_value() && end_opt.has_value()) {
-                    const auto start = start_opt.value() - 1;
-                    const auto end = end_opt.value() - 1;
-                    const auto length = end - start;
-                    m_source.replace(start, length, std::format("\"{}\"", GetRGBAHexFromImVec4(color)));
-                }
+                ReplaceInMSource(toolbar_node.color_source.value(), std::format("\"{}\"", GetRGBAHexFromImVec4(color)));
                 color_prev = color;
             }
         }
         else {
-            // ReSharper disable once CppTooWideScopeInitStatement
-            const auto node_def_end_idx = GetMSourceIdxFromSourceRegion(toolbar_node.node_source.end);
-            if (node_def_end_idx.has_value()) {
-                m_source.insert(node_def_end_idx.value(), std::format("\ncolor = \"{}\"", GetRGBAHexFromImVec4(color)));
-            }
+            InsertNodeParameterInMSource(toolbar_node, std::format("\ncolor = \"{}\"", GetRGBAHexFromImVec4(color)));
         }
-        if (m_do_use_alt_editor) {
-            m_alt_editor.SetText(m_source);
-        }
+        UpdateAltTextEditIfNeeded();
     }
 
     // .: Type select :.
     // .:=============:.
+    static int node_type_selected_idx;
+    // This must correspond to `enum NodeType` values
+    const char* node_types[] = {"Rectangle", "Ellipse  ", "Diamond  ", "Text     "};
+
     VerticalSeparator();
     ImGui::Text("Type:");
     ImGui::SameLine();
 
-    const char* items[] = {"Rectangle", "Oval     ", "Diamond  "};
-    static int item_selected_idx = 0;
-    if (GUICombo("##ComboNodeShape", items, IM_COUNTOF(items), item_selected_idx,
+    node_type_selected_idx = toolbar_node.type;
+
+    if (GUICombo("##ComboNodeShape", node_types, IM_COUNTOF(node_types), node_type_selected_idx,
                  ImGuiComboFlags_WidthFitPreview)) {
-        std::cout << "value changed\n";
+        auto type_str = "rectangle";
+        if (node_type_selected_idx == 1) type_str = "ellipse";
+        else if (node_type_selected_idx == 2) type_str = "diamond";
+        else if (node_type_selected_idx == 3) type_str = "text";
+        if (toolbar_node.type_source.has_value()) {
+            // Change type parameter's value in node's definition
+            ReplaceInMSource(toolbar_node.type_source.value(), std::format("\"{}\"", type_str));
+        }
+        else {
+            // Add type parameter to node's definition
+            InsertNodeParameterInMSource(toolbar_node, std::format("\ntype = \"{}\"", type_str));
+        }
+        UpdateAltTextEditIfNeeded();
     }
 
     // --- --- --- --- ---

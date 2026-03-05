@@ -162,6 +162,8 @@ private:
 
     // Source editing from canvas interaction
     std::optional<size_t> GetMSourceIdxFromSourceRegion(const toml::source_position& position);
+    void ReplaceInMSource(const toml::source_region& source, const std::string& new_str);
+    void InsertNodeParameterInMSource(const Node& toolbar_node, const std::string& new_str);
 
     //
     void ShowErrorModal(const std::string& error_message)

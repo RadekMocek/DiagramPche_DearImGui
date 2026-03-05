@@ -44,4 +44,5 @@ struct Node
     // = Canvas interaction =
     toml::source_region node_source{};
     std::optional<toml::source_region> color_source = std::nullopt;
+    std::optional<toml::source_region> type_source = std::nullopt;
 };

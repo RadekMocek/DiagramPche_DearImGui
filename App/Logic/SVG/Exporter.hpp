@@ -4,6 +4,8 @@
 
 #include "../../../Dependency/svg.hpp"
 
+using ColorTuple = std::tuple<unsigned char, unsigned char, unsigned char, unsigned char>;
+
 class Exporter
 {
 private:
@@ -14,14 +16,19 @@ private:
     const svg::Stroke STROKE_BLACK = svg::Stroke(1, svg::Color::Black);
     const svg::Fill FILL_BLACK = svg::Fill(svg::Color::Black, 1.0);
 
-    svg::Font FONT = svg::Font(18, "Inconsolata");
-    double LINE_HEIGHT = svg::Text(svg::Point(0, 0), "A", FILL_BLACK, FONT).getBoundingBox().size.height;
+    const svg::Font FONT = svg::Font(18, "Inconsolata");
+    const svg::Size CHAR_BB = svg::Text(svg::Point(0, 0), "A", FILL_BLACK, FONT).getBoundingBox().size;
+    const double LINE_HEIGHT = CHAR_BB.height;
+    const double CHAR_WIDTH = CHAR_BB.width;
 
     struct DrawCommand
     {
         int z;
+        // This decides the priority if the `z`s are equal:
+        // - Nodes: text should be above shape
+        // - Paths: arrow tips should be on exact same layer as their path
         int same_z_priority;
-        // I added this which should decide if the zs are equal, how to edit the operator< function ?
+
         std::unique_ptr<svg::Shape> shape;
 
         bool operator<(const DrawCommand& other) const
@@ -54,21 +61,20 @@ public:
     bool Save();
 
     // Shapes
-    void AddRect(int z, double x, double y, double width, double height,
-                 const std::tuple<unsigned char, unsigned char, unsigned char, unsigned char>& color);
-    void AddEllipse(int z, double x, double y, double width, double height,
-                 const std::tuple<unsigned char, unsigned char, unsigned char, unsigned char>& color);
+    void AddRect(int z, double tl_x, double tl_y, double width, double height, const ColorTuple& color);
+    void AddEllipse(int z, double c_x, double c_y, double width, double height, const ColorTuple& color);
+
+    void AddDiamond(int z, double c_x, double c_y, double t_y, double r_x, double b_y, double l_x,
+                    const ColorTuple& color);
 
     // Text
-    void AddText(int z, double x, double y, const std::string& value);
+    void AddText(int z, double tl_x, double tl_y, const std::string& value);
 
     // Line
     void StartPolyLine();
     void AddPointToPolyLine(double x, double y);
-    void FinishPolyLine(int z, int z2,
-                        const std::tuple<unsigned char, unsigned char, unsigned char, unsigned char>& color);
+    void FinishPolyLine(int z, int z2, const ColorTuple& color);
 
     // ArrowTip
-    void AddArrowTip(int z, int z2, double p1_x, double p1_y, double p2_x, double p2_y,
-                     const std::tuple<unsigned char, unsigned char, unsigned char, unsigned char>& color);
+    void AddArrowTip(int z, int z2, double p1_x, double p1_y, double p2_x, double p2_y, const ColorTuple& color);
 };
