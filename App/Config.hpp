@@ -5,6 +5,9 @@
 constexpr auto FONT_SIZE_DEFAULT = 20.0f;
 constexpr auto FONT_SIZE_MAIN_MENU_BAR = 18.0f;
 
+constexpr auto FONT_SIZE_SOURCE_MIN = 8;
+constexpr auto FONT_SIZE_SOURCE_MAX = 40;
+
 constexpr auto BOTTOM_BAR_HEIGHT = FONT_SIZE_DEFAULT;
 
 constexpr auto COLOR_ERROR = IM_COL32(211, 1, 2, 255);
@@ -15,18 +18,20 @@ constexpr auto SEPARATOR_WIDTH = 4.0f;
 // Canvas
 constexpr ImVec2 SCROLLING_DEFAULT = {5.0f, 5.0f};
 
-constexpr float GRID_STEP_BASE = 100.0f;
+constexpr auto GRID_STEP_BASE = 100.0f;
 constexpr auto COLOR_GRID_LINE = IM_COL32(200, 200, 200, 40);
 
-constexpr int CANVAS_FONT_SIZE_BASE = 18;
-constexpr int CANVAS_FONT_SIZE_STEP = 4;
-constexpr int CANVAS_FONT_SIZE_MIN = 6;
-constexpr int CANVAS_FONT_SIZE_MAX = 30;
+constexpr auto CANVAS_FONT_SIZE_BASE = 18;
+constexpr auto CANVAS_FONT_SIZE_STEP = 4;
+constexpr auto CANVAS_FONT_SIZE_MIN = 6;
+constexpr auto CANVAS_FONT_SIZE_MAX = 30;
 
-constexpr float NODE_BORDER_OFFSET_BASE = 18.0f;
+constexpr auto CANVAS_SECONDARY_TOOLBAR_HEIGHT = 26.0f;
 
-constexpr int TIP_ARROW_LENGTH = 12;
-constexpr int TIP_ARROW_SPAN = 4;
+constexpr auto NODE_BORDER_OFFSET_BASE = 18.0f;
+
+constexpr auto TIP_ARROW_LENGTH = 12;
+constexpr auto TIP_ARROW_SPAN = 4;
 
 constexpr auto WELCOME_TOML = R"([variables]
 offset = 14

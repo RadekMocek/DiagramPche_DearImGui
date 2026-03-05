@@ -8,10 +8,11 @@
 void App::GUICanvas(const float height)
 {
     static ImGuiIO& io = ImGui::GetIO(); // For getting the mouse position
+    static int zoom_level_slider_value = 3; // Rovnák na ohýbák
 
     // .: Prepare ground for the canvas :.
     // .:===============================:.
-    const ImVec2 canvas_size(ImGui::GetContentRegionAvail().x, height);
+    ImVec2 canvas_size(ImGui::GetContentRegionAvail().x, height);
 
     // Create a parent for our canvas (with zero padding)
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
@@ -20,6 +21,11 @@ void App::GUICanvas(const float height)
                       ImGuiChildFlags_Borders,
                       ImGuiWindowFlags_None);
     ImGui::PopStyleVar();
+
+    // Do this after `BeginChild` so the border is not affected
+    if (m_do_show_secondary_canvas_toolbar) {
+        canvas_size.y -= CANVAS_SECONDARY_TOOLBAR_HEIGHT;
+    }
 
     // Determine canvas position (window absolute)
     const auto canvas_top_left = ImGui::GetCursorScreenPos(); // ImDrawList API uses screen coordinates!
@@ -59,6 +65,8 @@ void App::GUICanvas(const float height)
         const int font_size_unclamped = m_canvas_font_size + io.MouseWheel * CANVAS_FONT_SIZE_STEP;
         m_canvas_font_size = std::clamp(font_size_unclamped, CANVAS_FONT_SIZE_MIN, CANVAS_FONT_SIZE_MAX);
         m_canvas_zoom_level = m_canvas_font_size / static_cast<float>(CANVAS_FONT_SIZE_BASE);
+
+        zoom_level_slider_value = (m_canvas_font_size - CANVAS_FONT_SIZE_MIN) / CANVAS_FONT_SIZE_STEP;
 
         // Zoom anchor under mouse
         if (const auto new_zoom = m_canvas_zoom_level; old_zoom != new_zoom) {
@@ -114,6 +122,7 @@ void App::GUICanvas(const float height)
     // Default layer for paths is 5 (Model → Path.hpp → int z)
     GUICanvasDrawPaths(draw_list, origin, m_canvas_zoom_level);
     draw_list->ChannelsMerge();
+    draw_list->PopClipRect();
 
     // .: User AABR interaction :.
     // .:=======================:.
@@ -173,6 +182,32 @@ void App::GUICanvas(const float height)
                 m_selected_or_hovered_canvas_node_key = std::nullopt;
             }
         }
+    }
+
+    // .: Secondary canvas toolbar :.
+    // .:==========================:.
+    if (m_do_show_secondary_canvas_toolbar) {
+        // == Add node button ==
+        ImGui::Button("Add node");
+        if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayShort | ImGuiHoveredFlags_NoSharedDelay)) {
+            ImGui::SetTooltip("Drag and drop me onto the canvas.");
+        }
+        ImGui::SameLine();
+
+        // == Zoom level slider ==
+        constexpr auto SLIDER_WIDTH = 200;
+        ImGui::PushItemWidth(SLIDER_WIDTH);
+        ImGui::SetCursorPosX(ImGui::GetCursorPosX() + ImGui::GetContentRegionAvail().x - SLIDER_WIDTH);
+        // ReSharper disable once CppTooWideScopeInitStatement
+        constexpr auto SLIDER_MIN = 0;
+        constexpr auto SLIDER_MAX = (CANVAS_FONT_SIZE_MAX - CANVAS_FONT_SIZE_MIN) / CANVAS_FONT_SIZE_STEP;
+        const auto slider_label = std::format("Zoom level: {:.2f}", m_canvas_zoom_level);
+        if (ImGui::SliderInt("##ZoomLevel", &zoom_level_slider_value, SLIDER_MIN, SLIDER_MAX,
+                             slider_label.c_str(), ImGuiSliderFlags_NoInput)) {
+            m_canvas_font_size = CANVAS_FONT_SIZE_MIN + CANVAS_FONT_SIZE_STEP * zoom_level_slider_value;
+            m_canvas_zoom_level = m_canvas_font_size / static_cast<float>(CANVAS_FONT_SIZE_BASE);
+        }
+        ImGui::PopItemWidth();
     }
 
     ImGui::EndChild();

@@ -11,7 +11,9 @@ void App::GUIToolbar(const float textedit_width)
 {
     constexpr auto TOOLBAR_HEIGHT = 30.0f;
     constexpr ImVec2 TOOLBAR_PADDING = {6.0f, 2.0f};
-    constexpr bool DO_SHOW_BORDERS = true;
+    constexpr ImVec2 ADDITIONAL_LEFT_PADDING = {0.0f, 0.0f};
+    // For some reason, `ImGui::Dummy` with zero vector still gives some space
+    constexpr bool DO_SHOW_BORDERS = false;
 
     // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
     // [!] using `umgui_internal.h` for vertical separator, which is still in development (?)
@@ -29,6 +31,39 @@ void App::GUIToolbar(const float textedit_width)
     // ReSharper disable once CppDFAUnreachableCode
     ImGui::BeginChild("Toolbar1Parent", toolbar1_size, (DO_SHOW_BORDERS) ? ImGuiChildFlags_Borders : 0);
     ImGui::PopStyleVar();
+
+    // Text vertical align: center; calling this once in child seems to be enough (I guess it's because we're using `ImGui::SameLine()`?)
+    ImGui::AlignTextToFramePadding();
+    // Additional padding
+    ImGui::Dummy(ADDITIONAL_LEFT_PADDING);
+    ImGui::SameLine();
+
+    // .: Text editor font size :.
+    // .:=======================:.
+    ImGui::Text("Font size:");
+    ImGui::SameLine();
+    ImGui::PushItemWidth(100);
+    ImGui::InputInt("##FontSizeInputInt", &m_source_font_size, 2);
+    ImGui::PopItemWidth();
+    if (m_source_font_size < FONT_SIZE_SOURCE_MIN) { m_source_font_size = FONT_SIZE_SOURCE_MIN; }
+    else if (m_source_font_size > FONT_SIZE_SOURCE_MAX) { m_source_font_size = FONT_SIZE_SOURCE_MAX; }
+
+    // .: Cursor position in text edit info :.
+    // .:===================================:.
+    static std::string cursor_pos_str;
+    constexpr auto CURSOR_POS_STR_LEN = 7;
+
+    if (m_do_use_alt_editor) {
+        const auto cursor_pos = m_alt_editor.GetCursorPosition();
+        cursor_pos_str = std::format("{},{}", cursor_pos.mLine, cursor_pos.mColumn);
+    }
+    else {
+        cursor_pos_str = "N/A";
+    }
+
+    cursor_pos_str.resize(CURSOR_POS_STR_LEN, ' ');
+    VerticalSeparator();
+    ImGui::Text("Cursor pos: %s", cursor_pos_str.c_str());
 
     // --- --- --- ---
     ImGui::EndChild();
@@ -53,7 +88,7 @@ void App::GUIToolbar(const float textedit_width)
     }
     else {
         // Case: nothing is selected/hovered
-        toolbar_node = DEFAULT_TOOLBAR_NODE;
+        toolbar_node = DEFAULT_TOOLBAR_NODE; //???[1]: this does not work as expected
         // In case when the id does not exist anymore
         m_is_canvas_node_selected = false;
         m_selected_or_hovered_canvas_node_key = std::nullopt;
@@ -72,9 +107,11 @@ void App::GUIToolbar(const float textedit_width)
     ImGui::BeginChild("Toolbar2Parent", toolbar2_size, (DO_SHOW_BORDERS) ? ImGuiChildFlags_Borders : 0);
     ImGui::PopStyleVar(2);
 
-    // Text vertical align: center; calling this once seems to be enough (I guess it's because we're using `ImGui::SameLine()`?)
+    // Text vertical align: center; calling this once in child seems to be enough (I guess it's because we're using `ImGui::SameLine()`?)
     ImGui::AlignTextToFramePadding();
-    ImGui::Text("Node ID: %s", node_key_label_value.c_str());
+    // Additional padding
+    ImGui::Dummy(ADDITIONAL_LEFT_PADDING);
+    ImGui::SameLine();
 
     const auto UpdateAltTextEditIfNeeded = [this] {
         if (m_do_use_alt_editor) {
@@ -91,7 +128,6 @@ void App::GUIToolbar(const float textedit_width)
     static ImVec4 color;
     static ImVec4 color_prev;
 
-    VerticalSeparator();
     ImGui::Text("Color:");
     ImGui::SameLine();
     color = GetImVec4FromColorTuple(toolbar_node.color);
@@ -137,6 +173,11 @@ void App::GUIToolbar(const float textedit_width)
         }
         UpdateAltTextEditIfNeeded();
     }
+
+    // .: Node ID label :.
+    // .:===============:.
+    VerticalSeparator();
+    ImGui::Text("Node ID: %s", node_key_label_value.c_str());
 
     // --- --- --- --- ---
     ImGui::EndDisabled();

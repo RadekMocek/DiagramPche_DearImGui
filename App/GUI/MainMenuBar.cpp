@@ -64,7 +64,16 @@ void App::GUIMainMenuBar()
         if (ImGui::MenuItem("Grid", nullptr, m_do_show_grid)) {
             m_do_show_grid = !m_do_show_grid;
         }
+        // . Toolbar .
+        if (ImGui::MenuItem("Toolbar", nullptr, m_do_show_toolbar)) {
+            m_do_show_toolbar = !m_do_show_toolbar;
+        }
+        // . Secondary canvas toolbar .
+        if (ImGui::MenuItem("Secondary canvas toolbar", nullptr, m_do_show_secondary_canvas_toolbar)) {
+            m_do_show_secondary_canvas_toolbar = !m_do_show_secondary_canvas_toolbar;
+        }
         // . Jump to canvas origin .
+        ImGui::Separator();
         if (ImGui::MenuItem("Jump to canvas origin")) {
             ResetCanvasScrollingAndZoom();
         }
@@ -92,10 +101,12 @@ void App::GUIMainMenuBar()
         if (ImGui::MenuItem("Dear ImGui demo window", nullptr, m_do_show_window_demo)) {
             m_do_show_window_demo = !m_do_show_window_demo;
         }
+        /*
         // . For testing purposes .
         if (ImGui::MenuItem("(test)")) {
             m_is_queued_popup_unsavedwarn = true;
         }
+        */
         // .::.
         ImGui::EndMenu();
     }

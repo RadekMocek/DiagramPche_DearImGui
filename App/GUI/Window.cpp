@@ -10,6 +10,7 @@ void App::GUIWinPreferences()
     const char* items[] = {"Vanilla (InputTextMultiline)  ", "3rd Party (ImGuiColorTextEdit)"};
     static int item_selected_idx = m_do_use_alt_editor ? 1 : 0;
 
+    ImGui::PushItemWidth(350);
     if (GUICombo("preferred editor", items, IM_COUNTOF(items), item_selected_idx)) {
         const bool do_use_alt_editor = item_selected_idx == 1;
         if (do_use_alt_editor) {
@@ -20,6 +21,7 @@ void App::GUIWinPreferences()
         }*/
         m_do_use_alt_editor = do_use_alt_editor;
     }
+    ImGui::PopItemWidth();
 
     // --- --- ---
     ImGui::End();

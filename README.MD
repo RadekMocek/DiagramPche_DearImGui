@@ -4,9 +4,14 @@
 
 * General:
   * [x] View → Jump to canvas origin
+  * [x] View → Toolbar
+    * [x] Source: Allow changing font size of the text editor
+    * [x] Source: Show cursor position in the text editor
+    * [x] Canvas: Change color node with color picker
+    * [x] Canvas: Change node's type via Drop-down list
   * [ ] View → Secondary canvas toolbar
-    * [ ] Zoom slider
     * [ ] Drag'n'Drop new node
+    * [x] Zoom slider, right aligned
   * Saving/loading:
     * [x] New, Open, Save, Save as
     * [x] Confirm unsaved exit (OS close button, alt+f4, mainmenubar option)
@@ -24,14 +29,12 @@
   * [x] Canvas zooming: anchor under mouse
   * [x] Change the cursor type while dragging the canvas
   * [x] Ctrl+Click to jump to node definition in text editor
-  * Canvas toolbar:
-    * [x] Change color node with color picker
-    * [x] Change node's type via Drop-down list
 * Settings window:
   * [x] Switch between vanilla and 3rd party text editor
   * [ ] Remember settings
 * Dear ImGui specific:
   * [x] ImGuiColorTextEdit: Tab insert 4 spaces
+  * [ ] Set minimal window size in GLFW
   * [ ] Check `CalcTextSizeA` usages
 * TOML Parser:
   * [x] Refactor TOML parsing: do not std::move into priority queue, use pq just for determining draw order and nothing more

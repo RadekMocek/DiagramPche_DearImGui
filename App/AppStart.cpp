@@ -46,6 +46,8 @@ void App::Start()
 
     // = Initialize all other members =
     m_do_show_grid = true;
+    m_do_show_toolbar = true;
+    m_do_show_secondary_canvas_toolbar = true;
     ResetCanvasScrollingAndZoom();
 
     m_path_export = (std::filesystem::current_path() / "diagram.svg").string();
@@ -53,9 +55,11 @@ void App::Start()
 
     m_source = WELCOME_TOML;
     m_is_source_dirty = false;
+    m_source_font_size = FONT_SIZE_DEFAULT;
 
-    //
+    //???[1]: this does not work as expected
     DEFAULT_TOOLBAR_NODE.color = {114, 144, 154, 200};
+    DEFAULT_TOOLBAR_NODE.type = NTYPE_RECTANGLE;
 }
 
 void App::ResetCanvasScrollingAndZoom()

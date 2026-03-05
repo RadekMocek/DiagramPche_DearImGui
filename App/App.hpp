@@ -79,6 +79,7 @@ private:
     std::string m_source{};
     std::optional<std::string> m_source_filename = std::nullopt;
     bool m_is_source_dirty{}; // Dirty == edited without saving to disk
+    int m_source_font_size{};
 
     // Text editor
     bool m_do_use_alt_editor{};
@@ -91,6 +92,8 @@ private:
     int m_canvas_font_size{};
     float m_canvas_zoom_level{};
     // Canvas interaction
+    bool m_do_show_toolbar{};
+    bool m_do_show_secondary_canvas_toolbar{};
     std::optional<std::string> m_selected_or_hovered_canvas_node_key = std::nullopt;
     bool m_is_canvas_node_selected = false;
 
@@ -177,6 +180,6 @@ private:
         glfwSetWindowTitle(m_window, title);
     }
 
-    //
+    //???[1]: this does not work as expected
     Node DEFAULT_TOOLBAR_NODE;
 };

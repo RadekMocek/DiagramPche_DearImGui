@@ -30,17 +30,21 @@ void App::GUIBody()
     // Two main columns with draggable separator between them
     const auto textedit_width = ImGui::GetContentRegionAvail().x * m_body_split_ratio;
     // - Toolbar
-    GUIToolbar(textedit_width); // This changes GetContentRegionAvail.Y
+    if (m_do_show_toolbar) {
+        GUIToolbar(textedit_width); // This changes GetContentRegionAvail.Y
+    }
     const auto content_region_available = ImGui::GetContentRegionAvail();
     const auto main_columns_height = content_region_available.y - BOTTOM_BAR_HEIGHT;
     // - TextEdit
     ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
+    ImGui::PushFont(nullptr, static_cast<float>(m_source_font_size));
     if (!m_do_use_alt_editor) {
         GUITextEditor(textedit_width, main_columns_height);
     }
     else {
         GUITextEditorAlt(textedit_width, main_columns_height);
     }
+    ImGui::PopFont();
     // - Separator
     ImGui::SameLine();
     ImGui::InvisibleButton("BodySeparator", ImVec2(SEPARATOR_WIDTH, main_columns_height));
