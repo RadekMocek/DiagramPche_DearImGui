@@ -97,6 +97,7 @@ private:
     std::optional<std::string> m_selected_or_hovered_canvas_node_key = std::nullopt;
     bool m_is_canvas_node_selected = false;
     bool m_is_dragndropping_node = false;
+    NodeType m_dragndropping_node_type{};
 
     // Modeless
     bool m_do_show_window_demo = false;
@@ -134,9 +135,15 @@ private:
     void GUITextEditor(float textedit_width, float height);
     void GUITextEditorAlt(float textedit_width, float height);
     void GUICanvas(float height);
-    void GUICanvasDrawNodes(ImDrawList* draw_list, ImVec2 origin, float zoom_level, float font_size_f);
-    void GUICanvasDrawPaths(ImDrawList* draw_list, ImVec2 origin, float zoom_level);
+    void GUICanvasDrawNodes(ImDrawList* draw_list, ImVec2 origin);
+    void GUICanvasDrawPaths(ImDrawList* draw_list, ImVec2 origin);
     void ResetCanvasScrollingAndZoom();
+
+    // Ghost node == semi-transparent node, used for drag'n'drop functionality, shows where the node will be placed if user releases LMB on canvas
+    void GUICanvasDrawGhostNode(ImDrawList* draw_list,
+                                ImVec2 mouse_pos,
+                                ImVec2 ghost_padding,
+                                const char* ghost_label_c_str) const;
 
     void GUIWinPreferences();
 

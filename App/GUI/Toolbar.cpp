@@ -12,8 +12,8 @@ void App::GUIToolbar(const float textedit_width)
 {
     constexpr auto TOOLBAR_HEIGHT = 30.0f;
     constexpr ImVec2 TOOLBAR_PADDING = {6.0f, 2.0f};
-    constexpr ImVec2 ADDITIONAL_LEFT_PADDING = {0.0f, 0.0f};
     // For some reason, `ImGui::Dummy` with zero vector still gives some space
+    constexpr ImVec2 ADDITIONAL_LEFT_PADDING = {0.0f, 0.0f};
     constexpr bool DO_SHOW_BORDERS = false;
 
     // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -155,10 +155,7 @@ void App::GUIToolbar(const float textedit_width)
 
     if (GUICombo("##ComboNodeShape", node_types, IM_COUNTOF(node_types), node_type_selected_idx,
                  ImGuiComboFlags_WidthFitPreview)) {
-        auto type_str = "rectangle";
-        if (node_type_selected_idx == 1) type_str = "ellipse";
-        else if (node_type_selected_idx == 2) type_str = "diamond";
-        else if (node_type_selected_idx == 3) type_str = "text";
+        auto type_str = GetStringFromNodeType(static_cast<NodeType>(node_type_selected_idx));
         if (toolbar_node.type_source.has_value()) {
             // Change type parameter's value in node's definition
             ReplaceInMSource(toolbar_node.type_source.value(), std::format("\"{}\"", type_str));

@@ -10,8 +10,7 @@
     * [x] Canvas: Change color node with color picker
     * [x] Canvas: Change node's type via Drop-down list
   * [x] View → Secondary canvas toolbar
-    * [x] Drag'n'Drop new node
-    * [ ] Drag'n'Drop – icon button for each available shape
+    * [x] Drag'n'Drop new node, button for each node type
     * [x] Zoom slider, right aligned
   * Saving/loading:
     * [x] New, Open, Save, Save as
@@ -33,6 +32,10 @@
 * Settings window:
   * [x] Switch between vanilla and 3rd party text editor
   * [ ] Remember settings
+* Icons:
+  * [x] Main menu bar → File items
+  * [x] Toolbar → Drop-down list with node types
+  * [x] Secondary canvas toolbar → Drag'n'Drop buttons
 * Dear ImGui specific:
   * [x] ImGuiColorTextEdit: Tab insert 4 spaces
   * [ ] Set minimal window size in GLFW
@@ -64,7 +67,7 @@
 * [FreeType](https://gitlab.freedesktop.org/freetype/freetype) ([Custom](https://gitlab.freedesktop.org/freetype/freetype/-/blob/master/docs/FTL.TXT))
 * [toml++](https://github.com/marzer/tomlplusplus) ([MIT](https://github.com/marzer/tomlplusplus/blob/master/LICENSE))
 * [stb](https://github.com/nothings/stb) ([MIT](https://github.com/nothings/stb/blob/master/LICENSE))
-* [simple-svg](https://github.com/adishavit/simple-svg), ([BSD-3-Clause](https://github.com/adishavit/simple-svg/blob/master/LICENSE))
+* [simple-svg](https://github.com/adishavit/simple-svg) ([BSD-3-Clause](https://github.com/adishavit/simple-svg/blob/master/LICENSE))
 * [Native File Dialog Extended](https://github.com/btzy/nativefiledialog-extended) ([zlib](https://github.com/btzy/nativefiledialog-extended/blob/master/LICENSE))
 * [ImGuiColorTextEdit](https://github.com/BalazsJako/ImGuiColorTextEdit) ([MIT](https://github.com/BalazsJako/ImGuiColorTextEdit/blob/master/LICENSE))
 * [IconFontCppHeaders](https://github.com/juliettef/IconFontCppHeaders) ([zlib](https://github.com/juliettef/IconFontCppHeaders/blob/main/licence.txt))

@@ -1,7 +1,5 @@
 #include <algorithm>
 
-#include "../../Dependency/IconsMaterialDesignIcons.h"
-
 #include "../App.hpp"
 #include "../Helper/DrawLayer.hpp"
 #include "../Helper/Operator.hpp"
@@ -121,10 +119,9 @@ void App::GUICanvas(const float height)
     // (We use 2*z for nodes and 2*z+1 for paths)
     draw_list->ChannelsSplit(N_DL_REAL_CHANNELS);
     // Default draw layer for nodes is 4 (Model → Node.hpp → int z)
-    const auto font_size_f = static_cast<float>(m_canvas_font_size);
-    GUICanvasDrawNodes(draw_list, origin, m_canvas_zoom_level, font_size_f);
+    GUICanvasDrawNodes(draw_list, origin);
     // Default layer for paths is 5 (Model → Path.hpp → int z)
-    GUICanvasDrawPaths(draw_list, origin, m_canvas_zoom_level);
+    GUICanvasDrawPaths(draw_list, origin);
     draw_list->ChannelsMerge();
 
     // .: User AABR interaction :.
@@ -132,37 +129,29 @@ void App::GUICanvas(const float height)
 
     // == Drag n drop new node logic ==
     if (m_is_dragndropping_node) {
-        constexpr ImVec2 VEC_ZERO(0, 0);
-        constexpr auto COLOR_GHOST_EDGE = IM_COL32(0, 0, 0, 128);
-        constexpr auto COLOR_GHOST_FILL = IM_COL32(255, 255, 255, 128);
+        // Prepare for the ghost node
         const auto node_padding = NODE_BORDER_OFFSET_BASE * m_canvas_zoom_level;
 
-        // Draw the "ghost node"
         const auto ghost_label = std::format("node_{}", m_canvas_nodes.size());
         const auto ghost_label_c_str = ghost_label.c_str();
+
         const auto ghost_label_size = m_font_inconsolata_medium->
-            CalcTextSizeA(font_size_f, FLT_MAX, -1.0f, ghost_label_c_str);
+            CalcTextSizeA(static_cast<float>(m_canvas_font_size), FLT_MAX, -1.0f, ghost_label_c_str);
+
         const ImVec2 ghost_padding(ghost_label_size.x / 2 + node_padding,
                                    ghost_label_size.y / 2 + node_padding);
-        const auto& mouse_pos = io.MousePos;
-        const auto ghost_top_left = mouse_pos - ghost_padding;
-        const auto ghost_bottom_right = mouse_pos + ghost_padding;
-        draw_list->AddText(m_font_inconsolata_medium,
-                           font_size_f,
-                           ghost_top_left + ImVec2(node_padding, node_padding),
-                           COLOR_GHOST_EDGE,
-                           ghost_label_c_str);
-        draw_list->AddRectFilled(ghost_top_left, ghost_bottom_right, COLOR_GHOST_FILL, 0, 0);
-        draw_list->AddRect(ghost_top_left, ghost_bottom_right, COLOR_GHOST_EDGE, 0, 0, m_canvas_zoom_level);
+        // Draw the "ghost node"
+        GUICanvasDrawGhostNode(draw_list, io.MousePos, ghost_padding, ghost_label_c_str);
 
         // Check if LMB released inside canvas
         if (!ImGui::IsMouseDown(ImGuiMouseButton_Left)
-            && mouse_pos_in_canvas >= VEC_ZERO
+            && mouse_pos_in_canvas >= ImVec2(0, 0)
             && mouse_pos_in_canvas <= canvas_size) {
             // Add new node to canvas
             const auto node_x = static_cast<int>(mouse_pos_in_canvas.x - ghost_padding.x);
             const auto node_y = static_cast<int>(mouse_pos_in_canvas.y - ghost_padding.y);
-            m_source += std::format("\n[node.{}]\nxy = [{}, {}]\n", ghost_label, node_x, node_y);
+            m_source += std::format("\n[node.{}]\ntype = \"{}\"\nxy = [{}, {}]\n",
+                                    ghost_label, GetStringFromNodeType(m_dragndropping_node_type), node_x, node_y);
             OnMSourceChanged();
         }
     }
@@ -237,17 +226,27 @@ void App::GUICanvas(const float height)
                                  cursor_screen_pos + ImGui::GetContentRegionAvail(),
                                  IM_COL32(219, 219, 219, 255));
 
-        // == Add node button ==
-        ImGui::Button(ICON_MDI_RECTANGLE_OUTLINE);
-        // - "drag n drop functionality", not using Dear ImGui dragndrop capabilities here, this is more convenient in this situation
-        m_is_dragndropping_node = ImGui::IsItemActive();
-        // - tooltip
-        if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayShort | ImGuiHoveredFlags_NoSharedDelay)) {
-            ImGui::SetTooltip("Drag and drop me onto the canvas.");
+        // == Add node buttons ==
+        m_is_dragndropping_node = false;
+        for (int i = 0; i < N_NTYPES; i++) {
+            ImGui::Button(GetIconFromNodeType(static_cast<NodeType>(i)));
+
+            if (ImGui::IsItemActive()) {
+                m_dragndropping_node_type = static_cast<NodeType>(i);
+                m_is_dragndropping_node = true;
+            }
+
+            if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayShort | ImGuiHoveredFlags_NoSharedDelay)) {
+                ImGui::SetTooltip(std::format("Drag and drop me onto the canvas to add a '{}' node.",
+                                              GetStringFromNodeType(static_cast<NodeType>(i))).c_str());
+            }
+
+            ImGui::SameLine();
+            ImGui::Dummy({2.0f, 0.0f});
+            ImGui::SameLine();
         }
 
         // == Zoom level slider ==
-        ImGui::SameLine();
         constexpr auto SLIDER_WIDTH = 200;
         ImGui::PushItemWidth(SLIDER_WIDTH);
         ImGui::SetCursorPosX(ImGui::GetCursorPosX() + ImGui::GetContentRegionAvail().x - SLIDER_WIDTH);

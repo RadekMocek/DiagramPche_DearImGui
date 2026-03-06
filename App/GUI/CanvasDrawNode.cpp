@@ -3,12 +3,13 @@
 #include "../Helper/Color.hpp"
 #include "../Helper/DrawLayer.hpp"
 
-void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, const float zoom_level, const float font_size_f)
+void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin)
 {
+    const auto font_size_f = static_cast<float>(m_canvas_font_size);
     const auto n_nodes = static_cast<int>(m_parser.m_result_nodes_pq.size());
     auto node_n = 0;
 
-    const auto node_padding = NODE_BORDER_OFFSET_BASE * zoom_level;
+    const auto node_padding = NODE_BORDER_OFFSET_BASE * m_canvas_zoom_level;
 
     for (; !m_parser.m_result_nodes_pq.empty(); m_parser.m_result_nodes_pq.pop()) {
         const auto& [node_draw_batch_number, node_id] = m_parser.m_result_nodes_pq.top();
@@ -23,15 +24,15 @@ void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, const f
 
         // Get explicit or calculate implicit node size
         const auto node_width = (node.width > 0)
-                                    ? static_cast<float>(node.width) * zoom_level
+                                    ? static_cast<float>(node.width) * m_canvas_zoom_level
                                     : label_size.x + 2 * node_padding;
         const auto node_height = (node.height > 0)
-                                     ? static_cast<float>(node.height) * zoom_level
+                                     ? static_cast<float>(node.height) * m_canvas_zoom_level
                                      : label_size.y + 2 * node_padding;
 
         // Get node position, this is from the line `xy = [number, number]`
-        const ImVec2 node_pos(static_cast<float>(node.position.x) * zoom_level,
-                              static_cast<float>(node.position.y) * zoom_level);
+        const ImVec2 node_pos(static_cast<float>(node.position.x) * m_canvas_zoom_level,
+                              static_cast<float>(node.position.y) * m_canvas_zoom_level);
 
         // Move node according to its parent, if the user had set some; this is where we use stored AABR from `canvas_nodes`
         ImVec2 parent_offset(0, 0);
@@ -178,7 +179,7 @@ void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, const f
         case NTYPE_RECTANGLE:
             // Draw rectangle and its edge
             draw_list->AddRectFilled(draw_top_left, draw_bottom_right, node_imcolor, 0, 0);
-            draw_list->AddRect(draw_top_left, draw_bottom_right, COLOR_NODE_EDGE, 0, 0, zoom_level);
+            draw_list->AddRect(draw_top_left, draw_bottom_right, COLOR_NODE_EDGE, 0, 0, m_canvas_zoom_level);
             // SVG rectangle
             m_exporter.AddRect(z,
                                draw_top_left.x,
@@ -193,7 +194,7 @@ void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, const f
                 const ImVec2 radius(node_width / 2.0f, node_height / 2.0f);
                 // Draw ellipse and its edge
                 draw_list->AddEllipseFilled(draw_center, radius, node_imcolor);
-                draw_list->AddEllipse(draw_center, radius, COLOR_NODE_EDGE, 0, 0, zoom_level);
+                draw_list->AddEllipse(draw_center, radius, COLOR_NODE_EDGE, 0, 0, m_canvas_zoom_level);
                 // SVG ellipse
                 m_exporter.AddEllipse(z, draw_center.x, draw_center.y, node_width, node_height, node.color);
                 break;
@@ -206,7 +207,7 @@ void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, const f
             const auto left = canvas_node.GetExactPointFromPivot(PIVOT_LEFT) + origin;
             // Draw diamond and its edge
             draw_list->AddQuadFilled(top, right, bottom, left, node_imcolor);
-            draw_list->AddQuad(top, right, bottom, left, COLOR_NODE_EDGE, zoom_level);
+            draw_list->AddQuad(top, right, bottom, left, COLOR_NODE_EDGE, m_canvas_zoom_level);
             // SVG diamond
             m_exporter.AddDiamond(z, draw_center.x, draw_center.y, top.y, right.x, bottom.y, left.x, node.color);
             break;
@@ -226,4 +227,49 @@ void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, const f
                            draw_label_position.y,
                            node.value);
     }
+}
+
+void App::GUICanvasDrawGhostNode(ImDrawList* draw_list,
+                                 const ImVec2 mouse_pos,
+                                 const ImVec2 ghost_padding,
+                                 const char* ghost_label_c_str) const
+{
+    const auto font_size_f = static_cast<float>(m_canvas_font_size);
+    constexpr auto COLOR_GHOST_EDGE = IM_COL32(0, 0, 0, 128);
+    constexpr auto COLOR_GHOST_FILL = IM_COL32(255, 255, 255, 128);
+    const auto node_padding = NODE_BORDER_OFFSET_BASE * m_canvas_zoom_level;
+
+    const auto ghost_top_left = mouse_pos - ghost_padding; // Used for rectangle and text
+
+    switch (m_dragndropping_node_type) {
+    case NTYPE_RECTANGLE:
+        {
+            const auto ghost_bottom_right = mouse_pos + ghost_padding;
+            draw_list->AddRectFilled(ghost_top_left, ghost_bottom_right, COLOR_GHOST_FILL, 0, 0);
+            draw_list->AddRect(ghost_top_left, ghost_bottom_right, COLOR_GHOST_EDGE, 0, 0, m_canvas_zoom_level);
+        }
+        break;
+    case NTYPE_ELLIPSE:
+        draw_list->AddEllipseFilled(mouse_pos, ghost_padding, COLOR_GHOST_FILL);
+        draw_list->AddEllipse(mouse_pos, ghost_padding, COLOR_GHOST_EDGE, 0, 0, m_canvas_zoom_level);
+        break;
+    case NTYPE_DIAMOND:
+        {
+            const auto top = mouse_pos + ImVec2(0.0f, ghost_padding.y);
+            const auto right = mouse_pos + ImVec2(ghost_padding.x, 0.0f);
+            const auto bottom = mouse_pos - ImVec2(0.0f, ghost_padding.y);
+            const auto left = mouse_pos - ImVec2(ghost_padding.x, 0.0f);
+            draw_list->AddQuadFilled(top, right, bottom, left, COLOR_GHOST_FILL);
+            draw_list->AddQuad(top, right, bottom, left, COLOR_GHOST_EDGE, m_canvas_zoom_level);
+        }
+        break;
+    case NTYPE_TEXT:
+        break; // Do nothing
+    }
+
+    draw_list->AddText(m_font_inconsolata_medium,
+                       font_size_f,
+                       ghost_top_left + ImVec2(node_padding, node_padding),
+                       COLOR_GHOST_EDGE,
+                       ghost_label_c_str);
 }
