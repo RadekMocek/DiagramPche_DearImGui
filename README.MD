@@ -35,7 +35,6 @@
 * Dear ImGui specific:
   * [x] ImGuiColorTextEdit: Tab insert 4 spaces
   * [ ] Set minimal window size in GLFW
-  * [ ] Check `CalcTextSizeA` usages
 * TOML Parser:
   * [x] Refactor TOML parsing: do not std::move into priority queue, use pq just for determining draw order and nothing more
   * [ ] Benchmark without freetype?

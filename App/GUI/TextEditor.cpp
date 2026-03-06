@@ -30,8 +30,8 @@ void App::GUITextEditor(const float textedit_width, const float height)
     // == ERROR HIGHLIGHT ==
     if (m_parser.m_is_error) {
         // Inconsolata is monospace so should be ok
-        // this could be moved into AppStart if font size is not changing at runtime (or update member var on every change)
-        const auto char_width_x = m_font_inconsolata_medium->CalcTextSizeA(FONT_SIZE_DEFAULT, FLT_MAX, -1.0f, "A").x;
+        const auto char_width_x = m_font_inconsolata_medium->
+                                  CalcTextSizeA(static_cast<float>(m_source_font_size), FLT_MAX, -1.0f, "A").x;
         const auto text_line_height = ImGui::GetTextLineHeight();
 
         // Using the same id to get scroll value of the InputTextMultiline and to not draw outside the text edit
@@ -46,8 +46,9 @@ void App::GUITextEditor(const float textedit_width, const float height)
         const auto error_x_start = static_cast<float>(EH_region.begin.column - 1);
         const auto error_x_length = static_cast<float>(EH_region.end.column) - error_x_start;
 
-        auto EH_x_start = char_width_x * error_x_start + char_width_x / 2;
-        const auto EH_y_start = (error_y - 1) * text_line_height - textedit_scroll_offset_y + text_line_height / 8;
+        const auto& textedit_padding = ImGui::GetStyle().FramePadding;
+        auto EH_x_start = char_width_x * error_x_start + textedit_padding.x;
+        const auto EH_y_start = (error_y - 1) * text_line_height - textedit_scroll_offset_y + textedit_padding.y;
 
         // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
         // [!] using `umgui_internal.h` to make EH work with TextInput Horizontal scroll
