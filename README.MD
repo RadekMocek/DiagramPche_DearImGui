@@ -67,10 +67,12 @@
 * [simple-svg](https://github.com/adishavit/simple-svg), ([BSD-3-Clause](https://github.com/adishavit/simple-svg/blob/master/LICENSE))
 * [Native File Dialog Extended](https://github.com/btzy/nativefiledialog-extended) ([zlib](https://github.com/btzy/nativefiledialog-extended/blob/master/LICENSE))
 * [ImGuiColorTextEdit](https://github.com/BalazsJako/ImGuiColorTextEdit) ([MIT](https://github.com/BalazsJako/ImGuiColorTextEdit/blob/master/LICENSE))
+* [IconFontCppHeaders](https://github.com/juliettef/IconFontCppHeaders) ([zlib](https://github.com/juliettef/IconFontCppHeaders/blob/main/licence.txt))
 
 <br>
 
 * [Inconsolata](https://levien.com/type/myfonts/inconsolata.html) ([SIL Open Font](https://github.com/google/fonts/blob/main/ofl/inconsolata/OFL.txt))
+* [Pictogrammers Material Design Icons](https://pictogrammers.com/library/mdi/) ([Apache-2.0](https://pictogrammers.com/docs/general/license/))
 
 <br>
 

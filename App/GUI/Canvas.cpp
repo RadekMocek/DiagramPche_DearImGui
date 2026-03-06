@@ -1,5 +1,7 @@
 #include <algorithm>
 
+#include "../../Dependency/IconsMaterialDesignIcons.h"
+
 #include "../App.hpp"
 #include "../Helper/DrawLayer.hpp"
 #include "../Helper/Operator.hpp"
@@ -236,7 +238,7 @@ void App::GUICanvas(const float height)
                                  IM_COL32(219, 219, 219, 255));
 
         // == Add node button ==
-        ImGui::Button("Add node");
+        ImGui::Button(ICON_MDI_RECTANGLE_OUTLINE);
         // - "drag n drop functionality", not using Dear ImGui dragndrop capabilities here, this is more convenient in this situation
         m_is_dragndropping_node = ImGui::IsItemActive();
         // - tooltip

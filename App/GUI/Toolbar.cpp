@@ -1,6 +1,7 @@
 #include <algorithm>
 
 #include "imgui_internal.h"
+#include "../../Dependency/IconsMaterialDesignIcons.h"
 
 #include "../App.hpp"
 #include "../Config.hpp"
@@ -139,7 +140,12 @@ void App::GUIToolbar(const float textedit_width)
     // .:=============:.
     static int node_type_selected_idx;
     // This must correspond to `enum NodeType` values
-    const char* node_types[] = {"Rectangle", "Ellipse  ", "Diamond  ", "Text     "};
+    const char* node_types[] = {
+        ICON_MDI_RECTANGLE_OUTLINE" Rectangle",
+        ICON_MDI_ELLIPSE_OUTLINE" Ellipse  ",
+        ICON_MDI_RHOMBUS_OUTLINE" Diamond  ",
+        ICON_MDI_FORMAT_TEXT_VARIANT" Text     "
+    };
 
     VerticalSeparator();
     ImGui::Text("Type:");

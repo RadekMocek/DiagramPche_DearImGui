@@ -8,30 +8,21 @@ void App::Start()
     m_cursor_crosshair = glfwCreateStandardCursor(GLFW_CROSSHAIR_CURSOR);
 
     // = Load Fonts =
-    // - If fonts are not explicitly loaded, Dear ImGui will select an embedded font: either AddFontDefaultVector() or AddFontDefaultBitmap().
-    //   This selection is based on (style.FontSizeBase * style.FontScaleMain * style.FontScaleDpi) reaching a small threshold.
-    // - You can load multiple fonts and use ImGui::PushFont()/PopFont() to select them.
-    // - If a file cannot be loaded, AddFont functions will return a nullptr. Please handle those errors in your code (e.g. use an assertion, display an error and quit).
-    // - Read 'docs/FONTS.md' for more instructions and details.
-    // - Use '#define IMGUI_ENABLE_FREETYPE' in your imconfig file to use FreeType for higher quality font rendering.
-    // - Remember that in C/C++ if you want to include a backslash \ in a string literal you need to write a double backslash \\ !
-    // - Our Emscripten build process allows embedding fonts to be accessible at runtime from the "fonts/" folder. See Makefile.emscripten for details.
-    //style.FontSizeBase = 20.0f;
-    //io.Fonts->AddFontDefaultVector();
-    //io.Fonts->AddFontDefaultBitmap();
-    //io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\segoeui.ttf");
-    //io.Fonts->AddFontFromFileTTF("../../misc/fonts/DroidSans.ttf");
-    //io.Fonts->AddFontFromFileTTF("../../misc/fonts/Roboto-Medium.ttf");
-    //io.Fonts->AddFontFromFileTTF("../../misc/fonts/Cousine-Regular.ttf");
-    //ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf");
-    //IM_ASSERT(font != nullptr);
-
     ImGuiIO& io = ImGui::GetIO();
 
     m_font_inconsolata_medium = io.Fonts->AddFontFromFileTTF("./Resource/Font/Inconsolata-Medium.ttf",
                                                              FONT_SIZE_DEFAULT);
 
     IM_ASSERT(m_font_inconsolata_medium != nullptr);
+
+    // Icon font
+    ImFontConfig icons_config;
+    icons_config.MergeMode = true;
+    icons_config.GlyphMinAdvanceX = FONT_SIZE_DEFAULT;
+    icons_config.GlyphOffset = {0.0f, 1.0f};
+    io.Fonts->AddFontFromFileTTF("./Resource/Font/pictogrammers-materialdesignicons.ttf",
+                                 FONT_SIZE_DEFAULT,
+                                 &icons_config);
 
     // = App config =
     // Cannot move windows by dragging their body, only titlebar counts, just like god intended

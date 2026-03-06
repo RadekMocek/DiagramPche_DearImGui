@@ -1,3 +1,5 @@
+#include  "../../Dependency/IconsMaterialDesignIcons.h"
+
 #include "../App.hpp"
 #include "../Config.hpp"
 
@@ -8,7 +10,7 @@ void App::GUIMainMenuBar()
     // .: File :.
     if (ImGui::BeginMenu("File")) {
         // . New .
-        if (ImGui::MenuItem("New")) {
+        if (ImGui::MenuItem(ICON_MDI_FILE_PLUS_OUTLINE" New")) {
             if (!m_is_source_dirty) {
                 HandleRegularNew();
             }
@@ -18,7 +20,7 @@ void App::GUIMainMenuBar()
             }
         }
         // . Open .
-        if (ImGui::MenuItem("Open")) {
+        if (ImGui::MenuItem(ICON_MDI_FOLDER_OPEN_OUTLINE" Open")) {
             if (!m_is_source_dirty) {
                 HandleRegularOpen();
             }
@@ -28,25 +30,25 @@ void App::GUIMainMenuBar()
             }
         }
         // . Save .
-        if (ImGui::MenuItem("Save")) {
+        if (ImGui::MenuItem(ICON_MDI_CONTENT_SAVE_OUTLINE" Save")) {
             HandleRegularSave();
         }
         // . Save as .
-        if (ImGui::MenuItem("Save as")) {
+        if (ImGui::MenuItem(ICON_MDI_CONTENT_SAVE_EDIT_OUTLINE" Save as")) {
             SaveSourceToFileFromDialog();
         }
         // . Export to SVG .
-        if (ImGui::MenuItem("Export to SVG")) {
+        if (ImGui::MenuItem(ICON_MDI_EXPORT" Export to SVG")) {
             m_is_queued_popup_export = true;
         }
         ImGui::Separator();
         // . Preferences .
-        if (ImGui::MenuItem("Preferences", nullptr, m_do_show_window_preferences)) {
+        if (ImGui::MenuItem(ICON_MDI_WRENCH_OUTLINE" Preferences", nullptr, m_do_show_window_preferences)) {
             m_do_show_window_preferences = !m_do_show_window_preferences;
         }
         ImGui::Separator();
         // . Exit .
-        if (ImGui::MenuItem("Exit", "Alt+F4")) {
+        if (ImGui::MenuItem(ICON_MDI_EXIT_RUN" Exit", "Alt+F4")) {
             if (!m_is_source_dirty) {
                 glfwSetWindowShouldClose(m_window, GLFW_TRUE);
             }

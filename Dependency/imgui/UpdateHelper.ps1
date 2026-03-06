@@ -4,6 +4,7 @@ Don't forget to:
 * imconfig.h:
   * uncomment '//#define IMGUI_ENABLE_FREETYPE'
   * uncomment '//#define IMGUI_DEFINE_MATH_OPERATORS'
+  * uncomment '//#define IMGUI_USE_WCHAR32'
 * misc\cpp\imgui_stdlib.h:
   * add '#include "imgui.h"' above '#ifndef IMGUI_DISABLE' ?
 #>
