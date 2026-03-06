@@ -96,6 +96,7 @@ private:
     bool m_do_show_secondary_canvas_toolbar{};
     std::optional<std::string> m_selected_or_hovered_canvas_node_key = std::nullopt;
     bool m_is_canvas_node_selected = false;
+    bool m_is_dragndropping_node = false;
 
     // Modeless
     bool m_do_show_window_demo = false;
@@ -133,7 +134,7 @@ private:
     void GUITextEditor(float textedit_width, float height);
     void GUITextEditorAlt(float textedit_width, float height);
     void GUICanvas(float height);
-    void GUICanvasDrawNodes(ImDrawList* draw_list, ImVec2 origin, float zoom_level, int font_size);
+    void GUICanvasDrawNodes(ImDrawList* draw_list, ImVec2 origin, float zoom_level, float font_size_f);
     void GUICanvasDrawPaths(ImDrawList* draw_list, ImVec2 origin, float zoom_level);
     void ResetCanvasScrollingAndZoom();
 
@@ -167,6 +168,22 @@ private:
     std::optional<size_t> GetMSourceIdxFromSourceRegion(const toml::source_position& position);
     void ReplaceInMSource(const toml::source_region& source, const std::string& new_str);
     void InsertNodeParameterInMSource(const Node& toolbar_node, const std::string& new_str);
+
+    // Call this after we change m_source somewhere from code instead of by editing text in the text edit widget
+    void OnMSourceChanged()
+    {
+        // Source was edited externally => source is dirty
+        m_is_source_dirty = true;
+
+        // If alt text editor is used, its text must be updated
+        if (m_do_use_alt_editor) {
+            //const auto cursor_pos = m_alt_editor.GetCursorPosition();
+            m_alt_editor.SetText(m_source);
+            //m_alt_editor.SetCursorPosition(cursor_pos);
+
+            // This resets scroll even if I do the GetCursorPosition + SetCursorPosition ¯\_(ツ)_/¯
+        }
+    }
 
     //
     void ShowErrorModal(const std::string& error_message)

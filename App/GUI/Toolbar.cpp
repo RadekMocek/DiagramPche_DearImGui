@@ -113,16 +113,6 @@ void App::GUIToolbar(const float textedit_width)
     ImGui::Dummy(ADDITIONAL_LEFT_PADDING);
     ImGui::SameLine();
 
-    const auto UpdateAltTextEditIfNeeded = [this] {
-        if (m_do_use_alt_editor) {
-            //const auto cursor_pos = m_alt_editor.GetCursorPosition();
-            m_alt_editor.SetText(m_source);
-            //m_alt_editor.SetCursorPosition(cursor_pos);
-
-            // This resets scroll even if I do the GetCursorPosition + SetCursorPosition ¯\_(ツ)_/¯
-        }
-    };
-
     // .: Color picker :.
     // .:==============:.
     static ImVec4 color;
@@ -142,7 +132,7 @@ void App::GUIToolbar(const float textedit_width)
         else {
             InsertNodeParameterInMSource(toolbar_node, std::format("\ncolor = \"{}\"", GetRGBAHexFromImVec4(color)));
         }
-        UpdateAltTextEditIfNeeded();
+        OnMSourceChanged();
     }
 
     // .: Type select :.
@@ -171,7 +161,7 @@ void App::GUIToolbar(const float textedit_width)
             // Add type parameter to node's definition
             InsertNodeParameterInMSource(toolbar_node, std::format("\ntype = \"{}\"", type_str));
         }
-        UpdateAltTextEditIfNeeded();
+        OnMSourceChanged();
     }
 
     // .: Node ID label :.

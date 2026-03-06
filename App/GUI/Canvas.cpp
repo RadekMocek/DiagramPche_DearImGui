@@ -2,6 +2,7 @@
 
 #include "../App.hpp"
 #include "../Helper/DrawLayer.hpp"
+#include "../Helper/Operator.hpp"
 #include "../Model/CanvasNode.hpp"
 #include "../Config.hpp"
 
@@ -88,7 +89,7 @@ void App::GUICanvas(const float height)
     ImDrawList* draw_list = ImGui::GetWindowDrawList(); // Enables us to draw primitives
 
     // == Draw grid ==
-    draw_list->PushClipRect(canvas_top_left, canvas_bottom_right, true);
+    draw_list->PushClipRect(canvas_top_left, canvas_bottom_right, true); // Draw only inside this rect
     if (m_do_show_grid) {
         const float GRID_STEP = GRID_STEP_BASE * m_canvas_zoom_level;
 
@@ -118,15 +119,56 @@ void App::GUICanvas(const float height)
     // (We use 2*z for nodes and 2*z+1 for paths)
     draw_list->ChannelsSplit(N_DL_REAL_CHANNELS);
     // Default draw layer for nodes is 4 (Model → Node.hpp → int z)
-    GUICanvasDrawNodes(draw_list, origin, m_canvas_zoom_level, m_canvas_font_size);
+    const auto font_size_f = static_cast<float>(m_canvas_font_size);
+    GUICanvasDrawNodes(draw_list, origin, m_canvas_zoom_level, font_size_f);
     // Default layer for paths is 5 (Model → Path.hpp → int z)
     GUICanvasDrawPaths(draw_list, origin, m_canvas_zoom_level);
     draw_list->ChannelsMerge();
-    draw_list->PopClipRect();
 
     // .: User AABR interaction :.
     // .:=======================:.
-    // Show tooltip with Node ID on hover
+
+    // == Drag n drop new node logic ==
+    if (m_is_dragndropping_node) {
+        constexpr ImVec2 VEC_ZERO(0, 0);
+        constexpr auto COLOR_GHOST_EDGE = IM_COL32(0, 0, 0, 128);
+        constexpr auto COLOR_GHOST_FILL = IM_COL32(255, 255, 255, 128);
+        const auto node_padding = NODE_BORDER_OFFSET_BASE * m_canvas_zoom_level;
+
+        // Draw the "ghost node"
+        const auto ghost_label = std::format("node_{}", m_canvas_nodes.size());
+        const auto ghost_label_c_str = ghost_label.c_str();
+        const auto ghost_label_size = m_font_inconsolata_medium->
+            CalcTextSizeA(font_size_f, FLT_MAX, -1.0f, ghost_label_c_str);
+        const ImVec2 ghost_padding(ghost_label_size.x / 2 + node_padding,
+                                   ghost_label_size.y / 2 + node_padding);
+        const auto& mouse_pos = io.MousePos;
+        const auto ghost_top_left = mouse_pos - ghost_padding;
+        const auto ghost_bottom_right = mouse_pos + ghost_padding;
+        draw_list->AddText(m_font_inconsolata_medium,
+                           font_size_f,
+                           ghost_top_left + ImVec2(node_padding, node_padding),
+                           COLOR_GHOST_EDGE,
+                           ghost_label_c_str);
+        draw_list->AddRectFilled(ghost_top_left, ghost_bottom_right, COLOR_GHOST_FILL, 0, 0);
+        draw_list->AddRect(ghost_top_left, ghost_bottom_right, COLOR_GHOST_EDGE, 0, 0, m_canvas_zoom_level);
+
+        // Check if LMB released inside canvas
+        if (!ImGui::IsMouseDown(ImGuiMouseButton_Left)
+            && mouse_pos_in_canvas >= VEC_ZERO
+            && mouse_pos_in_canvas <= canvas_size) {
+            // Add new node to canvas
+            const auto node_x = static_cast<int>(mouse_pos_in_canvas.x - ghost_padding.x);
+            const auto node_y = static_cast<int>(mouse_pos_in_canvas.y - ghost_padding.y);
+            m_source += std::format("\n[node.{}]\nxy = [{}, {}]\n", ghost_label, node_x, node_y);
+            OnMSourceChanged();
+        }
+    }
+
+    // Canvas drawing complete
+    draw_list->PopClipRect();
+
+    // == Clicking on nodes in canvas ==
     if (is_hovered) {
         static bool is_some_node_hovered;
         static std::string hovered_node_key;
@@ -187,14 +229,23 @@ void App::GUICanvas(const float height)
     // .: Secondary canvas toolbar :.
     // .:==========================:.
     if (m_do_show_secondary_canvas_toolbar) {
+        // Different background color for secondary toolbar
+        const auto& cursor_screen_pos = ImGui::GetCursorScreenPos();
+        draw_list->AddRectFilled(cursor_screen_pos,
+                                 cursor_screen_pos + ImGui::GetContentRegionAvail(),
+                                 IM_COL32(219, 219, 219, 255));
+
         // == Add node button ==
         ImGui::Button("Add node");
+        // - "drag n drop functionality", not using Dear ImGui dragndrop capabilities here, this is more convenient in this situation
+        m_is_dragndropping_node = ImGui::IsItemActive();
+        // - tooltip
         if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayShort | ImGuiHoveredFlags_NoSharedDelay)) {
             ImGui::SetTooltip("Drag and drop me onto the canvas.");
         }
-        ImGui::SameLine();
 
         // == Zoom level slider ==
+        ImGui::SameLine();
         constexpr auto SLIDER_WIDTH = 200;
         ImGui::PushItemWidth(SLIDER_WIDTH);
         ImGui::SetCursorPosX(ImGui::GetCursorPosX() + ImGui::GetContentRegionAvail().x - SLIDER_WIDTH);

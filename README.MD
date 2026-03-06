@@ -9,8 +9,9 @@
     * [x] Source: Show cursor position in the text editor
     * [x] Canvas: Change color node with color picker
     * [x] Canvas: Change node's type via Drop-down list
-  * [ ] View → Secondary canvas toolbar
-    * [ ] Drag'n'Drop new node
+  * [x] View → Secondary canvas toolbar
+    * [x] Drag'n'Drop new node
+    * [ ] Drag'n'Drop – icon button for each available shape
     * [x] Zoom slider, right aligned
   * Saving/loading:
     * [x] New, Open, Save, Save as

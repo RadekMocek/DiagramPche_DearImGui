@@ -3,12 +3,12 @@
 #include "../Helper/Color.hpp"
 #include "../Helper/DrawLayer.hpp"
 
-void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, const float zoom_level, const int font_size)
+void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, const float zoom_level, const float font_size_f)
 {
     const auto n_nodes = static_cast<int>(m_parser.m_result_nodes_pq.size());
     auto node_n = 0;
 
-    const float node_padding = NODE_BORDER_OFFSET_BASE * zoom_level;
+    const auto node_padding = NODE_BORDER_OFFSET_BASE * zoom_level;
 
     for (; !m_parser.m_result_nodes_pq.empty(); m_parser.m_result_nodes_pq.pop()) {
         const auto& [node_draw_batch_number, node_id] = m_parser.m_result_nodes_pq.top();
@@ -19,7 +19,7 @@ void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, const f
 
         // This gives us the size of label if we draw it; it's used for implicit (AAB)Rectangle size and for determining the label position
         const auto label_size = m_font_inconsolata_medium->
-            CalcTextSizeA(static_cast<float>(font_size), FLT_MAX, -1.0f, label_c_str);
+            CalcTextSizeA(font_size_f, FLT_MAX, -1.0f, label_c_str);
 
         // Get explicit or calculate implicit node size
         const auto node_width = (node.width > 0)
@@ -89,7 +89,7 @@ void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, const f
         canvas_node.center = ImVec2(aabr_top_left.x + node_width / 2,
                                     aabr_top_left.y + node_height / 2);
         canvas_node.z_mul = node.z * n_nodes + node_n++;
-        canvas_node.def_line_num = node.node_source.begin.line - 1;
+        canvas_node.def_line_num = static_cast<int>(node.node_source.begin.line) - 1;
 
         // We stored proper data in `m_canvas_nodes`, now we prepare for the drawing
 
@@ -216,7 +216,7 @@ void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, const f
         // .:===============:.
         // Draw node text
         draw_list->AddText(m_font_inconsolata_medium,
-                           static_cast<float>(font_size),
+                           font_size_f,
                            draw_label_position,
                            COLOR_NODE_EDGE,
                            label_c_str);
