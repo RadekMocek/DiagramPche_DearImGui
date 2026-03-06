@@ -2,6 +2,11 @@
 
 ## TODO
 
+* __DRAG'N'DROP IS BROKEN WHEN ZOOMING__
+* __UNSAVEDMODALWARN BUTTONS COLOR ON NON-LIGHT THEMES__
+
+<br>
+
 * General:
   * [x] View → Jump to canvas origin
   * [x] View → Toolbar
@@ -31,16 +36,16 @@
   * [x] Ctrl+Click to jump to node definition in text editor
 * Settings window:
   * [x] Switch between vanilla and 3rd party text editor
+  * [x] Appearance: color theme
+  * [ ] Duplicate things from app: view→grid/toolbar/toolbar2, text editor font size (so all things that can be set and saved are at one place)
   * [ ] Remember settings
 * Icons:
   * [x] Main menu bar → File items
   * [x] Toolbar → Drop-down list with node types
   * [x] Secondary canvas toolbar → Drag'n'Drop buttons
-* Dear ImGui specific:
-  * [x] ImGuiColorTextEdit: Tab insert 4 spaces
-  * [ ] Set minimal window size in GLFW
 * TOML Parser:
   * [x] Refactor TOML parsing: do not std::move into priority queue, use pq just for determining draw order and nothing more
+* Dear ImGui specific:
   * [ ] Benchmark without freetype?
 
 ## Problems

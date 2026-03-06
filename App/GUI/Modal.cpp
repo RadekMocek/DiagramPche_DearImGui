@@ -28,7 +28,7 @@ void App::GUIModal()
     };
 
     // (Make modal bg color same as normal window color)
-    ImGui::PushStyleColor(ImGuiCol_PopupBg, IM_COL32(240, 240, 240, 255));
+    ImGui::PushStyleColor(ImGuiCol_PopupBg, m_style_color_modal);
 
     // .: Export modal :.
     // .:==============:.

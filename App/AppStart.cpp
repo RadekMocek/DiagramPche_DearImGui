@@ -31,9 +31,9 @@ void App::Start()
     // = Alternative text editor =
     m_do_use_alt_editor = true;
     m_alt_editor.SetLanguageDefinition(TextEditor::LanguageDefinition::NSOLD());
-    m_alt_editor.SetPalette(TextEditor::GetDiagramPchePalette());
     m_alt_editor.SetShowWhitespaces(false);
     m_alt_editor.SetText(WELCOME_TOML);
+    // (Color palette is set elsewhere)
 
     // = Initialize all other members =
     m_do_show_grid = true;

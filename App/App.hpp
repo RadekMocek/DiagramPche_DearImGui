@@ -63,6 +63,11 @@ private:
         ActionAfterUnsavedWarn_LoadExample
     };
 
+    enum AppearanceTheme
+    {
+        AppearanceTheme_Light, AppearanceTheme_Dark, AppearanceTheme_Legacy
+    };
+
     // = Members =
     GLFWwindow* m_window{};
     bool m_should_window_really_close = false;
@@ -121,6 +126,10 @@ private:
     std::string m_path_export;
     int m_action_after_export_choice{};
 
+    // Style
+    ImU32 m_style_color_modal;
+    ImU32 m_style_color_secondary_toolbar;
+
     // = Functions =
     // Boilerplate
     static void GLFWErrorCallback(int error, const char* description);
@@ -175,6 +184,9 @@ private:
     std::optional<size_t> GetMSourceIdxFromSourceRegion(const toml::source_position& position);
     void ReplaceInMSource(const toml::source_region& source, const std::string& new_str);
     void InsertNodeParameterInMSource(const Node& toolbar_node, const std::string& new_str);
+
+    // Style
+    void ChangeAppearanceTheme(AppearanceTheme theme);
 
     // Call this after we change m_source somewhere from code instead of by editing text in the text edit widget
     void OnMSourceChanged()

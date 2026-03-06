@@ -267,7 +267,10 @@ public:
 	static const Palette& GetDarkPalette();
 	static const Palette& GetLightPalette();
 	static const Palette& GetRetroBluePalette();
-	static const Palette& GetDiagramPchePalette();
+
+	static const Palette& GetDiagramPchePaletteLight();
+	static const Palette& GetDiagramPchePaletteDark();
+	static const Palette& GetDiagramPchePaletteLegacy();
 
 private:
 	typedef std::vector<std::pair<std::regex, PaletteIndex>> RegexList;

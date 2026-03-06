@@ -224,7 +224,7 @@ void App::GUICanvas(const float height)
         const auto& cursor_screen_pos = ImGui::GetCursorScreenPos();
         draw_list->AddRectFilled(cursor_screen_pos,
                                  cursor_screen_pos + ImGui::GetContentRegionAvail(),
-                                 IM_COL32(219, 219, 219, 255));
+                                 m_style_color_secondary_toolbar);
 
         // == Add node buttons ==
         m_is_dragndropping_node = false;

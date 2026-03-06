@@ -96,6 +96,8 @@ bool App::Init()
     glfwMakeContextCurrent(m_window);
     glfwSwapInterval(1); // Enable vsync
 
+    glfwSetWindowSizeLimits(m_window, 666 * main_scale, 416 * main_scale, GLFW_DONT_CARE, GLFW_DONT_CARE);
+
     glfwSetWindowCloseCallback(m_window, GLFWWindowCloseCallback);
 
     GLFWimage images[1];
@@ -124,13 +126,15 @@ bool App::Init()
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad; // Enable Gamepad Controls
 
+    //TODO
     // Setup Dear ImGui style
     // ReSharper disable once CppDFAConstantConditions
     if (m_is_dark_mode) {
         //ImGui::StyleColorsDark();
     }
     else {
-        ImGui::StyleColorsLight();
+        //ImGui::StyleColorsLight();
+        ChangeAppearanceTheme(AppearanceTheme_Light);
     }
 
     // Setup scaling
@@ -154,7 +158,7 @@ bool App::Init()
 
 void App::Run()
 {
-    constexpr auto clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+    constexpr auto clear_color = ImVec4(0.0f, 0.0f, 0.0f, 1.00f);
 
     // User start
     Start();
