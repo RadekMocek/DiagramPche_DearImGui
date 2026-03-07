@@ -30,6 +30,7 @@
   * [x] `[node].label_shift`, allow for variables, don't forget about zoom level
   * [x] Allow setting individual start/end path shift, keep backwards compatible
   * [ ] `[[path]].label`
+  * [ ] `[[path]].label_bg`
 * Canvas features:
   * [x] Canvas zooming: anchor under mouse
   * [x] Change the cursor type while dragging the canvas
@@ -40,6 +41,8 @@
   * [x] Option for forcing light canvas regardless of color theme
   * [x] Duplicate settings from app: view→grid/toolbar/toolbar2, text editor font size (so all things that can be set and saved are at one place)
   * [ ] Remember settings
+* Benchmark window:
+  * [ ] Do?
 * Icons:
   * [x] Main menu bar → File items
   * [x] Toolbar → Drop-down list with node types

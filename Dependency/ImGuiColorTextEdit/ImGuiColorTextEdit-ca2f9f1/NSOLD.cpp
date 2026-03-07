@@ -19,6 +19,7 @@ const TextEditor::LanguageDefinition& TextEditor::LanguageDefinition::NSOLD()
             "end",
             "ends",
             "label",
+            "label_bg",
             "label_pos",
             "label_shift",
             "pivot",

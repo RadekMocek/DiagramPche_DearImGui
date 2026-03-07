@@ -106,15 +106,21 @@ void Parser::ParsePath(const toml::table* path_table, Path& curr_path)
         // == label ==> array [string, int, int]
         else if (key_str == "label") {
             if (const auto* value_arr_ptr = value.as_array(); value_arr_ptr
-                && value_arr_ptr->size() == 3
+                && value_arr_ptr->size() == 4
                 && value_arr_ptr->at(0).is_string()
                 && value_arr_ptr->at(1).is_integer()
-                && value_arr_ptr->at(2).is_integer()) {
+                && value_arr_ptr->at(2).is_integer()
+                && value_arr_ptr->at(3).is_integer()) {
                 curr_path.label_value = value_arr_ptr->at(0).as_string()->value_or("");
                 curr_path.label_point = value_arr_ptr->at(1).as_integer()->value_or(0);
                 curr_path.label_shift = value_arr_ptr->at(2).as_integer()->value_or(0);
+                curr_path.label_shift_orthogonal = value_arr_ptr->at(3).as_integer()->value_or(0);
             }
-            else ReportError(value.source(), "An array [string, int, int] must follow after 'label='");
+            else ReportError(value.source(), "An array [string, int, int, int] must follow after 'label='");
+        }
+        // == label_bg ==> same as color
+        else if (key_str == "label_bg") {
+            SetColorFromArray(value, curr_path.label_bg_color);
         }
         // == Unknown key ==> report error
         else ReportError(key.source(), std::format("Unknown key '{}'", key_str));

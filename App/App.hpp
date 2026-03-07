@@ -36,6 +36,8 @@
 #include "../libs/emscripten/emscripten_mainloop_stub.h"
 #endif
 
+// ReSharper disable once CppUnusedIncludeDirective
+#include "Helper/Operator.hpp"
 #include "Logic/SVG/Exporter.hpp"
 #include "Logic/TOML/Parser.hpp"
 #include "Model/CanvasNode.hpp"
@@ -112,6 +114,7 @@ private:
     // Modeless
     bool m_do_show_window_demo = false;
     bool m_do_show_window_preferences = false;
+    bool m_do_show_window_benchmark = false;
 
     // Modals
     bool m_is_queued_popup_about = false;
@@ -164,6 +167,7 @@ private:
 
     // Additional windows
     void GUIWinPreferences();
+    void GUIWinBenchmark();
 
     // All modals
     void GUIModal();

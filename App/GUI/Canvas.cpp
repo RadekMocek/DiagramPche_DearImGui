@@ -2,7 +2,6 @@
 
 #include "../App.hpp"
 #include "../Helper/DrawLayer.hpp"
-#include "../Helper/Operator.hpp"
 #include "../Model/CanvasNode.hpp"
 
 // ---  Canvas config  --- --- --- --- --- --- --- --- --- ---

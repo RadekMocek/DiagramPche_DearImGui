@@ -97,6 +97,10 @@ void App::GUIMainMenuBar()
             // .::.
             ImGui::EndMenu();
         }
+        // . Benchmark .
+        if (ImGui::MenuItem("Benchmark", nullptr, m_do_show_window_benchmark)) {
+            m_do_show_window_benchmark = !m_do_show_window_benchmark;
+        }
         // . Dear ImGui demo window .
 #ifdef INCLUDE_IMGUI_DEMO_WINDOW
         if (ImGui::MenuItem("Dear ImGui demo window", nullptr, m_do_show_window_demo)) {

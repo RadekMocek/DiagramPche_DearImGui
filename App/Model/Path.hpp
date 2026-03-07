@@ -30,6 +30,8 @@ struct Path
     std::string label_value{};
     int label_point{};
     int label_shift{};
+    int label_shift_orthogonal{};
+    ColorTuple label_bg_color = {0, 0, 0, 0};
 
     //
     [[nodiscard]] constexpr ImVec2 GetShiftVector(const Pivot pivot, const float zoom_level, const bool is_start) const

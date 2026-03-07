@@ -36,6 +36,7 @@ void App::Update()
 
     // .: Modeless windows :.
     if (m_do_show_window_preferences) GUIWinPreferences();
+    if (m_do_show_window_benchmark) GUIWinBenchmark();
 
     // .: Modals :.
     GUIModal();

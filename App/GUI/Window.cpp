@@ -82,3 +82,22 @@ void App::GUIWinPreferences()
     // --- --- --- ---
     ImGui::End();
 }
+
+void App::GUIWinBenchmark()
+{
+    ImGui::Begin("Benchmark", &m_do_show_window_benchmark, ImGuiWindowFlags_AlwaysAutoResize);
+    // --- --- --- ---
+    if (m_is_source_dirty) {
+        ImGui::PushStyleColor(ImGuiCol_Text, COLOR_ERROR);
+        ImGui::Text(
+            "You have unsaved changes, save your work before running the benchmark."
+            "\nIf you don't want to save, go to File→New→Discard."
+        );
+        ImGui::PopStyleColor();
+    }
+    else {
+        ImGui::Button("Start");
+    }
+    // --- --- --- ---
+    ImGui::End();
+}

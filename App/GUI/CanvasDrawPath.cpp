@@ -183,12 +183,27 @@ void App::GUICanvasDrawPaths(ImDrawList* draw_list, const ImVec2 origin)
                     const auto label_point_curr_idx = path.label_point % result_pathpoints.size();
                     const auto label_point_next_idx = (path.label_point + 1) % result_pathpoints.size();
                     const auto label_shift = path.label_shift;
+                    const auto label_shift_orth = path.label_shift_orthogonal;
 
                     const auto label_point_curr = result_pathpoints[label_point_curr_idx];
                     const auto label_point_next = result_pathpoints[label_point_next_idx];
                     const auto direction = ImVec2Normalized(label_point_next - label_point_curr);
 
-                    const auto label_position = label_point_curr + direction * label_shift;
+                    auto label_position = label_point_curr + direction * label_shift * m_canvas_zoom_level;
+
+                    if (label_shift_orth != 0) {
+                        label_position += ImVec2Orthogonalized(direction) * label_shift_orth * m_canvas_zoom_level;
+                    }
+
+                    // Prepare text bg
+                    const auto label_size = m_font_inconsolata_medium->
+                        CalcTextSizeA(font_size_f, FLT_MAX, -1.0f, label_c_str);
+                    const auto label_bg_imcolor = GetImU32FromColorTuple(path.label_bg_color);
+
+                    // Draw the bg
+                    draw_list->AddRectFilled(label_position, label_position + label_size, label_bg_imcolor);
+
+                    // Draw the text
                     draw_list->AddText(m_font_inconsolata_medium,
                                        font_size_f,
                                        label_position,

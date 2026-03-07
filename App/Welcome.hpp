@@ -55,7 +55,8 @@ points=[
     ["teststh","bottom",0,"","start",0],
     ["hello","bottom",0,"","prev",200]
 ]
-label=["huh?",0,0]
+label=["huh?", 1, 150, 15]
+label_bg = "#FF0000CF"
 
 [[path]]
 start=["testp", "right", 0,0]
@@ -64,5 +65,6 @@ ends=[
     ["teststh", "bottom", 20,0]
 ]
 shift=[200,100]
-label=["AAA\nBBB\nCCC\nDDD", 0,0]
+label=["AAA\nBBB\nCCC\nDDD", 1, 250, 0]
+label_bg = "#00FF008F"
 )";
