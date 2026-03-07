@@ -78,7 +78,7 @@ const TextEditor::Palette& TextEditor::GetDiagramPchePaletteLegacy()
             0xff404040, // Comment (multi line)
             IM_COL32(1, 39, 86, 255), // Background
             0xff0080ff, // Cursor
-            0x80ffff00, // Selection
+            IM_COL32(254, 219, 169, 64), // Selection
             0xa00000ff, // ErrorMarker
             0x80ff8000, // Breakpoint
             0xff808000, // Line number

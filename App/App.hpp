@@ -72,11 +72,11 @@ private:
     GLFWwindow* m_window{};
     bool m_should_window_really_close = false;
 
-    GLFWcursor* m_cursor_crosshair{};
+    // GLFW alternative cursors
     bool m_is_glfw_cursor_used = false;
+    GLFWcursor* m_cursor_crosshair{};
 
     ImFont* m_font_inconsolata_medium = nullptr;
-    const bool m_is_dark_mode = false;
     float m_body_split_ratio = 0.5f;
 
     // TOML source related
@@ -127,6 +127,8 @@ private:
     int m_action_after_export_choice{};
 
     // Style
+    AppearanceTheme m_style_current_color_theme = AppearanceTheme_Light;
+    bool m_style_do_force_light_canvas{};
     ImU32 m_style_color_modal;
     ImU32 m_style_color_secondary_toolbar;
 
@@ -151,11 +153,14 @@ private:
     // Ghost node == semi-transparent node, used for drag'n'drop functionality, shows where the node will be placed if user releases LMB on canvas
     void GUICanvasDrawGhostNode(ImDrawList* draw_list,
                                 ImVec2 mouse_pos,
+                                float node_padding,
                                 ImVec2 ghost_padding,
                                 const char* ghost_label_c_str) const;
 
+    // Additional windows
     void GUIWinPreferences();
 
+    // All modals
     void GUIModal();
 
     // File

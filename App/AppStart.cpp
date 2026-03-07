@@ -48,6 +48,9 @@ void App::Start()
     m_is_source_dirty = false;
     m_source_font_size = FONT_SIZE_DEFAULT;
 
+    // Style
+    m_style_do_force_light_canvas = true;
+
     //???[1]: this does not work as expected
     DEFAULT_TOOLBAR_NODE.color = {114, 144, 154, 200};
     DEFAULT_TOOLBAR_NODE.type = NTYPE_RECTANGLE;

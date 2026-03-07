@@ -62,13 +62,14 @@ void App::GUIMainMenuBar()
     }
     // .: View :.
     if (ImGui::BeginMenu("View")) {
-        // . Grid .
-        if (ImGui::MenuItem("Grid", nullptr, m_do_show_grid)) {
-            m_do_show_grid = !m_do_show_grid;
-        }
         // . Toolbar .
         if (ImGui::MenuItem("Toolbar", nullptr, m_do_show_toolbar)) {
             m_do_show_toolbar = !m_do_show_toolbar;
+        }
+        ImGui::Separator();
+        // . Grid .
+        if (ImGui::MenuItem("Canvas grid", nullptr, m_do_show_grid)) {
+            m_do_show_grid = !m_do_show_grid;
         }
         // . Secondary canvas toolbar .
         if (ImGui::MenuItem("Secondary canvas toolbar", nullptr, m_do_show_secondary_canvas_toolbar)) {

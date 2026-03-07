@@ -8,8 +8,10 @@
 
 void App::GUICanvas(const float height)
 {
-    static ImGuiIO& io = ImGui::GetIO(); // For getting the mouse position
-    static int zoom_level_slider_value = 3; // Rovnák na ohýbák
+    // For getting the mouse position
+    static ImGuiIO& io = ImGui::GetIO();
+    // Dear ImGui sliders don't support step size, so we have to map 6,10,14,18,... to 1,2,3,4,... (Straightening tool for bending machine)
+    static int zoom_level_slider_value = 3;
 
     // .: Prepare ground for the canvas :.
     // .:===============================:.
@@ -65,7 +67,7 @@ void App::GUICanvas(const float height)
 
         const int font_size_unclamped = m_canvas_font_size + io.MouseWheel * CANVAS_FONT_SIZE_STEP;
         m_canvas_font_size = std::clamp(font_size_unclamped, CANVAS_FONT_SIZE_MIN, CANVAS_FONT_SIZE_MAX);
-        m_canvas_zoom_level = m_canvas_font_size / static_cast<float>(CANVAS_FONT_SIZE_BASE);
+        m_canvas_zoom_level = static_cast<float>(m_canvas_font_size) / static_cast<float>(CANVAS_FONT_SIZE_BASE);
 
         zoom_level_slider_value = (m_canvas_font_size - CANVAS_FONT_SIZE_MIN) / CANVAS_FONT_SIZE_STEP;
 
@@ -88,8 +90,14 @@ void App::GUICanvas(const float height)
     // .:================:.
     ImDrawList* draw_list = ImGui::GetWindowDrawList(); // Enables us to draw primitives
 
-    // == Draw grid ==
     draw_list->PushClipRect(canvas_top_left, canvas_bottom_right, true); // Draw only inside this rect
+
+    if (m_style_do_force_light_canvas && m_style_current_color_theme != AppearanceTheme_Light) {
+        // (No need to add light canvas background if we're using the light theme)
+        draw_list->AddRectFilled(canvas_top_left, canvas_bottom_right, IM_COL32(240, 240, 240, 255));
+    }
+
+    // == Draw grid ==
     if (m_do_show_grid) {
         const float GRID_STEP = GRID_STEP_BASE * m_canvas_zoom_level;
 
@@ -141,15 +149,15 @@ void App::GUICanvas(const float height)
         const ImVec2 ghost_padding(ghost_label_size.x / 2 + node_padding,
                                    ghost_label_size.y / 2 + node_padding);
         // Draw the "ghost node"
-        GUICanvasDrawGhostNode(draw_list, io.MousePos, ghost_padding, ghost_label_c_str);
-
-        // Check if LMB released inside canvas
-        if (!ImGui::IsMouseDown(ImGuiMouseButton_Left)
-            && mouse_pos_in_canvas >= ImVec2(0, 0)
-            && mouse_pos_in_canvas <= canvas_size) {
-            // Add new node to canvas
-            const auto node_x = static_cast<int>(mouse_pos_in_canvas.x - ghost_padding.x);
-            const auto node_y = static_cast<int>(mouse_pos_in_canvas.y - ghost_padding.y);
+        GUICanvasDrawGhostNode(draw_list, io.MousePos, node_padding, ghost_padding, ghost_label_c_str);
+        // Check if LMB released inside canvas (To check if cursor is inside the canvas part of the app window, we ignore scrolling)
+        if (const auto mouse_pos_in_canvas_frame = io.MousePos - canvas_top_left;
+            !ImGui::IsMouseDown(ImGuiMouseButton_Left)
+            && mouse_pos_in_canvas_frame >= ImVec2(0, 0)
+            && mouse_pos_in_canvas_frame <= canvas_size) {
+            // Add new node to canvas (TOML values are zoom level independent so we divide by that)
+            const auto node_x = static_cast<int>((mouse_pos_in_canvas.x - ghost_padding.x) / m_canvas_zoom_level);
+            const auto node_y = static_cast<int>((mouse_pos_in_canvas.y - ghost_padding.y) / m_canvas_zoom_level);
             m_source += std::format("\n[node.{}]\ntype = \"{}\"\nxy = [{}, {}]\n",
                                     ghost_label, GetStringFromNodeType(m_dragndropping_node_type), node_x, node_y);
             OnMSourceChanged();
@@ -257,7 +265,7 @@ void App::GUICanvas(const float height)
         if (ImGui::SliderInt("##ZoomLevel", &zoom_level_slider_value, SLIDER_MIN, SLIDER_MAX,
                              slider_label.c_str(), ImGuiSliderFlags_NoInput)) {
             m_canvas_font_size = CANVAS_FONT_SIZE_MIN + CANVAS_FONT_SIZE_STEP * zoom_level_slider_value;
-            m_canvas_zoom_level = m_canvas_font_size / static_cast<float>(CANVAS_FONT_SIZE_BASE);
+            m_canvas_zoom_level = static_cast<float>(m_canvas_font_size) / static_cast<float>(CANVAS_FONT_SIZE_BASE);
         }
         ImGui::PopItemWidth();
     }

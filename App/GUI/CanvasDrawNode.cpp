@@ -231,14 +231,13 @@ void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin)
 
 void App::GUICanvasDrawGhostNode(ImDrawList* draw_list,
                                  const ImVec2 mouse_pos,
+                                 const float node_padding,
                                  const ImVec2 ghost_padding,
                                  const char* ghost_label_c_str) const
 {
     const auto font_size_f = static_cast<float>(m_canvas_font_size);
     constexpr auto COLOR_GHOST_EDGE = IM_COL32(0, 0, 0, 128);
     constexpr auto COLOR_GHOST_FILL = IM_COL32(255, 255, 255, 128);
-    const auto node_padding = NODE_BORDER_OFFSET_BASE * m_canvas_zoom_level;
-
     const auto ghost_top_left = mouse_pos - ghost_padding; // Used for rectangle and text
 
     switch (m_dragndropping_node_type) {

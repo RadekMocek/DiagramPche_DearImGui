@@ -5,19 +5,16 @@
 #include "../App.hpp"
 #include "../Config.hpp"
 #include "../Helper/Color.hpp"
+#include "../Helper/GUILayout.hpp"
 
 void App::GUIModal()
 {
-    constexpr auto SMALL_SKIP = ImVec2(0.0f, 6.0f);
-    constexpr auto BIG_SKIP = ImVec2(0.0f, 20.0f);
-    constexpr auto BUTTON_WIDER = ImVec2(120, 0);
-
     constexpr auto FLAGS_AUTOSIZE_AND_NOINI = ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings;
 
-    constexpr auto COLOR_GOOD_NORMAL = IM_COL32(174, 219, 152, 255);
+    constexpr auto COLOR_GOOD_NORMAL = IM_COL32(114, 224, 59, 102);
     constexpr auto COLOR_GOOD_HOVER = IM_COL32(114, 224, 59, 255);
     constexpr auto COLOR_GOOD_CLICK = IM_COL32(84, 224, 13, 255);
-    constexpr auto COLOR_BAD_NORMAL = IM_COL32(219, 152, 152, 255);
+    constexpr auto COLOR_BAD_NORMAL = IM_COL32(224, 59, 59, 102);
     constexpr auto COLOR_BAD_HOVER = IM_COL32(224, 59, 59, 255);
     constexpr auto COLOR_BAD_CLICK = IM_COL32(224, 13, 13, 255);
 
@@ -87,9 +84,9 @@ void App::GUIModal()
         ImGui::Dummy(SMALL_SKIP);
         ImGui::SeparatorText("Action after export");
         ImGui::RadioButton("Nothing", &m_action_after_export_choice, ActionAfterExport_DoNothing);
-        ImGui::SameLine();
+        SameLineWithDummy();
         ImGui::RadioButton("Show in explorer", &m_action_after_export_choice, ActionAfterExport_OpenFolder);
-        ImGui::SameLine();
+        SameLineWithDummy();
         ImGui::RadioButton("Open", &m_action_after_export_choice, ActionAfterExport_OpenFile);
 
 #ifndef _WIN32

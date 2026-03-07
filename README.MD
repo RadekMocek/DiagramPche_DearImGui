@@ -2,11 +2,6 @@
 
 ## TODO
 
-* __DRAG'N'DROP IS BROKEN WHEN ZOOMING__
-* __UNSAVEDMODALWARN BUTTONS COLOR ON NON-LIGHT THEMES__
-
-<br>
-
 * General:
   * [x] View → Jump to canvas origin
   * [x] View → Toolbar
@@ -37,7 +32,8 @@
 * Settings window:
   * [x] Switch between vanilla and 3rd party text editor
   * [x] Appearance: color theme
-  * [ ] Duplicate things from app: view→grid/toolbar/toolbar2, text editor font size (so all things that can be set and saved are at one place)
+  * [x] Option for forcing light canvas regardless of color theme
+  * [x] Duplicate settings from app: view→grid/toolbar/toolbar2, text editor font size (so all things that can be set and saved are at one place)
   * [ ] Remember settings
 * Icons:
   * [x] Main menu bar → File items

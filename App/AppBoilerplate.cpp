@@ -126,16 +126,8 @@ bool App::Init()
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad; // Enable Gamepad Controls
 
-    //TODO
     // Setup Dear ImGui style
-    // ReSharper disable once CppDFAConstantConditions
-    if (m_is_dark_mode) {
-        //ImGui::StyleColorsDark();
-    }
-    else {
-        //ImGui::StyleColorsLight();
-        ChangeAppearanceTheme(AppearanceTheme_Light);
-    }
+    ChangeAppearanceTheme(m_style_current_color_theme);
 
     // Setup scaling
     ImGuiStyle& style = ImGui::GetStyle();

@@ -32,4 +32,6 @@ void App::ChangeAppearanceTheme(const AppearanceTheme theme)
         m_style_color_secondary_toolbar = COLOR_SECONDARY_TOOLBAR_LEGACY;
         break;
     }
+
+    m_style_current_color_theme = theme;
 }
