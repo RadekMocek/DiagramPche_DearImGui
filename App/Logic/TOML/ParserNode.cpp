@@ -71,14 +71,14 @@ void Parser::ParseNode(const toml::table* node_table, Node& curr_node)
         }
         // == label_shift ==> array: [X, Y]
         else if (key_str == "label_shift") {
-            if (const auto* value_arr_ptr = value.as_array(); value_arr_ptr
-                && value_arr_ptr->size() == 2
-                && value_arr_ptr->at(0).is_integer()
-                && value_arr_ptr->at(1).is_integer()) {
-                curr_node.label_shift_x = value_arr_ptr->at(0).as_integer()->value_or(0);
-                curr_node.label_shift_y = value_arr_ptr->at(1).as_integer()->value_or(0);
+            if (const auto* value_arr_ptr = value.as_array(); value_arr_ptr && value_arr_ptr->size() == 2) {
+                SetIntFromIntOrVariable(value_arr_ptr->at(0), curr_node.label_shift_x);
+                SetIntFromIntOrVariable(value_arr_ptr->at(1), curr_node.label_shift_y);
             }
-            else ReportError(value.source(), "An array of two integers must follow after 'label_shift='");
+            else {
+                ReportError(value.source(),
+                            "An array of two integers and/or variable names must follow after 'label_shift='");
+            }
         }
         // == Unknown key ==> report error
         else ReportError(key.source(), std::format("Unknown key '{}'", key_str));

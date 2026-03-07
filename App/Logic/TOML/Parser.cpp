@@ -275,9 +275,9 @@ void Parser::SetColorFromArray(const toml::node& value, ColorTuple& to_set)
     else if (const auto* value_str_ptr = value.as_string()) {
         to_set = GetColorTupleFromString(value_str_ptr->value_or(""));
     }
-    else
-        ReportError(value.source(),
-                    "An array of four uchars (0–255) or RGBA hex string must be used to set the color");
+    else {
+        ReportError(value.source(), "An array of four uchars (0–255) or RGBA hex string must be used to set the color");
+    }
 }
 
 int Parser::GetZFromInt(const toml::node& value, const bool is_node)

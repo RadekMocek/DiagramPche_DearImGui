@@ -40,6 +40,9 @@
 #include "Logic/TOML/Parser.hpp"
 #include "Model/CanvasNode.hpp"
 
+// By commenting this out, Dear ImGui demo window won't be accessible from the app
+#define INCLUDE_IMGUI_DEMO_WINDOW
+
 class App
 {
 public:

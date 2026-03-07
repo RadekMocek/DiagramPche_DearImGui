@@ -27,7 +27,7 @@
   * [x] `[node].type = "ellipse"`
   * [x] `[node].type = "diamond"`
   * [x] `[node].color_border`, don't forget to generalize the error message
-  * [ ] `[node].label_shift`, allow for variables
+  * [x] `[node].label_shift`, allow for variables, don't forget about zoom level
   * [x] Allow setting individual start/end path shift, keep backwards compatible
   * [ ] `[[path]].label`
 * Canvas features:

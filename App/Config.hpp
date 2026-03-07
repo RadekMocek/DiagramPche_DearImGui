@@ -2,9 +2,6 @@
 
 #include "imgui.h"
 
-// By commenting this out, Dear ImGui demo window won't be accessible from the app
-#define INCLUDE_IMGUI_DEMO_WINDOW
-
 // Used in toolbar and settings window to set boundaries for the InputInt
 constexpr auto FONT_SIZE_SOURCE_MIN = 8;
 constexpr auto FONT_SIZE_SOURCE_MAX = 40;

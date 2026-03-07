@@ -1,4 +1,5 @@
 [variables]
+bg_label_shift = -10
 bg_width = 1000
 bg_height = 140
 node_height = 70
@@ -18,8 +19,8 @@ size = ["bg_width", "bg_height"]
 label_pos = "top-left"
 xy = ["bg_bg", "top-left", 1, 1]
 color = "#ffffffff"
-color_border = "#00000000"
-label_shift = [-10, -10]
+color_border = "#ffffff00"
+label_shift = ["bg_label_shift", "bg_label_shift"]
 
 [node.bg_p]
 z = 3
@@ -29,8 +30,8 @@ label_pos = "top-left"
 pivot = "top"
 xy = ["bg_z", "bottom", 0, -1]
 color = "#f8f8f8ff"
-color_border = "#00000000"
-label_shift = [-10, -10]
+color_border = "#f8f8f800"
+label_shift = ["bg_label_shift", "bg_label_shift"]
 
 [node.bg_s]
 z = 3
@@ -40,8 +41,8 @@ label_pos = "top-left"
 pivot = "top"
 xy = ["bg_p", "bottom", 0, -1]
 color = "#f0f0f0ff"
-color_border = "#00000000"
-label_shift = [-10, -10]
+color_border = "#f0f0f000"
+label_shift = ["bg_label_shift", "bg_label_shift"]
 
 [node.z_0]
 size = [0, "node_height"]

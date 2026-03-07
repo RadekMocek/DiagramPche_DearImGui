@@ -110,12 +110,12 @@ void App::GUIMainMenuBar()
     if (ImGui::BeginMenu("Help")) {
         // .: Examples :.
         if (ImGui::BeginMenu("Examples")) {
-            // . Example 1 .
-            if (ImGui::MenuItem("Example 1")) {
+            // . Example 1 :: CPU block diagram .
+            if (ImGui::MenuItem("Example 1: CPU block diagram")) {
                 HandleOpenExample("./Resource/Example/Example1.toml");
             }
-            // . Example 2 .
-            if (ImGui::MenuItem("Example 2")) {
+            // . Example 2 :: BPMN .
+            if (ImGui::MenuItem("Example 2: BPMN")) {
                 HandleOpenExample("./Resource/Example/Example2.toml");
             }
             // .::.

@@ -162,10 +162,10 @@ void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, const f
         }
 
         if (node.label_shift_x != 0) {
-            draw_label_position.x += node.label_shift_x;
+            draw_label_position.x += node.label_shift_x * m_canvas_zoom_level;
         }
         if (node.label_shift_y != 0) {
-            draw_label_position.y += node.label_shift_y;
+            draw_label_position.y += node.label_shift_y * m_canvas_zoom_level;
         }
 
         // Do the actual drawing (and possible SVG export)
@@ -200,8 +200,8 @@ void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, const f
                 // SVG ellipse
                 m_exporter.AddEllipse(z, draw_center.x, draw_center.y, node_width, node_height,
                                       node.color, node.color_border);
-                break;
             }
+            break;
         case NTYPE_DIAMOND:
             // Diamond points
             const auto top = canvas_node.GetExactPointFromPivot(PIVOT_TOP) + origin;
