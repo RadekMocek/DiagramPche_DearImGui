@@ -70,6 +70,7 @@ void App::GUIWinPreferences()
         // --- --- --- --- ---
         ImGui::EndTabBar();
     }
+    /*
     ImGui::Dummy(BIG_SKIP);
     ImGui::Button("Save");
     ImGui::SameLine();
@@ -77,6 +78,7 @@ void App::GUIWinPreferences()
         "This will save ALL settings to disk."
         "Your unsaved preferences will only be valid for the current session."
     );
+    */
     // --- --- --- ---
     ImGui::End();
 }

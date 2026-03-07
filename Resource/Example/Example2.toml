@@ -1,0 +1,52 @@
+[variables]
+bg_width = 500
+bg_height = 100
+node_height = 70
+node_bg_offset = 15
+
+[node.bg_z]
+z = 3
+value = "Zákazník"
+size = ["bg_width", "bg_height"]
+label_pos = "top-left"
+
+[node.bg_p]
+z = 3
+value = "Pracovník"
+size = ["bg_width", "bg_height"]
+label_pos = "top-left"
+pivot = "top"
+xy = ["bg_z", "bottom", 0, -1]
+
+[node.bg_s]
+z = 3
+value = "Systém"
+size = ["bg_width", "bg_height"]
+label_pos = "top-left"
+pivot = "top"
+xy = ["bg_p", "bottom", 0, -1]
+
+[node.z_0]
+size = [0, "node_height"]
+type = "ellipse"
+value = "Zahájení\npoptávky"
+xy = ["bg_z", "top-left", 120, "node_bg_offset"]
+
+[node.z_1]
+value = "Kontaktuje\npodnik"
+pivot = "left"
+xy = ["z_0", "right", 25, 0]
+
+[[path]]
+start = ["z_0", "right", 0, 0]
+end = ["z_1", "left", 0, 0]
+
+[node.p_0]
+size = [0, "node_height"]
+value = "Zahájí\nzpracování\nobjednávky"
+xy = ["bg_p", "top-left", 120, "node_bg_offset"]
+
+[[path]]
+start = ["z_1", "bottom", 0, 0]
+end = ["p_0", "top", 0, 0]
+shift = 14

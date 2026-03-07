@@ -25,6 +25,8 @@
   * [x] `[node].type = "rectangle"`
   * [x] `[node].type = "ellipse"`
   * [x] `[node].type = "diamond"`
+  * [x] `[node].color_border`
+  * [ ] PathLabel
 * Canvas features:
   * [x] Canvas zooming: anchor under mouse
   * [x] Change the cursor type while dragging the canvas
@@ -42,6 +44,7 @@
 * TOML Parser:
   * [x] Refactor TOML parsing: do not std::move into priority queue, use pq just for determining draw order and nothing more
 * Dear ImGui specific:
+  * [ ] Reorder elements in structs?
   * [ ] Benchmark without freetype?
 
 ## Problems
@@ -58,7 +61,8 @@
   * Selecting text by holding LMB and dragging pauses when curosr is out of the widget area
 * Error highlight breaks on tab
 * Hacky SVG edit
-  * It seems that only modern web browsers support svg fill transparency via rgba(r,g,b,a) or #RRGGBBAA, so I'm using the style="..." option, which the svg library wasn't made for, hence the "hack"
+  * It seems that only modern web browsers support svg fill transparency via rgba(r,g,b,a) or #RRGGBBAA, so I'm using the style="..." option, which the svg library wasn't made for. The way I added it is not very pretty.
+  * => Exported SVG currently does not support node border transparency (alpha is always 255)
 
 ## Dependencies
 
@@ -81,7 +85,7 @@
 <br>
 
 * Changes done to _simple-svg_:
-  * Modified to support transparency (dirty)
+  * Modified to support transparency (not very pretty)
 * Changes done to _ImGuiColorTextEdit_:
   * Added support for NSOLD (the diagram language)
   * Added a custom color palette

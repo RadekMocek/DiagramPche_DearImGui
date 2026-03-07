@@ -1,4 +1,5 @@
 #include "App.hpp"
+#include "Config.hpp"
 
 void App::Update()
 {
@@ -9,11 +10,13 @@ void App::Update()
     GUIBody();
 
     // .: Show the big demo window if enabled :.
+#ifdef INCLUDE_IMGUI_DEMO_WINDOW
     if (m_do_show_window_demo) {
         ImGui::PushFont(nullptr, 16.0f);
         ImGui::ShowDemoWindow(&m_do_show_window_demo); // Putting the bool here will add close button to the demo window
         ImGui::PopFont();
     }
+#endif
 
     // Must be called before modals because Export modal starts the exporter
     if (m_exporter.IsEnabled()) {

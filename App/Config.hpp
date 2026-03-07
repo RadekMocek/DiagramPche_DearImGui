@@ -2,6 +2,8 @@
 
 #include "imgui.h"
 
+#define INCLUDE_IMGUI_DEMO_WINDOW
+
 constexpr auto FONT_SIZE_DEFAULT = 20.0f;
 constexpr auto FONT_SIZE_MAIN_MENU_BAR = 18.0f;
 
@@ -61,6 +63,10 @@ color = [40, 40, 40, 255]
 xy = [250, 250]
 value = "aaaaa\nbbbbbbbbbbbbb\nccccc\nddddd"
 type = "text"
+
+[node.teststh]
+xy=[300, 0]
+color_border = "#FF0000FF"
 
 [node.testm]
 xy = [-250, -250]

@@ -87,29 +87,19 @@ void App::GUIMainMenuBar()
     if (ImGui::BeginMenu("Debug")) {
         // .: Render tests :.
         if (ImGui::BeginMenu("Render tests")) {
+            // . Z-axis, out-of-order .
             if (ImGui::MenuItem("Z-axis, out-of-order")) {
-                if (!m_is_source_dirty) {
-                    LoadSourceFromFile("./Resource/Example/Debug/Z-axis.toml", true);
-                }
-                else {
-                    m_action_unsavedwarn_type = ActionAfterUnsavedWarn_LoadExample;
-                    m_action_unsavedwarn_value = "./Resource/Example/Debug/Z-axis.toml";
-                    m_is_queued_popup_unsavedwarn = true;
-                }
+                HandleOpenExample("./Resource/Example/Debug/Z-axis.toml");
             }
             // .::.
             ImGui::EndMenu();
         }
         // . Dear ImGui demo window .
+#ifdef INCLUDE_IMGUI_DEMO_WINDOW
         if (ImGui::MenuItem("Dear ImGui demo window", nullptr, m_do_show_window_demo)) {
             m_do_show_window_demo = !m_do_show_window_demo;
         }
-        /*
-        // . For testing purposes .
-        if (ImGui::MenuItem("(test)")) {
-            m_is_queued_popup_unsavedwarn = true;
-        }
-        */
+#endif
         // .::.
         ImGui::EndMenu();
     }
@@ -117,15 +107,13 @@ void App::GUIMainMenuBar()
     if (ImGui::BeginMenu("Help")) {
         // .: Examples :.
         if (ImGui::BeginMenu("Examples")) {
+            // . Example 1 .
             if (ImGui::MenuItem("Example 1")) {
-                if (!m_is_source_dirty) {
-                    LoadSourceFromFile("./Resource/Example/Example1.toml", true);
-                }
-                else {
-                    m_action_unsavedwarn_type = ActionAfterUnsavedWarn_LoadExample;
-                    m_action_unsavedwarn_value = "./Resource/Example/Example1.toml";
-                    m_is_queued_popup_unsavedwarn = true;
-                }
+                HandleOpenExample("./Resource/Example/Example1.toml");
+            }
+            // . Example 2 .
+            if (ImGui::MenuItem("Example 2")) {
+                HandleOpenExample("./Resource/Example/Example2.toml");
             }
             // .::.
             ImGui::EndMenu();

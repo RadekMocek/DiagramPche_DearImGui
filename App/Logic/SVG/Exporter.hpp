@@ -13,9 +13,7 @@ private:
     static constexpr auto PRIORITY_SHAPE = 0;
     static constexpr auto PRIORITY_TEXT = 1;
 
-    const svg::Stroke STROKE_BLACK = svg::Stroke(1, svg::Color::Black);
     const svg::Fill FILL_BLACK = svg::Fill(svg::Color::Black, 1.0);
-
     const svg::Font FONT = svg::Font(18, "Inconsolata");
     const svg::Size CHAR_BB = svg::Text(svg::Point(0, 0), "A", FILL_BLACK, FONT).getBoundingBox().size;
     const double LINE_HEIGHT = CHAR_BB.height;
@@ -61,11 +59,14 @@ public:
     bool Save();
 
     // Shapes
-    void AddRect(int z, double tl_x, double tl_y, double width, double height, const ColorTuple& color);
-    void AddEllipse(int z, double c_x, double c_y, double width, double height, const ColorTuple& color);
+    void AddRect(int z, double tl_x, double tl_y, double width, double height,
+                 const ColorTuple& color, const ColorTuple& color_border);
+
+    void AddEllipse(int z, double c_x, double c_y, double width, double height,
+                    const ColorTuple& color, const ColorTuple& color_border);
 
     void AddDiamond(int z, double c_x, double c_y, double t_y, double r_x, double b_y, double l_x,
-                    const ColorTuple& color);
+                    const ColorTuple& color, const ColorTuple& color_border);
 
     // Text
     void AddText(int z, double tl_x, double tl_y, const std::string& value);

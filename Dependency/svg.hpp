@@ -41,6 +41,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <string>
 #include <vector>
 
+using ColorTuple = std::tuple<unsigned char, unsigned char, unsigned char, unsigned char>;
+
 namespace svg
 {
 // Utility XML/String Functions.
@@ -258,7 +260,7 @@ class Color : public Serializeable
     {
     }
 
-    explicit Color(const std::tuple<unsigned char, unsigned char, unsigned char, unsigned char>& tup) :
+    explicit Color(const ColorTuple& tup) :
         transparent(false),
         red(std::get<0>(tup)),
         green(std::get<1>(tup)),
@@ -352,7 +354,7 @@ class Fill : public Serializeable
     Fill() : color(Color::Transparent), alpha(0.0) {}
     explicit Fill(const Color::Defaults color, const double alpha) : color(color), alpha(alpha) {}
     explicit Fill(const Color &color, const double alpha) : color(color), alpha(alpha) {}
-    explicit Fill(const std::tuple<unsigned char, unsigned char, unsigned char, unsigned char>& tup) : color(Color(tup)), alpha(std::get<3>(tup) / 255.0) {}
+    explicit Fill(const ColorTuple& tup) : color(Color(tup)), alpha(std::get<3>(tup) / 255.0) {}
     explicit Fill(const double alpha): color(Color::Transparent), alpha(alpha / 255.0), do_stroke_hack(true) {}
 
     std::string toString(Layout const &layout) const override

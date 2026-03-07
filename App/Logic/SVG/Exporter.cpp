@@ -36,14 +36,17 @@ bool Exporter::Save()
 }
 
 void Exporter::AddRect(const int z, const double tl_x, const double tl_y, const double width, const double height,
-                       const ColorTuple& color)
+                       const ColorTuple& color, const ColorTuple& color_border)
 {
     if (!m_is_enabled) return;
 
     // Draw command
+    const auto top_left_point = svg::Point(tl_x, tl_y);
+    const auto fill = svg::Fill(color);
+    const auto stroke = svg::Stroke(1, svg::Color(color_border));
     m_draw_commands.push({
         z, PRIORITY_SHAPE,
-        std::make_unique<svg::Rectangle>(svg::Point(tl_x, tl_y), width, height, svg::Fill(color), STROKE_BLACK)
+        std::make_unique<svg::Rectangle>(top_left_point, width, height, fill, stroke)
     });
 
     // Update boundaries
@@ -62,14 +65,17 @@ void Exporter::AddRect(const int z, const double tl_x, const double tl_y, const 
 }
 
 void Exporter::AddEllipse(const int z, const double c_x, const double c_y, const double width, const double height,
-                          const ColorTuple& color)
+                          const ColorTuple& color, const ColorTuple& color_border)
 {
     if (!m_is_enabled) return;
 
     // Draw command
+    const auto center_point = svg::Point(c_x, c_y);
+    const auto fill = svg::Fill(color);
+    const auto stroke = svg::Stroke(1, svg::Color(color_border));
     m_draw_commands.push({
         z, PRIORITY_SHAPE,
-        std::make_unique<svg::Elipse>(svg::Point(c_x, c_y), width, height, svg::Fill(color), STROKE_BLACK)
+        std::make_unique<svg::Elipse>(center_point, width, height, fill, stroke)
     });
 
     // Update boundaries
@@ -95,7 +101,7 @@ void Exporter::AddEllipse(const int z, const double c_x, const double c_y, const
 
 void Exporter::AddDiamond(const int z, const double c_x, const double c_y,
                           const double t_y, const double r_x, const double b_y, const double l_x,
-                          const ColorTuple& color)
+                          const ColorTuple& color, const ColorTuple& color_border)
 {
     if (!m_is_enabled) return;
 
@@ -105,7 +111,7 @@ void Exporter::AddDiamond(const int z, const double c_x, const double c_y,
     const svg::Point bottom(c_x, b_y);
     const svg::Point left(l_x, c_y);
 
-    svg::Polygon polygon{svg::Fill(color), STROKE_BLACK};
+    svg::Polygon polygon{svg::Fill(color), svg::Stroke(1, svg::Color(color_border))};
     polygon << top << right << bottom << left;
     m_draw_commands.push({z, PRIORITY_SHAPE, std::make_unique<svg::Polygon>(polygon)});
 

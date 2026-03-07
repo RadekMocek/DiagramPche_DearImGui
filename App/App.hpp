@@ -168,6 +168,7 @@ private:
     void HandleRegularNew();
     void HandleRegularOpen();
     void HandleRegularSave();
+    void HandleOpenExample(const char* filename);
     // - Underlying logic
     void LoadSourceFromFile(const char* filename, bool is_example);
     bool SaveSourceToFile(const char* filename) const;

@@ -65,6 +65,10 @@ void Parser::ParseNode(const toml::table* node_table, Node& curr_node)
             }
             else ReportError(value.source(), "A string must follow after 'type='");
         }
+        // == color_border ==> same as color
+        else if (key_str == "color_border") {
+            SetColorFromArray(value, curr_node.color_border);
+        }
         // == Unknown key ==> report error
         else ReportError(key.source(), std::format("Unknown key '{}'", key_str));
     }

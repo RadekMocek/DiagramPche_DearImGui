@@ -7,6 +7,8 @@
 #include "Point.hpp"
 #include "../Helper/DrawLayer.hpp"
 
+using ColorTuple = std::tuple<unsigned char, unsigned char, unsigned char, unsigned char>;
+
 struct Node
 {
     // = ID =
@@ -23,7 +25,8 @@ struct Node
     Pivot pivot = PIVOT_TOPLEFT;
 
     // = Color =
-    std::tuple<unsigned char, unsigned char, unsigned char, unsigned char> color = {255, 255, 255, 255};
+    ColorTuple color = {255, 255, 255, 255};
+    ColorTuple color_border = {0, 0, 0, 255};
 
     // = Size =
     int width{};

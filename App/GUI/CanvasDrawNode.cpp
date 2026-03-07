@@ -168,8 +168,9 @@ void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin)
         // .:================================:.
         const auto z = DLUserChannelToRealChannel(node.z, true);
         draw_list->ChannelsSetCurrent(z);
-        const auto node_imcolor = GetImU32FromColorTuple(node.color);
-        constexpr auto COLOR_NODE_EDGE = IM_COL32(0, 0, 0, 255);
+        const auto node_fill_imcolor = GetImU32FromColorTuple(node.color);
+        const auto node_edge_imcolor = GetImU32FromColorTuple(node.color_border);
+        constexpr auto COLOR_NODE_TEXT = IM_COL32(0, 0, 0, 255);
 
         // .: Draw the shape :.
         // .:================:.
@@ -178,25 +179,22 @@ void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin)
             break; // Do nothing
         case NTYPE_RECTANGLE:
             // Draw rectangle and its edge
-            draw_list->AddRectFilled(draw_top_left, draw_bottom_right, node_imcolor, 0, 0);
-            draw_list->AddRect(draw_top_left, draw_bottom_right, COLOR_NODE_EDGE, 0, 0, m_canvas_zoom_level);
+            draw_list->AddRectFilled(draw_top_left, draw_bottom_right, node_fill_imcolor, 0, 0);
+            draw_list->AddRect(draw_top_left, draw_bottom_right, node_edge_imcolor, 0, 0, m_canvas_zoom_level);
             // SVG rectangle
-            m_exporter.AddRect(z,
-                               draw_top_left.x,
-                               draw_top_left.y,
-                               node_width,
-                               node_height,
-                               node.color);
+            m_exporter.AddRect(z, draw_top_left.x, draw_top_left.y, node_width, node_height,
+                               node.color, node.color_border);
             break;
         case NTYPE_ELLIPSE:
             {
                 // Ellipse radius
                 const ImVec2 radius(node_width / 2.0f, node_height / 2.0f);
                 // Draw ellipse and its edge
-                draw_list->AddEllipseFilled(draw_center, radius, node_imcolor);
-                draw_list->AddEllipse(draw_center, radius, COLOR_NODE_EDGE, 0, 0, m_canvas_zoom_level);
+                draw_list->AddEllipseFilled(draw_center, radius, node_fill_imcolor);
+                draw_list->AddEllipse(draw_center, radius, node_edge_imcolor, 0, 0, m_canvas_zoom_level);
                 // SVG ellipse
-                m_exporter.AddEllipse(z, draw_center.x, draw_center.y, node_width, node_height, node.color);
+                m_exporter.AddEllipse(z, draw_center.x, draw_center.y, node_width, node_height,
+                                      node.color, node.color_border);
                 break;
             }
         case NTYPE_DIAMOND:
@@ -206,10 +204,11 @@ void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin)
             const auto bottom = canvas_node.GetExactPointFromPivot(PIVOT_BOTTOM) + origin;
             const auto left = canvas_node.GetExactPointFromPivot(PIVOT_LEFT) + origin;
             // Draw diamond and its edge
-            draw_list->AddQuadFilled(top, right, bottom, left, node_imcolor);
-            draw_list->AddQuad(top, right, bottom, left, COLOR_NODE_EDGE, m_canvas_zoom_level);
+            draw_list->AddQuadFilled(top, right, bottom, left, node_fill_imcolor);
+            draw_list->AddQuad(top, right, bottom, left, node_edge_imcolor, m_canvas_zoom_level);
             // SVG diamond
-            m_exporter.AddDiamond(z, draw_center.x, draw_center.y, top.y, right.x, bottom.y, left.x, node.color);
+            m_exporter.AddDiamond(z, draw_center.x, draw_center.y, top.y, right.x, bottom.y, left.x,
+                                  node.color, node.color_border);
             break;
         }
 
@@ -219,7 +218,7 @@ void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin)
         draw_list->AddText(m_font_inconsolata_medium,
                            font_size_f,
                            draw_label_position,
-                           COLOR_NODE_EDGE,
+                           COLOR_NODE_TEXT,
                            label_c_str);
         // SVG node text
         m_exporter.AddText(z,

@@ -36,6 +36,18 @@ void App::HandleRegularSave()
     }
 }
 
+void App::HandleOpenExample(const char* filename)
+{
+    if (!m_is_source_dirty) {
+        LoadSourceFromFile(filename, true);
+    }
+    else {
+        m_action_unsavedwarn_type = ActionAfterUnsavedWarn_LoadExample;
+        m_action_unsavedwarn_value = filename;
+        m_is_queued_popup_unsavedwarn = true;
+    }
+}
+
 // == Underlying logic ==========================================================
 
 void App::LoadSourceFromFile(const char* filename, const bool is_example)

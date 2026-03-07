@@ -14,8 +14,8 @@ const TextEditor::LanguageDefinition& TextEditor::LanguageDefinition::NSOLD()
         }
         //
         constexpr std::string_view identifiers[] = {
-            "value", "xy", "pivot", "color", "size", "label_pos", "z", "type", "start", "end", "ends", "points",
-            "shift", "tips",
+            "value", "xy", "pivot", "color", "size", "label_pos", "z", "type", "color_border",
+            "start", "end", "ends", "points", "shift", "tips",
         };
         for (auto i : identifiers) {
             Identifier id;
