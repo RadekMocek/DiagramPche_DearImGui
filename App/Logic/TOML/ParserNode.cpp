@@ -69,6 +69,17 @@ void Parser::ParseNode(const toml::table* node_table, Node& curr_node)
         else if (key_str == "color_border") {
             SetColorFromArray(value, curr_node.color_border);
         }
+        // == label_shift ==> array: [X, Y]
+        else if (key_str == "label_shift") {
+            if (const auto* value_arr_ptr = value.as_array(); value_arr_ptr
+                && value_arr_ptr->size() == 2
+                && value_arr_ptr->at(0).is_integer()
+                && value_arr_ptr->at(1).is_integer()) {
+                curr_node.label_shift_x = value_arr_ptr->at(0).as_integer()->value_or(0);
+                curr_node.label_shift_y = value_arr_ptr->at(1).as_integer()->value_or(0);
+            }
+            else ReportError(value.source(), "An array of two integers must follow after 'label_shift='");
+        }
         // == Unknown key ==> report error
         else ReportError(key.source(), std::format("Unknown key '{}'", key_str));
     }

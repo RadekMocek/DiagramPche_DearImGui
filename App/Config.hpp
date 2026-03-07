@@ -67,6 +67,7 @@ type = "text"
 [node.teststh]
 xy=[300, 0]
 color_border = "#FF0000FF"
+label_shift = [-50, 50]
 
 [node.testm]
 xy = [-250, -250]

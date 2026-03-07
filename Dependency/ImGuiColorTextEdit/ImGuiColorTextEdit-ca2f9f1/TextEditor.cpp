@@ -756,7 +756,7 @@ void TextEditor::HandleKeyboardInputs()
 			Cut();
 		else if (ctrl && !shift && !alt && ImGui::IsKeyPressed(ImGuiKey_A))
 			SelectAll();
-		else if (!IsReadOnly() && !ctrl && !shift && !alt && ImGui::IsKeyPressed(ImGuiKey_Enter))
+		else if (!IsReadOnly() && !ctrl && !shift && !alt && (ImGui::IsKeyPressed(ImGuiKey_Enter) || ImGui::IsKeyPressed(ImGuiKey_KeypadEnter)))
 			EnterCharacter('\n', false);
 		else if (!IsReadOnly() && !ctrl && !alt && ImGui::IsKeyPressed(ImGuiKey_Tab)) {
 			//EnterCharacter('\t', shift);

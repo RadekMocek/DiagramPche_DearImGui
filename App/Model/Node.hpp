@@ -34,6 +34,8 @@ struct Node
 
     // = Label pos =
     Pivot label_position = PIVOT_CENTER;
+    int label_shift_x{};
+    int label_shift_y{};
 
     // = Z =
     int z = DL_USER_CHANNEL_DEFAULT_NODE;

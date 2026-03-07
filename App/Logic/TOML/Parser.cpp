@@ -27,7 +27,7 @@ void Parser::Parse(const std::string& source)
     // Variables can be used to have multiple nodes with shared coordinates and/or size
     m_variables.clear();
     // They are set in table [variables]
-    if (const auto vars = toml_parsed["variables"]; !!vars && vars.is_table()) {
+    if (const auto vars = toml_parsed["variables"]; vars && vars.is_table()) {
         if (const auto* vars_table = vars.as_table()) {
             for (const auto& [key, value] : *vars_table) {
                 if (const auto* value_int_ptr = value.as_integer()) {
@@ -66,7 +66,7 @@ void Parser::Parse(const std::string& source)
 
     // Nodes are defined as [node."id1"], [node."id2"] etc., this gives us a structure that would look like this in JSON land:
     // "node": { "id1": { ... }, "id2": { ... } }
-    if (const auto node = toml_parsed["node"]; !!node && node.is_table()) {
+    if (const auto node = toml_parsed["node"]; node && node.is_table()) {
         if (const auto* node_table = node.as_table()) {
             for (const auto& [node_key, node_value] : *node_table) {
                 if (const auto* node_value_table = node_value.as_table()) {
@@ -169,7 +169,7 @@ void Parser::Parse(const std::string& source)
     // .:=======:.
     m_result_paths.clear();
 
-    if (const auto paths = toml_parsed["path"]; !!paths && paths.is_array_of_tables()) {
+    if (const auto paths = toml_parsed["path"]; paths && paths.is_array_of_tables()) {
         if (const auto* paths_array = paths.as_array()) {
             // `paths_array` is an array of tables labeled as `[[path]]`
             for (const auto& path : *paths_array) {
@@ -231,13 +231,13 @@ void Parser::SetIntFromIntOrVariable(const toml::node& value, int& to_set)
 void Parser::SetPositionPointFromArray(const toml::node& value, Point& to_set)
 {
     // [X, Y] or [Parent, Pivot, X, Y]
-    if (const auto* value_arr_ptr = value.as_array(); !!value_arr_ptr && value_arr_ptr->size() == 2) {
+    if (const auto* value_arr_ptr = value.as_array(); value_arr_ptr && value_arr_ptr->size() == 2) {
         // X
         SetIntFromIntOrVariable(value_arr_ptr->at(0), to_set.x);
         // Y
         SetIntFromIntOrVariable(value_arr_ptr->at(1), to_set.y);
     }
-    else if (!!value_arr_ptr && value_arr_ptr->size() == 4) {
+    else if (value_arr_ptr && value_arr_ptr->size() == 4) {
         const auto parent_id_source_region = value_arr_ptr->at(0).source();
         // Parent
         if (const auto* value_arr_0_str_ptr = value_arr_ptr->at(0).as_string()) {
@@ -278,7 +278,7 @@ void Parser::SetColorFromArray(const toml::node& value, ColorTuple& to_set)
     else if (const auto* value_str_ptr = value.as_string()) {
         to_set = GetColorTupleFromString(value_str_ptr->value_or(""));
     }
-    else ReportError(value.source(), "An array of four uchars (0–255) or RGBA hex string must follow after 'color='");
+    else ReportError(value.source(), "An array of four uchars (0–255) or RGBA hex string must be used to set the color");
 }
 
 int Parser::GetZFromInt(const toml::node& value, const bool is_node)

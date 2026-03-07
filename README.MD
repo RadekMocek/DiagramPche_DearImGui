@@ -25,7 +25,8 @@
   * [x] `[node].type = "rectangle"`
   * [x] `[node].type = "ellipse"`
   * [x] `[node].type = "diamond"`
-  * [x] `[node].color_border`
+  * [x] `[node].color_border`, don't forget to generalize the error message
+  * [x] `[node].label_shift`
   * [ ] PathLabel
 * Canvas features:
   * [x] Canvas zooming: anchor under mouse
@@ -59,6 +60,7 @@
   * Scrolling by holding up/down arrow key weird "jumpy" behavior, it's even worse with horizontal scroll (right arrow), it does not do that in their demo, but that's older version on older Dear ImGui
   * No Ctrl + Backspace for removing the whole word (same for Delete)
   * Selecting text by holding LMB and dragging pauses when curosr is out of the widget area
+  * Sometimes it things the "#RRGGBBAA" string is comment (TOML comments start with '#')
 * Error highlight breaks on tab
 * Hacky SVG edit
   * It seems that only modern web browsers support svg fill transparency via rgba(r,g,b,a) or #RRGGBBAA, so I'm using the style="..." option, which the svg library wasn't made for. The way I added it is not very pretty.
@@ -94,6 +96,7 @@
   * Removed `ImGuiWindowFlags_AlwaysHorizontalScrollbar` flag
   * Added `GetErrorMarkersRef` function
   * Pressing <kbd>Tab</kbd> inserts four spaces instead of `\t`
+  * Accept the numpad enter as well as the "normal" enter
 
 ## Building locally
 

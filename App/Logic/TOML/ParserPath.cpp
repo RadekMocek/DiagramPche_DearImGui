@@ -38,7 +38,7 @@ void Parser::ParsePath(const toml::table* path_table, Path& curr_path)
                     // "",   "end",   23  :: relative to path end
                     // "",   "prev",  23  :: relative to previous pathpoint
                     // Instead of integer (23), string with variable name can be used
-                    if (const auto* pathpoint_arr_ptr = pathpoint.as_array(); !!pathpoint_arr_ptr
+                    if (const auto* pathpoint_arr_ptr = pathpoint.as_array(); pathpoint_arr_ptr
                         && pathpoint_arr_ptr->size() == 6
                         && pathpoint_arr_ptr->at(0).is_string()
                         && pathpoint_arr_ptr->at(1).is_string()

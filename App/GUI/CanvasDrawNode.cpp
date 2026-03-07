@@ -162,6 +162,13 @@ void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin)
             }
         }
 
+        if (node.label_shift_x != 0) {
+            draw_label_position.x += node.label_shift_x;
+        }
+        if (node.label_shift_y != 0) {
+            draw_label_position.y += node.label_shift_y;
+        }
+
         // Do the actual drawing (and possible SVG export)
 
         // .: Set proper layer, colors, etc. :.

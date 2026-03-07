@@ -1,14 +1,24 @@
 [variables]
-bg_width = 500
-bg_height = 100
+bg_width = 1000
+bg_height = 130
 node_height = 70
-node_bg_offset = 15
+node_bg_offset = 30
+space = 25
+dia_w = 180
+dia_h = 100
+
+[node.bg_bg]
+z = 2
+size = [1002, 390]
 
 [node.bg_z]
 z = 3
 value = "Zákazník"
 size = ["bg_width", "bg_height"]
 label_pos = "top-left"
+xy = ["bg_bg", "top-left", 1, 1]
+color = "#ffffffff"
+color_border = "#00000000"
 
 [node.bg_p]
 z = 3
@@ -17,6 +27,8 @@ size = ["bg_width", "bg_height"]
 label_pos = "top-left"
 pivot = "top"
 xy = ["bg_z", "bottom", 0, -1]
+color = "#f8f8f8ff"
+color_border = "#00000000"
 
 [node.bg_s]
 z = 3
@@ -25,6 +37,8 @@ size = ["bg_width", "bg_height"]
 label_pos = "top-left"
 pivot = "top"
 xy = ["bg_p", "bottom", 0, -1]
+color = "#f0f0f0ff"
+color_border = "#00000000"
 
 [node.z_0]
 size = [0, "node_height"]
@@ -33,9 +47,10 @@ value = "Zahájení\npoptávky"
 xy = ["bg_z", "top-left", 120, "node_bg_offset"]
 
 [node.z_1]
+size = [0, "node_height"]
 value = "Kontaktuje\npodnik"
 pivot = "left"
-xy = ["z_0", "right", 25, 0]
+xy = ["z_0", "right", "space", 0]
 
 [[path]]
 start = ["z_0", "right", 0, 0]
@@ -49,4 +64,44 @@ xy = ["bg_p", "top-left", 120, "node_bg_offset"]
 [[path]]
 start = ["z_1", "bottom", 0, 0]
 end = ["p_0", "top", 0, 0]
-shift = 14
+shift = 20
+
+[node.s_0]
+size = ["dia_w", "dia_h"]
+type = "diamond"
+value = "Existuje\nzákaznický\núčet?"
+xy = ["bg_s", "top-left", 93, 15]
+
+[[path]]
+start = ["p_0", "bottom", 0, 0]
+end = ["s_0", "top", 0, 0]
+
+[node.p_1]
+size = [0, "node_height"]
+value = "Vytvoří\nzákaznický\núčet v systému"
+xy = ["p_0", "top-right", 75, 0]
+
+[node.p_2]
+size = [0, "node_height"]
+value = "Zadá\nparametry\npoptávaných\nproduktů"
+xy = ["p_1", "top-right", "space", 0]
+
+[[path]]
+start = ["s_0", "right", 0, 0]
+end = ["p_1", "left", 0, 0]
+shift = 15
+
+[[path]]
+start = ["s_0", "bottom", 0, 0]
+end = ["p_2", "bottom", 0, 0]
+points = [
+    ["p_1", "left", 0, "", "prev", 0],
+    ["", "prev", 0, "", "end", 0]
+]
+shift = 15
+
+[node.s_1]
+size = ["dia_w", "dia_h"]
+type = "diamond"
+value = "Existuje\nodpovídající\nprodukt?"
+xy = ["s_0", "top-right", 35, 0]
