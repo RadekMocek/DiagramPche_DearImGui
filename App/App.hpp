@@ -148,7 +148,7 @@ private:
     void GUITextEditor(float textedit_width, float height);
     void GUITextEditorAlt(float textedit_width, float height);
     void GUICanvas(float height);
-    void GUICanvasDrawNodes(ImDrawList* draw_list, ImVec2 origin);
+    void GUICanvasDrawNodes(ImDrawList* draw_list, ImVec2 origin, float node_border_offset_base);
     void GUICanvasDrawPaths(ImDrawList* draw_list, ImVec2 origin);
     void ResetCanvasScrollingAndZoom();
 

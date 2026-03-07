@@ -1,10 +1,13 @@
 #include  "../../Dependency/IconsMaterialDesignIcons.h"
 
 #include "../App.hpp"
-#include "../Config.hpp"
 
 void App::GUIMainMenuBar()
 {
+    // ---  Main menu bar config   --- --- --- --- ---
+    constexpr auto FONT_SIZE_MAIN_MENU_BAR = 18.0f;
+    // --- --- --- --- --- --- --- --- --- --- --- ---
+
     ImGui::PushFont(nullptr, FONT_SIZE_MAIN_MENU_BAR);
     ImGui::BeginMainMenuBar();
     // .: File :.

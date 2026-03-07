@@ -2,12 +2,14 @@
 #include "misc/cpp/imgui_stdlib.h"
 
 #include "../App.hpp"
-#include "../Config.hpp"
 
 void App::GUITextEditor(const float textedit_width, const float height)
 {
+    // --- Text editor config  --- --- --- --- --- --- --- --- --- ---
+    constexpr auto COLOR_ERROR_HIGHLIGHT = IM_COL32(211, 1, 2, 80);
     // Same ID for textedit and drawing error highlights
     constexpr auto TEXTEDIT_ID = "##Source";
+    // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
     // Text editor must be put in a child window for resizing (moving the divider between textedit and canvas) to work (we can use a special flag)
     const auto textedit_top_left = ImGui::GetCursorScreenPos();

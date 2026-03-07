@@ -7,6 +7,10 @@
 
 void App::GUIBody()
 {
+    // --- Body config --- --- --- --- ---
+    constexpr auto BOTTOM_BAR_HEIGHT = 20;
+    // --- --- --- --- --- --- --- --- ---
+
     // Full-viewport window setup
     constexpr ImGuiWindowFlags flags
         // Main windows must be always on background so it does not get infront of ther modal windows

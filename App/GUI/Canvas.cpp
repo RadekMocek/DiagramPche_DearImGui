@@ -4,7 +4,25 @@
 #include "../Helper/DrawLayer.hpp"
 #include "../Helper/Operator.hpp"
 #include "../Model/CanvasNode.hpp"
-#include "../Config.hpp"
+
+// ---  Canvas config  --- --- --- --- --- --- --- --- --- ---
+constexpr ImVec2 SCROLLING_DEFAULT = {5.0f, 5.0f};
+constexpr auto GRID_STEP_BASE = 100.0f;
+constexpr auto COLOR_GRID_LINE = IM_COL32(200, 200, 200, 40);
+constexpr auto CANVAS_FONT_SIZE_BASE = 18;
+constexpr auto CANVAS_FONT_SIZE_STEP = 4;
+constexpr auto CANVAS_FONT_SIZE_MIN = 6;
+constexpr auto CANVAS_FONT_SIZE_MAX = 30;
+constexpr auto CANVAS_SECONDARY_TOOLBAR_HEIGHT = 26.0f;
+constexpr auto NODE_BORDER_OFFSET_BASE = 18.0f;
+// --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+void App::ResetCanvasScrollingAndZoom()
+{
+    m_scrolling = SCROLLING_DEFAULT;
+    m_canvas_font_size = CANVAS_FONT_SIZE_BASE;
+    m_canvas_zoom_level = 1.0f;
+}
 
 void App::GUICanvas(const float height)
 {
@@ -127,7 +145,7 @@ void App::GUICanvas(const float height)
     // (We use 2*z for nodes and 2*z+1 for paths)
     draw_list->ChannelsSplit(N_DL_REAL_CHANNELS);
     // Default draw layer for nodes is 4 (Model → Node.hpp → int z)
-    GUICanvasDrawNodes(draw_list, origin);
+    GUICanvasDrawNodes(draw_list, origin, NODE_BORDER_OFFSET_BASE);
     // Default layer for paths is 5 (Model → Path.hpp → int z)
     GUICanvasDrawPaths(draw_list, origin);
     draw_list->ChannelsMerge();

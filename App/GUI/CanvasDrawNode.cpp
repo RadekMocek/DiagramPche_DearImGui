@@ -1,15 +1,14 @@
 #include "../App.hpp"
-#include "../Config.hpp"
 #include "../Helper/Color.hpp"
 #include "../Helper/DrawLayer.hpp"
 
-void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin)
+void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, const float node_border_offset_base)
 {
     const auto font_size_f = static_cast<float>(m_canvas_font_size);
     const auto n_nodes = static_cast<int>(m_parser.m_result_nodes_pq.size());
     auto node_n = 0;
 
-    const auto node_padding = NODE_BORDER_OFFSET_BASE * m_canvas_zoom_level;
+    const auto node_padding = node_border_offset_base * m_canvas_zoom_level;
 
     for (; !m_parser.m_result_nodes_pq.empty(); m_parser.m_result_nodes_pq.pop()) {
         const auto& [node_draw_batch_number, node_id] = m_parser.m_result_nodes_pq.top();

@@ -1,7 +1,7 @@
 #include <filesystem>
 
 #include "App.hpp"
-#include "Config.hpp"
+#include "Welcome.hpp"
 
 void App::Start()
 {
@@ -9,10 +9,9 @@ void App::Start()
 
     // = Load Fonts =
     ImGuiIO& io = ImGui::GetIO();
-
+    constexpr auto FONT_SIZE_DEFAULT = 20.0f;
     m_font_inconsolata_medium = io.Fonts->AddFontFromFileTTF("./Resource/Font/Inconsolata-Medium.ttf",
                                                              FONT_SIZE_DEFAULT);
-
     IM_ASSERT(m_font_inconsolata_medium != nullptr);
 
     // Icon font
@@ -54,11 +53,4 @@ void App::Start()
     //???[1]: this does not work as expected
     DEFAULT_TOOLBAR_NODE.color = {114, 144, 154, 200};
     DEFAULT_TOOLBAR_NODE.type = NTYPE_RECTANGLE;
-}
-
-void App::ResetCanvasScrollingAndZoom()
-{
-    m_scrolling = SCROLLING_DEFAULT;
-    m_canvas_font_size = CANVAS_FONT_SIZE_BASE;
-    m_canvas_zoom_level = 1.0f;
 }

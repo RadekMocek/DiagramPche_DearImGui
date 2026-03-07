@@ -87,7 +87,7 @@ xy = ["p_0", "top-right", 75, 0]
 
 [node.p_2]
 size = [0, "node_height"]
-value = "Zadá\nparametry\npoptávaných\nproduktů"
+value = "Zadá parametry\npoptávaných\nproduktů"
 xy = ["p_1", "top-right", "space", 0]
 
 [[path]]
