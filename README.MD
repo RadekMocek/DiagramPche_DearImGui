@@ -21,12 +21,14 @@
   * [x] Code editor syntax highlight
   * [ ] Klávesové zkratky (<kbd>Alt</kbd> pro navigaci v MainMenuBar, <kbd>Ctrl</kbd>+<kbd>S</kbd> pro uložení, <kbd>Ctrl</kbd>+<kbd>+</kbd> zoom atd.)
 * Pipeline: TOML parse → Draw to canvas / Render to SVG:
+  * [x] Remove `(expecting [X, Y])` from error message (does not make sense in wider context)
   * [x] `[node].type = "text"`
   * [x] `[node].type = "rectangle"`
   * [x] `[node].type = "ellipse"`
   * [x] `[node].type = "diamond"`
   * [x] `[node].color_border`, don't forget to generalize the error message
-  * [x] `[node].label_shift`
+  * [ ] `[node].label_shift`, allow for variables
+  * [x] Allow setting individual start/end path shift, keep backwards compatible
   * [ ] `[[path]].label`
 * Canvas features:
   * [x] Canvas zooming: anchor under mouse

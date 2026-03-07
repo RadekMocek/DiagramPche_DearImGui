@@ -61,9 +61,16 @@ void Parser::ParsePath(const toml::table* path_table, Path& curr_path)
             }
             else ReportError(value.source(), "An array of arrays must follow after 'points='");
         }
-        // == shift ==> int or var
+        // == shift ==> int or [int, int]
         else if (key_str == "shift") {
-            SetIntFromIntOrVariable(value, curr_path.shift);
+            if (const auto* value_arr_ptr = value.as_array(); value_arr_ptr && value_arr_ptr->size() == 2) {
+                SetIntFromIntOrVariable(value_arr_ptr->at(0), curr_path.shift_start);
+                SetIntFromIntOrVariable(value_arr_ptr->at(1), curr_path.shift_end);
+            }
+            else {
+                SetIntFromIntOrVariable(value, curr_path.shift_start);
+                SetIntFromIntOrVariable(value, curr_path.shift_end);
+            }
         }
         // == color ==> array of four u8s (rgba) or RGBA hex string ("#xxxxxxxx")
         else if (key_str == "color") {

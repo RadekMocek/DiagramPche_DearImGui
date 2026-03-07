@@ -103,7 +103,7 @@ points = [
     ["s_0", "right", 30, "", "prev", 0],
     ["", "prev", 0, "", "end", 0]
 ]
-shift = 15
+shift = [15, 20]
 
 [node.s_1]
 size = ["dia_w", "dia_h"]

@@ -17,7 +17,8 @@ struct Path
     std::vector<Point> ends{};
     std::vector<Pathpoint> pathpoints{};
 
-    int shift{};
+    int shift_start{};
+    int shift_end{};
 
     ColorTuple color = {0, 0, 0, 255};
 
@@ -31,9 +32,9 @@ struct Path
     int label_shift{};
 
     //
-    [[nodiscard]] constexpr ImVec2 GetShiftVector(const Pivot pivot, const float zoom_level) const
+    [[nodiscard]] constexpr ImVec2 GetShiftVector(const Pivot pivot, const float zoom_level, const bool is_start) const
     {
-        const auto sf = static_cast<float>(shift) * zoom_level;
+        const auto sf = static_cast<float>((is_start) ? shift_start : shift_end) * zoom_level;
         switch (pivot) {
         default:
             // Unreachable (?), fallthrough

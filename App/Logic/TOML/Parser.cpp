@@ -220,10 +220,7 @@ void Parser::SetIntFromIntOrVariable(const toml::node& value, int& to_set)
         if (const auto it = m_variables.find(value_str_ptr->get()); it != m_variables.end()) {
             to_set = it->second;
         }
-        else {
-            ReportError(value.source(),
-                        std::format("Variable '{}' does not exist (expecting [X, Y])", value_str_ptr->get()));
-        }
+        else ReportError(value.source(), std::format("Variable '{}' does not exist", value_str_ptr->get()));
     }
     else ReportError(value.source(), "Value must be specified as an integer or a string with a variable name");
 }
@@ -278,7 +275,9 @@ void Parser::SetColorFromArray(const toml::node& value, ColorTuple& to_set)
     else if (const auto* value_str_ptr = value.as_string()) {
         to_set = GetColorTupleFromString(value_str_ptr->value_or(""));
     }
-    else ReportError(value.source(), "An array of four uchars (0–255) or RGBA hex string must be used to set the color");
+    else
+        ReportError(value.source(),
+                    "An array of four uchars (0–255) or RGBA hex string must be used to set the color");
 }
 
 int Parser::GetZFromInt(const toml::node& value, const bool is_node)

@@ -1,7 +1,8 @@
 #pragma once
 
 constexpr auto WELCOME_TOML = R"([variables]
-offset = 14
+node_offset = 14
+path_offset = 40
 
 [node.hello]
 value = "Hello,"
@@ -12,13 +13,13 @@ type = "ellipse"
 value = "world!"
 color = "#ffcfb380"
 pivot = "top-left"
-xy = ["hello", "bottom-right", "offset", "offset"]
+xy = ["hello", "bottom-right", "node_offset", "node_offset"]
 type = "diamond"
 
 [[path]]
 start = ["hello", "bottom", 0, 0]
 end = ["world", "bottom", 0, 0]
-shift = 40
+shift = [0, "path_offset"]
 points = [["", "start", 0, "", "end", 0]]
 color = [40, 40, 40, 255]
 
@@ -62,6 +63,6 @@ ends=[
     ["teststh", "right", 0,0],
     ["teststh", "bottom", 20,0]
 ]
-shift=100
+shift=[200,100]
 label=["AAA\nBBB\nCCC\nDDD", 0,0]
 )";

@@ -20,7 +20,6 @@ void App::GUICanvasDrawPaths(ImDrawList* draw_list, const ImVec2 origin)
 
         // Get the "simple" values from path
         const auto color = GetImU32FromColorTuple(path.color);
-        const auto shift = path.shift;
 
         // Prepare the start point
         ImVec2 start(static_cast<float>(path.start.x) * m_canvas_zoom_level,
@@ -31,7 +30,7 @@ void App::GUICanvasDrawPaths(ImDrawList* draw_list, const ImVec2 origin)
                 // Move start point so it's relative to parent's pivot
                 start += it->second.GetExactPointFromPivot(path.start.parent_pivot);
                 // Path shift makes sense only when the start/end point is relative to some node
-                if (shift != 0) {
+                if (path.shift_start != 0) {
                     do_start_shift = true;
                 }
             }
@@ -51,7 +50,7 @@ void App::GUICanvasDrawPaths(ImDrawList* draw_list, const ImVec2 origin)
             result_paths = std::vector(path.ends.size(), std::vector({start}));
         }
         else {
-            const auto shifted_start = start + path.GetShiftVector(path.start.parent_pivot, m_canvas_zoom_level);
+            const auto shifted_start = start + path.GetShiftVector(path.start.parent_pivot, m_canvas_zoom_level, true);
             result_paths = std::vector(path.ends.size(), std::vector({start, shifted_start}));
             start = shifted_start; // Do this so Pathpoints relative to start are relative to this
         }
@@ -68,7 +67,7 @@ void App::GUICanvasDrawPaths(ImDrawList* draw_list, const ImVec2 origin)
             if (!path_end.parent_id.empty()) {
                 if (const auto it = m_canvas_nodes.find(path_end.parent_id); it != m_canvas_nodes.end()) {
                     end += it->second.GetExactPointFromPivot(path_end.parent_pivot);
-                    if (shift != 0) {
+                    if (path.shift_end != 0) {
                         do_end_shift = true;
                     }
                 }
@@ -82,7 +81,7 @@ void App::GUICanvasDrawPaths(ImDrawList* draw_list, const ImVec2 origin)
             // If there is a shift, we apply it; we still remember the original end and in this case it will be the last point added to current collection.
             const auto shifted_end = (!do_end_shift)
                                          ? end
-                                         : end + path.GetShiftVector(path_end.parent_pivot, m_canvas_zoom_level);
+                                         : end + path.GetShiftVector(path_end.parent_pivot, m_canvas_zoom_level, false);
 
             // Pathpoints (defined as a collection [[path]].points) are points between start and end.
             // They are not mandatory: if no Pathpoints are specified, then path is just a single line from start to end.
@@ -191,10 +190,10 @@ void App::GUICanvasDrawPaths(ImDrawList* draw_list, const ImVec2 origin)
 
                     const auto label_position = label_point_curr + direction * label_shift;
                     draw_list->AddText(m_font_inconsolata_medium,
-                           font_size_f,
-                           label_position,
-                           COLOR_BLACK,
-                           label_c_str);
+                                       font_size_f,
+                                       label_position,
+                                       COLOR_BLACK,
+                                       label_c_str);
                 }
             }
         }
