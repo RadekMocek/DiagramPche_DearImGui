@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string>
 #include <vector>
 
 #include "imgui.h"
@@ -24,6 +25,10 @@ struct Path
     bool do_end_arrow = true;
 
     int z = DL_USER_CHANNEL_DEFAULT_PATH;
+
+    std::string label_value{};
+    int label_point{};
+    int label_shift{};
 
     //
     [[nodiscard]] constexpr ImVec2 GetShiftVector(const Pivot pivot, const float zoom_level) const

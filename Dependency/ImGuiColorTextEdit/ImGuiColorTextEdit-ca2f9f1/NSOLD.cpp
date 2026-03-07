@@ -18,6 +18,7 @@ const TextEditor::LanguageDefinition& TextEditor::LanguageDefinition::NSOLD()
             "color_border",
             "end",
             "ends",
+            "label",
             "label_pos",
             "label_shift",
             "pivot",

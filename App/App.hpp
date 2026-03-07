@@ -48,6 +48,8 @@ public:
     void Run();
 
 private:
+    static constexpr auto COLOR_BLACK = IM_COL32(0, 0, 0, 255);
+
     // Helper structs / enums =
     enum ActionAfterExport
     {

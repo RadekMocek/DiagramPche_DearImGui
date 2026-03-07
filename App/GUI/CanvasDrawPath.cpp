@@ -5,6 +5,8 @@
 
 void App::GUICanvasDrawPaths(ImDrawList* draw_list, const ImVec2 origin)
 {
+    const auto font_size_f = static_cast<float>(m_canvas_font_size);
+
     // For SVG export → `Exporter.DrawCommand.same_z_priority`. Arrow tips should be on the same exact "SVG layer" as their path.
     // If there were multiple colliding paths, then without this, tips could be sorted differently than their corresponsing paths
     // (and that could be seen if colliding paths have different colors).
@@ -174,6 +176,25 @@ void App::GUICanvasDrawPaths(ImDrawList* draw_list, const ImVec2 origin)
                                  result_pathpoints[result_pathpoints.size() - 1],
                                  m_canvas_zoom_level,
                                  color);
+                }
+
+                // Path label
+                if (!path.label_value.empty()) {
+                    const auto& label_c_str = path.label_value.c_str();
+                    const auto label_point_curr_idx = path.label_point % result_pathpoints.size();
+                    const auto label_point_next_idx = (path.label_point + 1) % result_pathpoints.size();
+                    const auto label_shift = path.label_shift;
+
+                    const auto label_point_curr = result_pathpoints[label_point_curr_idx];
+                    const auto label_point_next = result_pathpoints[label_point_next_idx];
+                    const auto direction = ImVec2Normalized(label_point_next - label_point_curr);
+
+                    const auto label_position = label_point_curr + direction * label_shift;
+                    draw_list->AddText(m_font_inconsolata_medium,
+                           font_size_f,
+                           label_position,
+                           COLOR_BLACK,
+                           label_c_str);
                 }
             }
         }

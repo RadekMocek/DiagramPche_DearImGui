@@ -177,7 +177,6 @@ void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin)
         draw_list->ChannelsSetCurrent(z);
         const auto node_fill_imcolor = GetImU32FromColorTuple(node.color);
         const auto node_edge_imcolor = GetImU32FromColorTuple(node.color_border);
-        constexpr auto COLOR_NODE_TEXT = IM_COL32(0, 0, 0, 255);
 
         // .: Draw the shape :.
         // .:================:.
@@ -225,7 +224,7 @@ void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin)
         draw_list->AddText(m_font_inconsolata_medium,
                            font_size_f,
                            draw_label_position,
-                           COLOR_NODE_TEXT,
+                           COLOR_BLACK,
                            label_c_str);
         // SVG node text
         m_exporter.AddText(z,
