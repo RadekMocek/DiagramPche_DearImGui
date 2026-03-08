@@ -19,8 +19,8 @@ bool Exporter::Save()
     if (!m_is_enabled) return false;
     m_is_enabled = false;
 
-    const svg::Dimensions dimensions(m_boundaries_max_x - m_boundaries_min_x + 2 * SVG_PADDING,
-                                     m_boundaries_max_y - m_boundaries_min_y + 2 * SVG_PADDING);
+    const svg::Dimensions dimensions(m_boundaries_max_x - m_boundaries_min_x + 2 * SVG_DOCUMENT_PADDING,
+                                     m_boundaries_max_y - m_boundaries_min_y + 2 * SVG_DOCUMENT_PADDING);
 
     const auto layout = svg::Layout(dimensions, ORIGIN);
 
@@ -28,7 +28,7 @@ bool Exporter::Save()
 
     for (; !m_draw_commands.empty(); m_draw_commands.pop()) {
         const auto& [z1, z2, shape] = m_draw_commands.top();
-        shape->offset(svg::Point(SVG_PADDING - m_boundaries_min_x, SVG_PADDING - m_boundaries_min_y));
+        shape->offset(svg::Point(SVG_DOCUMENT_PADDING - m_boundaries_min_x, SVG_DOCUMENT_PADDING - m_boundaries_min_y));
         document << *shape;
     }
 
@@ -45,7 +45,7 @@ void Exporter::AddRect(const int z, const double tl_x, const double tl_y, const 
     const auto fill = svg::Fill(color);
     const auto stroke = svg::Stroke(1, svg::Color(color_border));
     m_draw_commands.push({
-        z, PRIORITY_SHAPE + additional_priority,
+        z, SVG_PRIORITY_SHAPE + additional_priority,
         std::make_unique<svg::Rectangle>(top_left_point, width, height, fill, stroke)
     });
 
@@ -74,7 +74,7 @@ void Exporter::AddEllipse(const int z, const double c_x, const double c_y, const
     const auto fill = svg::Fill(color);
     const auto stroke = svg::Stroke(1, svg::Color(color_border));
     m_draw_commands.push({
-        z, PRIORITY_SHAPE,
+        z, SVG_PRIORITY_SHAPE,
         std::make_unique<svg::Elipse>(center_point, width, height, fill, stroke)
     });
 
@@ -113,7 +113,7 @@ void Exporter::AddDiamond(const int z, const double c_x, const double c_y,
 
     svg::Polygon polygon{svg::Fill(color), svg::Stroke(1, svg::Color(color_border))};
     polygon << top << right << bottom << left;
-    m_draw_commands.push({z, PRIORITY_SHAPE, std::make_unique<svg::Polygon>(polygon)});
+    m_draw_commands.push({z, SVG_PRIORITY_SHAPE, std::make_unique<svg::Polygon>(polygon)});
 
     // Update boundaries
     if (l_x < m_boundaries_min_x) {
@@ -137,7 +137,7 @@ void Exporter::AddText(const int z, const double tl_x, const double tl_y, const 
 
     // Draw command
     double y_offset = 0;
-    const auto y_start = tl_y - LINE_HEIGHT / 6; // Magic
+    const auto y_start = tl_y - SVG_LINE_HEIGHT / 6; // Magic
 
     std::istringstream iss(value);
     std::string line;
@@ -147,10 +147,10 @@ void Exporter::AddText(const int z, const double tl_x, const double tl_y, const 
     while (std::getline(iss, line)) {
         m_draw_commands.push(
             {
-                z, PRIORITY_TEXT + additional_priority,
-                std::make_unique<svg::Text>(svg::Point(tl_x, y_start + y_offset), line, FILL_BLACK, FONT)
+                z, SVG_PRIORITY_TEXT + additional_priority,
+                std::make_unique<svg::Text>(svg::Point(tl_x, y_start + y_offset), line, SVG_FILL_BLACK, SVG_FONT)
             });
-        y_offset += LINE_HEIGHT;
+        y_offset += SVG_LINE_HEIGHT;
 
         if (line.size() > max_line_length) {
             max_line_length = line.size();
@@ -164,7 +164,7 @@ void Exporter::AddText(const int z, const double tl_x, const double tl_y, const 
     if (y_start < m_boundaries_min_y) {
         m_boundaries_min_y = y_start;
     }
-    if (const auto text_max_x = tl_x + CHAR_WIDTH * static_cast<double>(max_line_length);
+    if (const auto text_max_x = tl_x + SVG_CHAR_WIDTH * static_cast<double>(max_line_length);
         text_max_x > m_boundaries_max_x) {
         m_boundaries_max_x = text_max_x;
     }

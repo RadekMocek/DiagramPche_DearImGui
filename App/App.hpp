@@ -179,10 +179,10 @@ private:
     void GUIModal();
 
     // Widgets (if there are multiple instances of the same thing, we put it to the method to DRY)
+    // (Setter for text editor font size found in toolbar AND in preferences window)
     void WidgetTextEditorFontSizeInputInt();
-    // Setter for text editor font size found in toolbar AND in preferences window
+    // (Combo for choosing between vanilla/3rd party text editor found in preferences window AND in start benchmark window)
     void WidgetTextEditorPreferredCombo();
-    // Combo for choosing between vanilla/3rd party text editor found in preferences window AND in start benchmark window
 
     // File
     // - Logic for buttons in MainMenuBar

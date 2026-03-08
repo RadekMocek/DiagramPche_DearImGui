@@ -93,11 +93,9 @@ void App::GUIWinBenchmark()
         ImGui::Dummy(TINY_SKIP);
         if (m_is_source_dirty) {
             ImGui::PushStyleColor(ImGuiCol_Text, COLOR_ERROR);
-            ImGui::Text(
-                "You have unsaved changes, save your work before running the benchmark."
-                "\nIf you don't wish to save this, select File → New → Discard."
-            );
+            ImGui::Text("You have unsaved changes, save your work before running the benchmark.");
             ImGui::PopStyleColor();
+            ImGui::Text("(If you don't wish to save this, select File → New → Discard.)");
         }
         else {
             if (ImGui::Button("Start benchmark")) {

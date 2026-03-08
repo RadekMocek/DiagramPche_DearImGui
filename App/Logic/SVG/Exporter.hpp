@@ -9,15 +9,15 @@ using ColorTuple = std::tuple<unsigned char, unsigned char, unsigned char, unsig
 class Exporter
 {
 private:
-    static constexpr auto SVG_PADDING = 25.0f;
-    static constexpr auto PRIORITY_SHAPE = 0;
-    static constexpr auto PRIORITY_TEXT = 1;
+    static constexpr auto SVG_DOCUMENT_PADDING = 25.0f;
+    static constexpr auto SVG_PRIORITY_SHAPE = 0;
+    static constexpr auto SVG_PRIORITY_TEXT = 1;
 
-    const svg::Fill FILL_BLACK = svg::Fill(svg::Color::Black, 1.0);
-    const svg::Font FONT = svg::Font(18, "Inconsolata");
-    const svg::Size CHAR_BB = svg::Text(svg::Point(0, 0), "A", FILL_BLACK, FONT).getBoundingBox().size;
-    const double LINE_HEIGHT = CHAR_BB.height;
-    const double CHAR_WIDTH = CHAR_BB.width;
+    const svg::Fill SVG_FILL_BLACK = svg::Fill(svg::Color::Black, 1.0);
+    const svg::Font SVG_FONT = svg::Font(18, "Inconsolata");
+    const svg::Size SVG_CHAR_BB = svg::Text(svg::Point(0, 0), "A", SVG_FILL_BLACK, SVG_FONT).getBoundingBox().size;
+    const double SVG_LINE_HEIGHT = SVG_CHAR_BB.height;
+    const double SVG_CHAR_WIDTH = SVG_CHAR_BB.width;
 
     struct DrawCommand
     {

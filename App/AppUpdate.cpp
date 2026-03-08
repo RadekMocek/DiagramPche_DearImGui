@@ -12,7 +12,6 @@ void App::Update()
     // .: Main "full-viewport" window :.
     GUIBody();
 
-
     // .: Show the big demo window if enabled :.
 #ifdef INCLUDE_IMGUI_DEMO_WINDOW
     if (m_do_show_window_demo) {

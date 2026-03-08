@@ -260,8 +260,8 @@ void App::GUICanvas(const float height)
             }
 
             if (ImGui::IsItemHovered(ImGuiHoveredFlags_DelayShort | ImGuiHoveredFlags_NoSharedDelay)) {
-                ImGui::SetTooltip(std::format("Drag and drop me onto the canvas to add a '{}' node.",
-                                              GetStringFromNodeType(static_cast<NodeType>(i))).c_str());
+                ImGui::SetTooltip("%s", std::format("Drag and drop me onto the canvas to add a '{}' node.",
+                                                    GetStringFromNodeType(static_cast<NodeType>(i))).c_str());
             }
 
             ImGui::SameLine();
