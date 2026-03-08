@@ -3,11 +3,15 @@
 
 void App::Update()
 {
+    BenchmarkUpdate();
+    ImGui::BeginDisabled(m_is_benchmark_running);
+
     // .: Main menu bar :.
     GUIMainMenuBar();
 
     // .: Main "full-viewport" window :.
     GUIBody();
+
 
     // .: Show the big demo window if enabled :.
 #ifdef INCLUDE_IMGUI_DEMO_WINDOW
@@ -17,6 +21,8 @@ void App::Update()
         ImGui::PopFont();
     }
 #endif
+
+    ImGui::EndDisabled(/*m_is_benchmark_running*/);
 
     // Must be called before modals because Export modal starts the exporter
     if (m_exporter.IsEnabled()) {

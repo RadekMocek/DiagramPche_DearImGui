@@ -44,10 +44,8 @@ void App::GUIToolbar(const float textedit_width)
     ImGui::Text("Font size:");
     ImGui::SameLine();
     ImGui::PushItemWidth(100);
-    ImGui::InputInt("##FontSizeInputInt", &m_source_font_size, 2);
+    WidgetTextEditorFontSizeInputInt();
     ImGui::PopItemWidth();
-    if (m_source_font_size < FONT_SIZE_SOURCE_MIN) { m_source_font_size = FONT_SIZE_SOURCE_MIN; }
-    else if (m_source_font_size > FONT_SIZE_SOURCE_MAX) { m_source_font_size = FONT_SIZE_SOURCE_MAX; }
 
     // .: Cursor position in text edit info :.
     // .:===================================:.

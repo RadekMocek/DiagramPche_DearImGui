@@ -1,10 +1,10 @@
 #include "../App.hpp"
 #include "../Config.hpp"
-#include "../Helper/GUICombo.hpp"
 #include "../Helper/GUILayout.hpp"
 
 void App::GUIWinPreferences()
 {
+    ImGui::SetNextWindowSizeConstraints(ImVec2(450, 205), ImVec2(FLT_MAX, FLT_MAX));
     ImGui::Begin("Preferences", &m_do_show_window_preferences, ImGuiWindowFlags_AlwaysAutoResize);
     // --- --- --- ---
     if (ImGui::BeginTabBar("PreferencesTabBar")) {
@@ -34,27 +34,11 @@ void App::GUIWinPreferences()
         if (ImGui::BeginTabItem("Text editor")) {
             ImGui::Dummy(TINY_SKIP);
             ImGui::SeparatorText("Text editor font size");
-            ImGui::InputInt("##FontSizeInputInt", &m_source_font_size, 2);
-            if (m_source_font_size < FONT_SIZE_SOURCE_MIN) { m_source_font_size = FONT_SIZE_SOURCE_MIN; }
-            else if (m_source_font_size > FONT_SIZE_SOURCE_MAX) { m_source_font_size = FONT_SIZE_SOURCE_MAX; }
+            WidgetTextEditorFontSizeInputInt();
 
             ImGui::Dummy(SMALL_SKIP);
             ImGui::SeparatorText("Preferred text editor");
-            const char* items[] = {"Vanilla (InputTextMultiline)  ", "3rd Party (ImGuiColorTextEdit)"};
-            static int item_selected_idx = m_do_use_alt_editor ? 1 : 0;
-
-            ImGui::PushItemWidth(350);
-            if (GUICombo("##preferred editor", items, IM_COUNTOF(items), item_selected_idx)) {
-                const bool do_use_alt_editor = item_selected_idx == 1;
-                if (do_use_alt_editor) {
-                    m_alt_editor.SetText(m_source);
-                }
-                /*else {
-                    m_source = m_alt_editor.GetText(); // This gets called every frame so shouldn't be needed to call here as well
-                }*/
-                m_do_use_alt_editor = do_use_alt_editor;
-            }
-            ImGui::PopItemWidth();
+            WidgetTextEditorPreferredCombo();
             // --- --- --- --- ---
             ImGui::EndTabItem();
         }
@@ -80,24 +64,51 @@ void App::GUIWinPreferences()
     );
     */
     // --- --- --- ---
+    //std::cout << ImGui::GetWindowSize() << "\n";
     ImGui::End();
 }
 
+// This method handles the benchmark window only before the user starts the benchmark. Everything else benchmark related is in a special file `Logic→AppBenchmark.cpp`
 void App::GUIWinBenchmark()
 {
-    ImGui::Begin("Benchmark", &m_do_show_window_benchmark, ImGuiWindowFlags_AlwaysAutoResize);
+    ImGuiWindowFlags flags = ImGuiWindowFlags_AlwaysAutoResize;
+    if (m_is_benchmark_running) {
+        flags |= ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoDecoration;
+        constexpr auto WINDOW_OFFSET = 12;
+        ImGui::SetNextWindowPos({WINDOW_OFFSET, WINDOW_OFFSET});
+    }
+
+    ImGui::Begin("Benchmark", &m_do_show_window_benchmark, flags);
     // --- --- --- ---
-    if (m_is_source_dirty) {
-        ImGui::PushStyleColor(ImGuiCol_Text, COLOR_ERROR);
-        ImGui::Text(
-            "You have unsaved changes, save your work before running the benchmark."
-            "\nIf you don't want to save, go to File→New→Discard."
+    if (!m_is_benchmark_running) {
+        ImGui::SeparatorText("BEFORE YOU START:");
+        ImGui::BulletText("Epilepsy warning?");
+        ImGui::BulletText("Maximize the app for comparable results?");
+        ImGui::BulletText(
+            "3rd party text editor uses std::regex for syntax highlight,"
+            "\nswitching to vanilla editor may affect performance:"
         );
-        ImGui::PopStyleColor();
+        WidgetTextEditorPreferredCombo();
+        ImGui::Separator();
+        ImGui::Dummy(TINY_SKIP);
+        if (m_is_source_dirty) {
+            ImGui::PushStyleColor(ImGuiCol_Text, COLOR_ERROR);
+            ImGui::Text(
+                "You have unsaved changes, save your work before running the benchmark."
+                "\nIf you don't wish to save this, select File → New → Discard."
+            );
+            ImGui::PopStyleColor();
+        }
+        else {
+            if (ImGui::Button("Start benchmark")) {
+                BenchmarkStart();
+            }
+        }
     }
     else {
-        ImGui::Button("Start");
+        BenchmarkGUIUpdate();
     }
     // --- --- --- ---
+    //std::cout << ImGui::GetWindowSize() << "\n";
     ImGui::End();
 }

@@ -137,8 +137,13 @@ private:
     // Style
     AppearanceTheme m_style_current_color_theme = AppearanceTheme_Light;
     bool m_style_do_force_light_canvas{};
-    ImU32 m_style_color_modal;
-    ImU32 m_style_color_secondary_toolbar;
+    ImU32 m_style_color_modal{};
+    ImU32 m_style_color_secondary_toolbar{};
+
+    // Benchmark
+    bool m_is_benchmark_running = false;
+    bool m_is_benchmark_first_iter = false;
+    int m_bench_stats_total_nodes{};
 
     // = Functions =
     // Boilerplate
@@ -157,6 +162,7 @@ private:
     void GUICanvasDrawNodes(ImDrawList* draw_list, ImVec2 origin, float node_border_offset_base);
     void GUICanvasDrawPaths(ImDrawList* draw_list, ImVec2 origin);
     void ResetCanvasScrollingAndZoom();
+    void ChangeCanvasFontSizeAndZoom(int new_canvas_font_size);
 
     // Ghost node == semi-transparent node, used for drag'n'drop functionality, shows where the node will be placed if user releases LMB on canvas
     void GUICanvasDrawGhostNode(ImDrawList* draw_list,
@@ -171,6 +177,12 @@ private:
 
     // All modals
     void GUIModal();
+
+    // Widgets (if there are multiple instances of the same thing, we put it to the method to DRY)
+    void WidgetTextEditorFontSizeInputInt();
+    // Setter for text editor font size found in toolbar AND in preferences window
+    void WidgetTextEditorPreferredCombo();
+    // Combo for choosing between vanilla/3rd party text editor found in preferences window AND in start benchmark window
 
     // File
     // - Logic for buttons in MainMenuBar
@@ -202,6 +214,11 @@ private:
 
     // Style
     void ChangeAppearanceTheme(AppearanceTheme theme);
+
+    // Benchmark
+    void BenchmarkStart();
+    void BenchmarkUpdate();
+    void BenchmarkGUIUpdate();
 
     // Call this after we change m_source somewhere from code instead of by editing text in the text edit widget
     void OnMSourceChanged()

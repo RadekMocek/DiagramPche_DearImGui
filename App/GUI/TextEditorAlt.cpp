@@ -10,6 +10,8 @@ void App::GUITextEditorAlt(const float textedit_width, const float height)
     ImGui::PopStyleVar();
     // --- --- --- --- --- --- --- ---
 
+    m_alt_editor.SetReadOnly(m_is_benchmark_running);
+
     m_alt_editor.Render("##SourceAlt");
     m_source = m_alt_editor.GetText(); // Diagram gets build from m_source
 

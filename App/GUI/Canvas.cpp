@@ -83,9 +83,7 @@ void App::GUICanvas(const float height)
         const auto old_zoom = m_canvas_zoom_level;
 
         const int font_size_unclamped = m_canvas_font_size + io.MouseWheel * CANVAS_FONT_SIZE_STEP;
-        m_canvas_font_size = std::clamp(font_size_unclamped, CANVAS_FONT_SIZE_MIN, CANVAS_FONT_SIZE_MAX);
-        m_canvas_zoom_level = static_cast<float>(m_canvas_font_size) / static_cast<float>(CANVAS_FONT_SIZE_BASE);
-
+        ChangeCanvasFontSizeAndZoom(std::clamp(font_size_unclamped, CANVAS_FONT_SIZE_MIN, CANVAS_FONT_SIZE_MAX));
         zoom_level_slider_value = (m_canvas_font_size - CANVAS_FONT_SIZE_MIN) / CANVAS_FONT_SIZE_STEP;
 
         // Zoom anchor under mouse
@@ -281,11 +279,16 @@ void App::GUICanvas(const float height)
         const auto slider_label = std::format("Zoom level: {:.2f}", m_canvas_zoom_level);
         if (ImGui::SliderInt("##ZoomLevel", &zoom_level_slider_value, SLIDER_MIN, SLIDER_MAX,
                              slider_label.c_str(), ImGuiSliderFlags_NoInput)) {
-            m_canvas_font_size = CANVAS_FONT_SIZE_MIN + CANVAS_FONT_SIZE_STEP * zoom_level_slider_value;
-            m_canvas_zoom_level = static_cast<float>(m_canvas_font_size) / static_cast<float>(CANVAS_FONT_SIZE_BASE);
+            ChangeCanvasFontSizeAndZoom(CANVAS_FONT_SIZE_MIN + CANVAS_FONT_SIZE_STEP * zoom_level_slider_value);
         }
         ImGui::PopItemWidth();
     }
 
     ImGui::EndChild();
+}
+
+void App::ChangeCanvasFontSizeAndZoom(const int new_canvas_font_size)
+{
+    m_canvas_font_size = new_canvas_font_size;
+    m_canvas_zoom_level = static_cast<float>(m_canvas_font_size) / static_cast<float>(CANVAS_FONT_SIZE_BASE);
 }

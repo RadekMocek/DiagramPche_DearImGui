@@ -96,14 +96,20 @@ bool App::Init()
     glfwMakeContextCurrent(m_window);
     glfwSwapInterval(1); // Enable vsync
 
-    glfwSetWindowSizeLimits(m_window, 666 * main_scale, 416 * main_scale, GLFW_DONT_CARE, GLFW_DONT_CARE);
+    glfwSetWindowSizeLimits(m_window,
+                            static_cast<int>(666 * main_scale),
+                            static_cast<int>(416 * main_scale),
+                            GLFW_DONT_CARE,
+                            GLFW_DONT_CARE);
 
     glfwSetWindowCloseCallback(m_window, GLFWWindowCloseCallback);
 
+    // Window icon
     GLFWimage images[1];
     images[0].pixels = stbi_load("./Resource/Icon/icon-256.png", &images[0].width, &images[0].height, nullptr, 4);
     glfwSetWindowIcon(m_window, 1, images);
     stbi_image_free(images[0].pixels);
+    std::cout << "STB OK\n";
 
     // Init Glad
     if (!gladLoaderLoadGL()) {
@@ -152,7 +158,7 @@ void App::Run()
 {
     constexpr auto clear_color = ImVec4(0.0f, 0.0f, 0.0f, 1.00f);
 
-    // User start
+    // App start
     Start();
 
     // Main loop
@@ -181,7 +187,7 @@ void App::Run()
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        // User update
+        // App update
         Update();
 
         // Rendering
