@@ -54,6 +54,7 @@ public:
 
 private:
     static constexpr auto COLOR_BLACK = IM_COL32(0, 0, 0, 255);
+    const char* gl_info_renderer{};
 
     // Helper structs / enums =
     enum ActionAfterExport
@@ -144,6 +145,7 @@ private:
     bool m_is_benchmark_running = false;
     bool m_is_benchmark_first_iter = false;
     int m_bench_stats_total_nodes{};
+    float m_bench_stats_mem_usage_mib{};
 
     // = Functions =
     // Boilerplate
@@ -219,6 +221,7 @@ private:
     void BenchmarkStart();
     void BenchmarkUpdate();
     void BenchmarkGUIUpdate();
+    void BenchmarkStatsUpdate();
 
     // Call this after we change m_source somewhere from code instead of by editing text in the text edit widget
     void OnMSourceChanged()

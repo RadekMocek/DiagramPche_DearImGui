@@ -151,6 +151,8 @@ bool App::Init()
 
     std::cout << "DEAR IMGUI OK\n";
 
+    gl_info_renderer = reinterpret_cast<const char*>(glGetString(GL_RENDERER));
+
     return true;
 }
 

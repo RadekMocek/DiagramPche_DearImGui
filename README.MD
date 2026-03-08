@@ -84,6 +84,7 @@
 * [Native File Dialog Extended](https://github.com/btzy/nativefiledialog-extended) ([zlib](https://github.com/btzy/nativefiledialog-extended/blob/master/LICENSE))
 * [ImGuiColorTextEdit](https://github.com/BalazsJako/ImGuiColorTextEdit) ([MIT](https://github.com/BalazsJako/ImGuiColorTextEdit/blob/master/LICENSE))
 * [IconFontCppHeaders](https://github.com/juliettef/IconFontCppHeaders) ([zlib](https://github.com/juliettef/IconFontCppHeaders/blob/main/licence.txt))
+* David Robert Nadeau's `getCurrentRSS` (CC BY 3.0)
 
 <br>
 

@@ -1,3 +1,5 @@
+#include "../../Dependency/RSS.hpp"
+
 #include "../App.hpp"
 #include "../Helper/Color.hpp"
 #include "../Helper/GUILayout.hpp"
@@ -122,11 +124,10 @@ void App::BenchmarkUpdate()
 
             // Stats
             m_bench_stats_total_nodes += 2 * N_NODES_IN_INTERVAL;
+            BenchmarkStatsUpdate();
 
-            // Log?
-            if (zoom_level == 1) {
-                std::cout << m_bench_stats_total_nodes << "\n";
-            }
+            //TODO log to CSV?
+            //if (zoom_level == 1) {/*log stats*/}
         }
     }
 }
@@ -137,12 +138,20 @@ void App::BenchmarkGUIUpdate()
 
     ImGui::ProgressBar(-1.0f * static_cast<float>(ImGui::GetTime()), ImVec2(0.0f, 0.0f), "Benchmark is running...");
 
+    ImGui::Text("      GL renderer: %s", gl_info_renderer);
     ImGui::Text("Average framerate: %.1f FPS", io.Framerate);
     ImGui::Text("Total nodes drawn: %i", m_bench_stats_total_nodes);
+    ImGui::Text(" Working set size: %.1f MiB", m_bench_stats_mem_usage_mib);
 
     ImGui::Separator();
     ImGui::Dummy(TINY_SKIP);
     if (ImGui::Button("Stop")) {
         m_is_benchmark_running = false;
     }
+}
+
+void App::BenchmarkStatsUpdate()
+{
+    constexpr auto MIBI = 1024.0f * 1024.0f;
+    m_bench_stats_mem_usage_mib = getCurrentRSS() / MIBI;
 }
