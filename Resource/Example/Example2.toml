@@ -1,6 +1,6 @@
 [variables]
 bg_label_shift = -10
-bg_width = 1000
+bg_width = 1600
 bg_height = 140
 node_height = 70
 node_bg_offset = 35
@@ -10,7 +10,7 @@ dia_h = 100
 
 [node.bg_bg]
 z = 2
-size = [1002, 420]
+size = [1602, 420]
 
 [node.bg_z]
 z = 3
@@ -44,77 +44,228 @@ color = "#f0f0f0ff"
 color_border = "#f0f0f000"
 label_shift = ["bg_label_shift", "bg_label_shift"]
 
-[node.z_0]
+[node.z0]
 size = [0, "node_height"]
 type = "ellipse"
 value = "Zahájení\npoptávky"
 xy = ["bg_z", "top-left", 75, "node_bg_offset"]
+color="#f2f2f2cf"
 
-[node.z_1]
+[node.z1]
 size = [0, "node_height"]
 value = "Kontaktuje\npodnik"
 pivot = "left"
-xy = ["z_0", "right", "space", 0]
+xy = ["z0", "right", "space", 0]
+color="#c6daf2cf"
 
 [[path]]
-start = ["z_0", "right", 0, 0]
-end = ["z_1", "left", 0, 0]
+start = ["z0", "right", 0, 0]
+end = ["z1", "left", 0, 0]
 
-[node.p_0]
+[node.p0]
 size = [0, "node_height"]
 value = "Zahájí\nzpracování\nobjednávky"
 xy = ["bg_p", "top-left", 110, "node_bg_offset"]
+color="#c6daf2cf"
 
 [[path]]
-start = ["z_1", "bottom", 0, 0]
-end = ["p_0", "top", 0, 0]
+start = ["z1", "bottom", 0, 0]
+end = ["p0", "top", 0, 0]
 shift = 20
 
-[node.s_0]
+[node.s0]
 size = ["dia_w", "dia_h"]
 label_shift = [6, 0]
 type = "diamond"
 value = "Existuje\nzákaznický\núčet?"
 xy = ["bg_s", "top-left", 93, 15]
+color="#f0f2c6cf"
 
 [[path]]
-start = ["p_0", "bottom", 0, 0]
-end = ["s_0", "top", 0, 0]
+start = ["p0", "bottom", 0, 0]
+end = ["s0", "top", 0, 0]
 
-[node.p_1]
+[node.p1]
 size = [0, "node_height"]
 value = "Vytvoří\nzákaznický\núčet v systému"
-xy = ["p_0", "top-right", 75, 0]
+xy = ["p0", "top-right", 45, 0]
+color="#c6daf2cf"
 
-[node.p_2]
+[node.p2]
 size = [0, "node_height"]
 value = "Zadá parametry\npoptávaných\nproduktů"
-xy = ["p_1", "top-right", "space", 0]
+xy = ["p1", "top-right", "space", 0]
+color="#c6daf2cf"
 
 [[path]]
-start = ["s_0", "right", 0, 0]
-end = ["p_1", "left", 0, 0]
+start = ["p1", "right", 0, 0]
+end = ["p2", "left", 0, 0]
+
+[[path]]
+start = ["s0", "right", 0, 0]
+end = ["p1", "left", 0, 0]
 points = [["", "start", 0, "", "end", 0]]
 shift = 7
+label = ["Ne", 1, 30, 0]
+label_bg = "#f0f0f0ff"
 
 [[path]]
-start = ["s_0", "bottom", 0, 0]
-end = ["p_2", "bottom", 0, 0]
+start = ["s0", "bottom", 0, 0]
+end = ["p2", "bottom", -20, 0]
 points = [
-    ["s_0", "right", 30, "", "prev", 0],
+    ["s0", "right", 30, "", "prev", 0],
     ["", "prev", 0, "", "end", 0]
 ]
-shift = [15, 20]
+shift = [15, 18]
+label = ["Ano", 1, 30, -2]
+label_bg = "#f0f0f0ff"
 
-[node.s_1]
+[node.s1]
 size = ["dia_w", "dia_h"]
 label_shift = [12, 0]
 type = "diamond"
 value = "Existuje\nodpovídající\nprodukt?"
-xy = ["s_0", "top-right", 35, 0]
+xy = ["s0", "top-right", 45, 0]
+color="#f0f2c6cf"
 
-[node.s_2]
+[[path]]
+start = ["p2", "bottom", 15, 0]
+end = ["s1", "top", 0, 0]
+points = [["", "start", 0, "", "end", 0]]
+shift = [10, 21]
+
+[node.s2]
 size = [0, "node_height"]
 value = "Automaticky\nvytvoří\nprodukt"
 pivot = "left"
-xy = ["s_1", "right", "space", 0]
+xy = ["s1", "right", 50, 0]
+color="#c6daf2cf"
+
+[[path]]
+start = ["s1", "right", 0, 0]
+end = ["s2", "left", 0, 0]
+label = ["Ne", 0, 20, -2]
+label_bg = "#f0f0f0ff"
+
+[node.s3]
+size = [0, "node_height"]
+value = "Načte produkt\na jeho cenu"
+pivot = "left"
+xy = ["s2", "right", "space", 0]
+color="#c6daf2cf"
+
+[[path]]
+start = ["s1", "bottom", 0, 0]
+end = ["s3", "bottom", 0, 0]
+shift = [15, 30]
+label = ["Ano", 1, 30, -2]
+label_bg = "#f0f0f0ff"
+
+[node.p3]
+size = [0, "node_height"]
+value = "Stanoví cenu\nproduktu"
+pivot = "left"
+xy = ["p2", "right", "space", 0]
+color="#c6daf2cf"
+
+[[path]]
+start = ["s2", "top-right", 0, 0]
+end = ["p3", "bottom", 0, 0]
+shift = [0, 18]
+
+[node.p4]
+size = [0, "node_height"]
+value = "Doplní zbývající\núdaje objednávky"
+pivot = "left"
+xy = ["p3", "right", "space", 0]
+color="#c6daf2cf"
+
+[[path]]
+start = ["p3", "right", 0, 0]
+end = ["p4", "left", 0, 0]
+
+[[path]]
+start = ["s3", "top-right", 0, 0]
+end = ["p4", "bottom", -15, 0]
+shift = [0, 18]
+
+[node.s4]
+size = [0, "node_height"]
+value = "Uloží objednávku\njako nepotvrzenou"
+pivot = "left"
+xy = ["s3", "right", "space", 0]
+color="#c6daf2cf"
+
+[[path]]
+start = ["p4", "bottom", 20, 0]
+end = ["s4", "top", -6, 0]
+
+[node.s5]
+size = [0, "node_height"]
+value = "Odešle zákazníkovi\ncenovou nabídku\nk odsouhlasení"
+pivot = "left"
+xy = ["s4", "right", 40, 0]
+color="#c6daf2cf"
+
+[[path]]
+start = ["s4", "right", 0, 0]
+end = ["s5", "left", 0, 0]
+
+[node.z2]
+size = ["dia_w", "dia_h"]
+label_shift = [1, 0]
+type = "diamond"
+value = "Souhlasí\ns cenovou\nnabídkou?"
+pivot = "bottom"
+xy = ["s5", "top", 0, -190]
+color="#f0f2c6cf"
+
+[[path]]
+start = ["s5", "top", 0, 0]
+end = ["z2", "bottom", 0, 0]
+
+[node.p5]
+size = [0, "node_height"]
+value = "Upraví\nparametry\nobjednávky"
+pivot = "left"
+xy = ["p4", "right", "space", 0]
+color="#c6daf2cf"
+
+[[path]]
+start = ["z2", "left", 0, 0]
+end = ["p5", "top", -10, 0]
+points = [["", "end", 0, "", "start", 0]]
+label = ["Ne", 1, 20, 0]
+label_bg = [255, 255, 255, 255]
+
+[[path]]
+start = ["p5", "bottom", -10, 0]
+end = ["s5", "top", -30, 0]
+shift = 20
+
+[node.s6]
+size = [0, "node_height"]
+value = "Změní stav\nobjednávky\nna aktivní"
+pivot = "left"
+xy = ["s5", "right", "space", 0]
+color="#c6daf2cf"
+
+[[path]]
+start = ["z2", "right", 0, 0]
+end = ["s6", "top", 0, 0]
+points = [["", "end", 0, "", "start", 0]]
+label = ["Ano", 0, 30, 0]
+label_bg = [255, 255, 255, 255]
+
+[node.s7]
+type = "ellipse"
+size = [0, "node_height"]
+value = "Zařazení\nproduktů\ndo výroby"
+label_shift = [2, 0]
+pivot = "left"
+xy = ["s6", "right", "space", 0]
+color="#f2f2f2cf"
+
+[[path]]
+start = ["s6", "right", 0, 0]
+end = ["s7", "left", 0, 0]

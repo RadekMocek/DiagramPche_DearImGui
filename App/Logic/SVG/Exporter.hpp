@@ -60,7 +60,7 @@ public:
 
     // Shapes
     void AddRect(int z, double tl_x, double tl_y, double width, double height,
-                 const ColorTuple& color, const ColorTuple& color_border);
+                 const ColorTuple& color, const ColorTuple& color_border, int additional_priority = 0);
 
     void AddEllipse(int z, double c_x, double c_y, double width, double height,
                     const ColorTuple& color, const ColorTuple& color_border);
@@ -69,7 +69,7 @@ public:
                     const ColorTuple& color, const ColorTuple& color_border);
 
     // Text
-    void AddText(int z, double tl_x, double tl_y, const std::string& value);
+    void AddText(int z, double tl_x, double tl_y, const std::string& value, int additional_priority = 0);
 
     // Line
     void StartPolyLine();

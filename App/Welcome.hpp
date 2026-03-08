@@ -56,7 +56,7 @@ points=[
     ["hello","bottom",0,"","prev",200]
 ]
 label=["huh?", 1, 150, 15]
-label_bg = "#FF0000CF"
+label_bg = [255,255,255,255]
 
 [[path]]
 start=["testp", "right", 0,0]

@@ -10,11 +10,11 @@ void App::GUICanvasDrawPaths(ImDrawList* draw_list, const ImVec2 origin)
     // For SVG export → `Exporter.DrawCommand.same_z_priority`. Arrow tips should be on the same exact "SVG layer" as their path.
     // If there were multiple colliding paths, then without this, tips could be sorted differently than their corresponsing paths
     // (and that could be seen if colliding paths have different colors).
+
+    // This value is incremented by 3 for each path, we need to keep two empty slots for possible path labels (rectangle and text)
     int path_number = 0;
 
     for (const auto& path : m_parser.m_result_paths) {
-        // Setup
-        path_number++;
         const auto z = DLUserChannelToRealChannel(path.z, false);
         draw_list->ChannelsSetCurrent(z);
 
@@ -156,7 +156,7 @@ void App::GUICanvasDrawPaths(ImDrawList* draw_list, const ImVec2 origin)
             if (result_pathpoints.size() >= 2) {
                 // Line from all the points
                 draw_list->AddPolyline(result_pathpoints.data(),
-                                       result_pathpoints.size(),
+                                       static_cast<int>(result_pathpoints.size()),
                                        color,
                                        0,
                                        m_canvas_zoom_level);
@@ -177,30 +177,42 @@ void App::GUICanvasDrawPaths(ImDrawList* draw_list, const ImVec2 origin)
                                  color);
                 }
 
-                // Path label
+                // Path label (`label=` && `label_bg=`)
                 if (!path.label_value.empty()) {
-                    const auto& label_c_str = path.label_value.c_str();
+                    // Path label is set in TOML as [string(1), int(2), int(3), int(4)]
+                    // (1) is the label's text, Dear ImGui takes const char ptr
+                    const auto label_c_str = path.label_value.c_str();
+                    // (2) is the point of the path on which the label is placed, use modulo to not get out of bounds
                     const auto label_point_curr_idx = path.label_point % result_pathpoints.size();
+                    // (3) is the shift of the label position to the next point on the path, get next point using modulo as well
                     const auto label_point_next_idx = (path.label_point + 1) % result_pathpoints.size();
-                    const auto label_shift = path.label_shift;
-                    const auto label_shift_orth = path.label_shift_orthogonal;
+                    const auto label_shift = static_cast<float>(path.label_shift);
+                    // (4) is shift in a direction orthogonal to (3), so user can fine-tune the placement of the label on the path
+                    const auto label_shift_orth = static_cast<float>(path.label_shift_orthogonal);
 
+                    // Get chosen point ("curr") and next point ("next"), and get the direction vector from curr to next
                     const auto label_point_curr = result_pathpoints[label_point_curr_idx];
                     const auto label_point_next = result_pathpoints[label_point_next_idx];
                     const auto direction = ImVec2Normalized(label_point_next - label_point_curr);
 
-                    auto label_position = label_point_curr + direction * label_shift * m_canvas_zoom_level;
-
+                    // Using the direction vector, we can apply the shifts
+                    auto label_position = label_point_curr;
+                    if (label_shift != 0) {
+                        label_position += direction * label_shift * m_canvas_zoom_level;
+                    }
                     if (label_shift_orth != 0) {
                         label_position += ImVec2Orthogonalized(direction) * label_shift_orth * m_canvas_zoom_level;
                     }
 
-                    // Prepare text bg
+                    // `label_bg=` can be set with color value to give background to the path label; background rectangle size == label size
                     const auto label_size = m_font_inconsolata_medium->
                         CalcTextSizeA(font_size_f, FLT_MAX, -1.0f, label_c_str);
                     const auto label_bg_imcolor = GetImU32FromColorTuple(path.label_bg_color);
 
-                    // Draw the bg
+                    // Final shift to make it that when (3)==0, label center sits on the path
+                    label_position -= label_size / 2.0f;
+
+                    // Draw the background rectangle
                     draw_list->AddRectFilled(label_position, label_position + label_size, label_bg_imcolor);
 
                     // Draw the text
@@ -209,6 +221,11 @@ void App::GUICanvasDrawPaths(ImDrawList* draw_list, const ImVec2 origin)
                                        label_position,
                                        COLOR_BLACK,
                                        label_c_str);
+
+                    // SVG path label
+                    m_exporter.AddRect(z, label_position.x, label_position.y, label_size.x, label_size.y,
+                                       path.label_bg_color, path.label_bg_color, path_number + 1);
+                    m_exporter.AddText(z, label_position.x, label_position.y, path.label_value, path_number + 1);
                 }
             }
         }
@@ -238,5 +255,8 @@ void App::GUICanvasDrawPaths(ImDrawList* draw_list, const ImVec2 origin)
                 }
             }
         }
+
+        //
+        path_number += 3;
     }
 }

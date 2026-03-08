@@ -36,7 +36,7 @@ bool Exporter::Save()
 }
 
 void Exporter::AddRect(const int z, const double tl_x, const double tl_y, const double width, const double height,
-                       const ColorTuple& color, const ColorTuple& color_border)
+                       const ColorTuple& color, const ColorTuple& color_border, const int additional_priority)
 {
     if (!m_is_enabled) return;
 
@@ -45,7 +45,7 @@ void Exporter::AddRect(const int z, const double tl_x, const double tl_y, const 
     const auto fill = svg::Fill(color);
     const auto stroke = svg::Stroke(1, svg::Color(color_border));
     m_draw_commands.push({
-        z, PRIORITY_SHAPE,
+        z, PRIORITY_SHAPE + additional_priority,
         std::make_unique<svg::Rectangle>(top_left_point, width, height, fill, stroke)
     });
 
@@ -130,7 +130,8 @@ void Exporter::AddDiamond(const int z, const double c_x, const double c_y,
     }
 }
 
-void Exporter::AddText(const int z, const double tl_x, const double tl_y, const std::string& value)
+void Exporter::AddText(const int z, const double tl_x, const double tl_y, const std::string& value,
+                       const int additional_priority)
 {
     if (!m_is_enabled) return;
 
@@ -146,7 +147,7 @@ void Exporter::AddText(const int z, const double tl_x, const double tl_y, const 
     while (std::getline(iss, line)) {
         m_draw_commands.push(
             {
-                z, PRIORITY_TEXT,
+                z, PRIORITY_TEXT + additional_priority,
                 std::make_unique<svg::Text>(svg::Point(tl_x, y_start + y_offset), line, FILL_BLACK, FONT)
             });
         y_offset += LINE_HEIGHT;

@@ -29,8 +29,8 @@
   * [x] `[node].color_border`, don't forget to generalize the error message
   * [x] `[node].label_shift`, allow for variables, don't forget about zoom level
   * [x] Allow setting individual start/end path shift, keep backwards compatible
-  * [ ] `[[path]].label`
-  * [ ] `[[path]].label_bg`
+  * [x] `[[path]].label`
+  * [x] `[[path]].label_bg`
 * Canvas features:
   * [x] Canvas zooming: anchor under mouse
   * [x] Change the cursor type while dragging the canvas
