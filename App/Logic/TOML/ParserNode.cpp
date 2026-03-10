@@ -28,7 +28,7 @@ void Parser::ParseNode(const toml::table* node_table, Node& curr_node)
         }
         // == color ==> array of four u8s (rgba) or RGBA hex string ("#xxxxxxxx")
         else if (key_str == "color") {
-            SetColorFromArray(value, curr_node.color);
+            SetColorFromArrayOrString(value, curr_node.color);
             curr_node.color_source = value.source();
         }
         // == size ==> array of two items [width, height], where each is specified either by integer or a string with variable name
@@ -67,9 +67,9 @@ void Parser::ParseNode(const toml::table* node_table, Node& curr_node)
         }
         // == color_border ==> same as color
         else if (key_str == "color_border") {
-            SetColorFromArray(value, curr_node.color_border);
+            SetColorFromArrayOrString(value, curr_node.color_border);
         }
-        // == label_shift ==> array: [X, Y]
+        // == label_shift ==> array [X, Y], same as size
         else if (key_str == "label_shift") {
             if (const auto* value_arr_ptr = value.as_array(); value_arr_ptr && value_arr_ptr->size() == 2) {
                 SetIntFromIntOrVariable(value_arr_ptr->at(0), curr_node.label_shift_x);

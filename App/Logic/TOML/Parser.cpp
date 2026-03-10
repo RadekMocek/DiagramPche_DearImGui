@@ -261,7 +261,7 @@ void Parser::SetPositionPointFromArray(const toml::node& value, Point& to_set)
     else ReportError(value.source(), "An array ([X, Y] or [Parent, Pivot, X, Y]) expected");
 }
 
-void Parser::SetColorFromArray(const toml::node& value, ColorTuple& to_set)
+void Parser::SetColorFromArrayOrString(const toml::node& value, ColorTuple& to_set)
 {
     if (const auto* value_arr_ptr = value.as_array(); value_arr_ptr &&
         value_arr_ptr->size() == 4 && value_arr_ptr->is_homogeneous(toml::node_type::integer)) {

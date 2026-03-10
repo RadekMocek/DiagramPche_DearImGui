@@ -55,7 +55,7 @@ private:
     void SetPivotFromString(const toml::value<std::string>* value_str_ptr, Pivot& to_set);
     void SetIntFromIntOrVariable(const toml::node& value, int& to_set);
     void SetPositionPointFromArray(const toml::node& value, Point& to_set);
-    void SetColorFromArray(const toml::node& value, ColorTuple& to_set);
+    void SetColorFromArrayOrString(const toml::node& value, ColorTuple& to_set);
     int GetZFromInt(const toml::node& value, bool is_node);
 
     void ParsePathStartOrEnd(const toml::node& value, Point& to_set);

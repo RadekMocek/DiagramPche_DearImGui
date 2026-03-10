@@ -1,5 +1,12 @@
 # DiagramPche :: Dear ImGui
 
+This is part of a IMGUI paradigm research, [go back to main repo](https://github.com/RadekMocek/DP).
+
+* Jump to:
+  * [Building locally](#building-locally)
+  * [Dependencies](#dependencies)
+  * [Problems](#problems)
+
 ## TODO
 
 * General:
@@ -53,24 +60,25 @@
   * [ ] Reorder elements in structs?
   * [ ] Benchmark without freetype?
 
-## Problems
+## Building locally
 
-* Design problems:
-  * No undo for changing node's color via the color picker, changing color even clears the history 😬
-* InputTextMultiline problems:
-  * Loses focus on AltGR
-  * Horizontal scrolling is problematic [...](https://github.com/hoffstadt/DearPyGui/issues/2381#issuecomment-2303922790)
-  * Scrollbar flashing while typing
-* ImGuiColorTextEdit problems:
-  * Scrolling by holding up/down arrow key weird "jumpy" behavior, it's even worse with horizontal scroll (right arrow), it does not do that in their demo, but that's older version on older Dear ImGui
-  * No Ctrl + Backspace for removing the whole word (same for Delete)
-  * Selecting text by holding LMB and dragging pauses when curosr is out of the widget area
-  * Sometimes it thinks the "#RRGGBBAA" string is comment (TOML comments start with '#'), comments with `"` also not ideal
-  * Setting curosr position when the text is selected will move the cursor, but won't unselect the text and won't highlight the new line
-* Error highlight breaks on tab
-* Hacky SVG edit
-  * It seems that only modern web browsers support svg fill transparency via rgba(r,g,b,a) or #RRGGBBAA, so I'm using the style="..." option, which the svg library wasn't made for. The way I added it is not very pretty.
-  * ⇒ Exported SVG currently does not support node border transparency (alpha is always 255, this is true for Nodes and Path labels' background)
+### Debian based distros
+
+```bash
+sudo apt install cmake ninja-build libdbus-1-dev
+
+# Navigate to the root directory of this repository
+
+cmake -S . -B build
+
+cmake --build build
+```
+
+### Windows
+
+* The most straightforward way is probably to use an IDE:
+  * In CLion, go to _File_ → _Open..._ and select root directory of this repository
+  * In Visual Studio's launcher, click on the _Open a local folder_ button and select root directory of this repository
 
 ## Dependencies
 
@@ -105,22 +113,21 @@
   * Pressing <kbd>Tab</kbd> inserts four spaces instead of `\t`
   * Accept the numpad enter as well as the "normal" enter
 
-## Building locally
+## Problems
 
-### Debian based distros
-
-```bash
-sudo apt install cmake ninja-build libdbus-1-dev
-
-# Navigate to the root directory of this repository
-
-cmake -S . -B build
-
-cmake --build build
-```
-
-### Windows
-
-* The most straightforward way is probably to use an IDE:
-  * In CLion, go to _File_ → _Open..._ and select root directory of this repository
-  * In Visual Studio's launcher, click on the _Open a local folder_ button and select root directory of this repository
+* Design problems:
+  * No undo for changing node's color via the color picker, changing color even clears the history 😬
+* InputTextMultiline problems:
+  * Loses focus on AltGR
+  * Horizontal scrolling is problematic [...](https://github.com/hoffstadt/DearPyGui/issues/2381#issuecomment-2303922790)
+  * Scrollbar flashing while typing
+* ImGuiColorTextEdit problems:
+  * Scrolling by holding up/down arrow key weird "jumpy" behavior, it's even worse with horizontal scroll (right arrow), it does not do that in their demo, but that's older version on older Dear ImGui
+  * No Ctrl + Backspace for removing the whole word (same for Delete)
+  * Selecting text by holding LMB and dragging pauses when curosr is out of the widget area
+  * Sometimes it thinks the "#RRGGBBAA" string is comment (TOML comments start with '#'), comments with `"` also not ideal
+  * Setting curosr position when the text is selected will move the cursor, but won't unselect the text and won't highlight the new line
+* Error highlight breaks on tab (can fix by counting tabs (`\t`) on the row with error and shifting EH_x accordingly)
+* Hacky SVG edit
+  * It seems that only modern web browsers support svg fill transparency via rgba(r,g,b,a) or #RRGGBBAA, so I'm using the style="..." option, which the svg library wasn't made for. The way I added it is not very pretty.
+  * ⇒ Exported SVG currently does not support node border transparency (alpha is always 255, this is true for Nodes and Path labels' background)

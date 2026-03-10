@@ -83,7 +83,7 @@ void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, const f
                                        aabr_top_left.y + node_height);
 
         // ReSharper disable once CppUseStructuredBinding
-        auto& canvas_node = m_canvas_nodes[node.id];
+        auto& canvas_node = m_canvas_nodes[node.id]; // (Create)
         canvas_node.top_left = aabr_top_left;
         canvas_node.bottom_right = aabr_bottom_right;
         canvas_node.center = ImVec2(aabr_top_left.x + node_width / 2,
@@ -162,10 +162,10 @@ void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, const f
         }
 
         if (node.label_shift_x != 0) {
-            draw_label_position.x += node.label_shift_x * m_canvas_zoom_level;
+            draw_label_position.x += static_cast<float>(node.label_shift_x) * m_canvas_zoom_level;
         }
         if (node.label_shift_y != 0) {
-            draw_label_position.y += node.label_shift_y * m_canvas_zoom_level;
+            draw_label_position.y += static_cast<float>(node.label_shift_y) * m_canvas_zoom_level;
         }
 
         // Do the actual drawing (and possible SVG export)
@@ -203,7 +203,7 @@ void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, const f
             }
             break;
         case NTYPE_DIAMOND:
-            // Diamond points
+            // Diamond points (draw_... is scrolled, could use aabr_... but `GetExactPointFromPivot` works and is cleaner)
             const auto top = canvas_node.GetExactPointFromPivot(PIVOT_TOP) + origin;
             const auto right = canvas_node.GetExactPointFromPivot(PIVOT_RIGHT) + origin;
             const auto bottom = canvas_node.GetExactPointFromPivot(PIVOT_BOTTOM) + origin;

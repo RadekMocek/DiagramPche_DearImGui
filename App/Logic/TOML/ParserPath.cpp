@@ -74,7 +74,7 @@ void Parser::ParsePath(const toml::table* path_table, Path& curr_path)
         }
         // == color ==> array of four u8s (rgba) or RGBA hex string ("#xxxxxxxx")
         else if (key_str == "color") {
-            SetColorFromArray(value, curr_path.color);
+            SetColorFromArrayOrString(value, curr_path.color);
         }
         // == tips ==> 2 char string for now?
         else if (key_str == "tips") {
@@ -120,7 +120,7 @@ void Parser::ParsePath(const toml::table* path_table, Path& curr_path)
         }
         // == label_bg ==> same as color
         else if (key_str == "label_bg") {
-            SetColorFromArray(value, curr_path.label_bg_color);
+            SetColorFromArrayOrString(value, curr_path.label_bg_color);
         }
         // == Unknown key ==> report error
         else ReportError(key.source(), std::format("Unknown key '{}'", key_str));
