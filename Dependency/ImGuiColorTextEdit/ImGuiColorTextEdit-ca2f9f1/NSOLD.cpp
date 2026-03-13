@@ -39,10 +39,10 @@ const TextEditor::LanguageDefinition& TextEditor::LanguageDefinition::NSOLD()
         }
 
         langDef.mTokenRegexStrings.push_back(
-            std::make_pair<std::string, PaletteIndex>("\\\"(\\\\.|[^\\\"])*\\\"", PaletteIndex::String));
+            std::make_pair<std::string, PaletteIndex>(R"(\"(\\.|[^\"])*\")", PaletteIndex::String));
 
         langDef.mTokenRegexStrings.push_back(
-            std::make_pair<std::string, PaletteIndex>("\\\'[^\\\']*\\\'", PaletteIndex::String));
+            std::make_pair<std::string, PaletteIndex>(R"(\'[^\']*\')", PaletteIndex::String));
 
         langDef.mTokenRegexStrings.push_back(
             std::make_pair<std::string, PaletteIndex>("[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)", PaletteIndex::Number));
@@ -51,7 +51,7 @@ const TextEditor::LanguageDefinition& TextEditor::LanguageDefinition::NSOLD()
             std::make_pair<std::string, PaletteIndex>("[a-zA-Z_][a-zA-Z0-9_]*", PaletteIndex::Identifier));
 
         langDef.mTokenRegexStrings.push_back(std::make_pair<std::string, PaletteIndex>(
-            "[\\[\\]\\{\\}\\!\\%\\^\\&\\*\\(\\)\\-\\+\\=\\~\\|\\<\\>\\?\\/\\;\\,\\.]", PaletteIndex::Punctuation));
+            R"([\[\]\{\}\!\%\^\&\*\(\)\-\+\=\~\|\<\>\?\/\;\,\.])", PaletteIndex::Punctuation));
 
         // TOML does not allow multiline comments but this has to be set to something
         langDef.mCommentStart = "/*";

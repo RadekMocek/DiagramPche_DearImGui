@@ -16,11 +16,11 @@ void App::GUIWinPreferences()
             if (ImGui::RadioButton("Light mode", &color_theme_int, AppearanceTheme_Light)) {
                 ChangeAppearanceTheme(AppearanceTheme_Light);
             }
-            SameLineWithDummy();
+            SameLineWithDummy(SMALL_SKIP);
             if (ImGui::RadioButton("Dark mode", &color_theme_int, AppearanceTheme_Dark)) {
                 ChangeAppearanceTheme(AppearanceTheme_Dark);
             }
-            SameLineWithDummy();
+            SameLineWithDummy(SMALL_SKIP);
             if (ImGui::RadioButton("Legacy mode", &color_theme_int, AppearanceTheme_Legacy)) {
                 ChangeAppearanceTheme(AppearanceTheme_Legacy);
             }

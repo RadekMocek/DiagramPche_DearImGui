@@ -2,6 +2,7 @@
 
 #include "../App.hpp"
 #include "../Helper/DrawLayer.hpp"
+#include "../Helper/GUILayout.hpp"
 #include "../Model/CanvasNode.hpp"
 
 // ---  Canvas config  --- --- --- --- --- --- --- --- --- ---
@@ -167,15 +168,16 @@ void App::GUICanvas(const float height)
         GUICanvasDrawGhostNode(draw_list, io.MousePos, node_padding, ghost_padding, ghost_label_c_str);
         // Check if LMB released inside canvas (To check if cursor is inside the canvas part of the app window, we ignore scrolling)
         if (const auto mouse_pos_in_canvas_frame = io.MousePos - canvas_top_left;
-            !ImGui::IsMouseDown(ImGuiMouseButton_Left)
-            && mouse_pos_in_canvas_frame >= ImVec2(0, 0)
-            && mouse_pos_in_canvas_frame <= canvas_size) {
-            // Add new node to canvas (TOML values are zoom level independent so we divide by that)
-            const auto node_x = static_cast<int>((mouse_pos_in_canvas.x - ghost_padding.x) / m_canvas_zoom_level);
-            const auto node_y = static_cast<int>((mouse_pos_in_canvas.y - ghost_padding.y) / m_canvas_zoom_level);
-            m_source += std::format("\n[node.{}]\ntype = \"{}\"\nxy = [{}, {}]\n",
-                                    ghost_label, GetStringFromNodeType(m_dragndropping_node_type), node_x, node_y);
-            OnMSourceChanged();
+            !ImGui::IsMouseDown(ImGuiMouseButton_Left)) {
+            m_is_dragndropping_node = false;
+            if (mouse_pos_in_canvas_frame >= ImVec2(0, 0) && mouse_pos_in_canvas_frame <= canvas_size) {
+                // Add new node to canvas (TOML values are zoom level independent so we divide by that)
+                const auto node_x = static_cast<int>((mouse_pos_in_canvas.x - ghost_padding.x) / m_canvas_zoom_level);
+                const auto node_y = static_cast<int>((mouse_pos_in_canvas.y - ghost_padding.y) / m_canvas_zoom_level);
+                m_source += std::format("\n[node.{}]\ntype = \"{}\"\nxy = [{}, {}]\n",
+                                        ghost_label, GetStringFromNodeType(m_dragndropping_node_type), node_x, node_y);
+                OnMSourceChanged();
+            }
         }
     }
 
@@ -250,11 +252,10 @@ void App::GUICanvas(const float height)
                                  m_style_color_secondary_toolbar);
 
         // == Add node buttons ==
-        m_is_dragndropping_node = false;
         for (int i = 0; i < N_NTYPES; i++) {
             ImGui::Button(GetIconFromNodeType(static_cast<NodeType>(i)));
 
-            if (ImGui::IsItemActive()) {
+            if (!m_is_dragndropping_node && ImGui::IsItemActive()) {
                 m_dragndropping_node_type = static_cast<NodeType>(i);
                 m_is_dragndropping_node = true;
             }
@@ -264,9 +265,7 @@ void App::GUICanvas(const float height)
                                                     GetStringFromNodeType(static_cast<NodeType>(i))).c_str());
             }
 
-            ImGui::SameLine();
-            ImGui::Dummy({2.0f, 0.0f});
-            ImGui::SameLine();
+            SameLineWithDummy(NANO_SKIP);
         }
 
         // == Zoom level slider ==

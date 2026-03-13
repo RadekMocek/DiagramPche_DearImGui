@@ -84,9 +84,9 @@ void App::GUIModal()
         ImGui::Dummy(SMALL_SKIP);
         ImGui::SeparatorText("Action after export");
         ImGui::RadioButton("Nothing", &m_action_after_export_choice, ActionAfterExport_DoNothing);
-        SameLineWithDummy();
+        SameLineWithDummy(SMALL_SKIP);
         ImGui::RadioButton("Show in explorer", &m_action_after_export_choice, ActionAfterExport_OpenFolder);
-        SameLineWithDummy();
+        SameLineWithDummy(SMALL_SKIP);
         ImGui::RadioButton("Open", &m_action_after_export_choice, ActionAfterExport_OpenFile);
 
 #ifndef _WIN32

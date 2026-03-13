@@ -49,20 +49,11 @@ void App::GUIToolbar(const float textedit_width)
 
     // .: Cursor position in text edit info :.
     // .:===================================:.
-    static std::string cursor_pos_str;
-    constexpr auto CURSOR_POS_STR_LEN = 7;
-
     if (m_do_use_alt_editor) {
+        VerticalSeparator();
         const auto cursor_pos = m_alt_editor.GetCursorPosition();
-        cursor_pos_str = std::format("{},{}", cursor_pos.mLine, cursor_pos.mColumn);
+        ImGui::Text("Cursor pos: %s", std::format("{},{}", cursor_pos.mLine, cursor_pos.mColumn).c_str());
     }
-    else {
-        cursor_pos_str = "N/A";
-    }
-
-    cursor_pos_str.resize(CURSOR_POS_STR_LEN, ' ');
-    VerticalSeparator();
-    ImGui::Text("Cursor pos: %s", cursor_pos_str.c_str());
 
     // --- --- --- ---
     ImGui::EndChild();
@@ -80,9 +71,7 @@ void App::GUIToolbar(const float textedit_width)
         // Case: some node in canvas is selected/hovered and exists
         toolbar_node = m_parser.m_result_nodes[m_selected_or_hovered_canvas_node_key.value()];
         // Update `node_key_label_value` accordingly
-        constexpr auto NODE_KEY_LENGTH = 17;
-        node_key_label_value = m_selected_or_hovered_canvas_node_key.value().substr(0, NODE_KEY_LENGTH);
-        node_key_label_value.resize(NODE_KEY_LENGTH, ' ');
+        node_key_label_value = m_selected_or_hovered_canvas_node_key.value();
         std::ranges::replace(node_key_label_value, '\n', ' ');
     }
     else {
@@ -117,7 +106,7 @@ void App::GUIToolbar(const float textedit_width)
     static ImVec4 color;
     static ImVec4 color_prev;
 
-    ImGui::Text("Color:");
+    ImGui::Text("Node color:");
     ImGui::SameLine();
     color = GetImVec4FromColorTuple(toolbar_node.color);
     if (ImGui::ColorEdit4("Node color", reinterpret_cast<float*>(&color),
@@ -168,7 +157,7 @@ void App::GUIToolbar(const float textedit_width)
     // .: Node ID label :.
     // .:===============:.
     VerticalSeparator();
-    ImGui::Text("Node ID: %s", node_key_label_value.c_str());
+    ImGui::Text("ID: %s", node_key_label_value.c_str());
 
     // --- --- --- --- ---
     ImGui::EndDisabled();

@@ -55,5 +55,5 @@ void App::Start()
     DEFAULT_TOOLBAR_NODE.type = NTYPE_RECTANGLE;
 
     // Temporary
-    m_do_show_window_benchmark = true;
+    //m_do_show_window_benchmark = true;
 }
