@@ -13,7 +13,7 @@ This is part of a IMGUI paradigm research, [go back to main repo](https://github
   * [x] View → Jump to canvas origin
   * [x] View → Toolbar
     * [x] Source: Allow changing font size of the text editor
-    * [ ] Source: Show cursor position in the text editor
+    * [x] Source: Show cursor position in the text editor
     * [x] Canvas: Change color node with color picker
     * [x] Canvas: Change node's type via Drop-down list
   * [x] View → Secondary canvas toolbar
@@ -25,7 +25,7 @@ This is part of a IMGUI paradigm research, [go back to main repo](https://github
     * [x] Confirm unsaved new
     * [x] Confirm unsaved open, including loading a debug diagram or an example
     * [x] Change window name according to opened document (incl. star for unsaved)
-    * [ ] __Save → Cancel should behave same as Cancel ?__
+    * [x] _Save → Cancel_ should behave the same as unsavedwarn's _Cancel_
   * [x] Code editor syntax highlight
   * [ ] Klávesové zkratky (<kbd>Alt</kbd> pro navigaci v MainMenuBar, <kbd>Ctrl</kbd>+<kbd>S</kbd> pro uložení, <kbd>Ctrl</kbd>+<kbd>+</kbd> zoom atd.)
 * Pipeline: TOML parse → Draw to canvas / Render to SVG:
@@ -55,6 +55,7 @@ This is part of a IMGUI paradigm research, [go back to main repo](https://github
   * [x] Main menu bar → File items
   * [x] Toolbar → Drop-down list with node types
   * [x] Secondary canvas toolbar → Drag'n'Drop buttons
+  * [x] UnsavedWarn modal
 * TOML Parser:
   * [x] Refactor TOML parsing: do not std::move into priority queue, use pq just for determining draw order and nothing more
 * Dear ImGui specific:

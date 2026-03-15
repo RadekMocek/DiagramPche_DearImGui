@@ -24,16 +24,17 @@ void App::HandleRegularOpen()
     }
 }
 
-void App::HandleRegularSave()
+bool App::HandleRegularSave()
 {
     if (!m_source_filename.has_value()) {
-        SaveSourceToFileFromDialog();
+        return SaveSourceToFileFromDialog();
     }
-    else {
-        if (SaveSourceToFile(m_source_filename.value().c_str())) {
-            m_is_source_dirty = false;
-        }
+    // Else
+    if (SaveSourceToFile(m_source_filename.value().c_str())) {
+        m_is_source_dirty = false;
+        return true;
     }
+    return false;
 }
 
 void App::HandleOpenExample(const char* filename)
@@ -70,6 +71,7 @@ void App::LoadSourceFromFile(const char* filename, const bool is_example)
     m_is_source_dirty = false;
 }
 
+// Saves `m_source` to `filename`, returns true if successful
 bool App::SaveSourceToFile(const char* filename) const
 {
     /*if (m_do_use_alt_editor) {
@@ -83,14 +85,16 @@ bool App::SaveSourceToFile(const char* filename) const
     // file.close() should be called automatically out of scope
 }
 
-void App::SaveSourceToFileFromDialog()
+bool App::SaveSourceToFileFromDialog()
 {
     if (const auto path = SaveTOMLDialog(); path.has_value()) {
         if (SaveSourceToFile(path.value().c_str())) {
             m_source_filename = path;
             m_is_source_dirty = false;
+            return true;
         }
     }
+    return false;
 }
 
 // == "Outside of app" logic (open the file in system explorer / image viewer) ==

@@ -1,5 +1,6 @@
 #include <filesystem>
 
+#include  "../../Dependency/IconsMaterialDesignIcons.h"
 #include "misc/cpp/imgui_stdlib.h"
 
 #include "../App.hpp"
@@ -140,7 +141,7 @@ void App::GUIModal()
         ImGui::Dummy(BIG_SKIP);
 
         SetButtonColors(COLOR_GOOD_NORMAL, COLOR_GOOD_HOVER, COLOR_GOOD_CLICK);
-        if (ImGui::Button("Save", BUTTON_WIDER)) {
+        if (ImGui::Button(ICON_MDI_CONTENT_SAVE_OUTLINE" Save", BUTTON_WIDER)) {
             m_is_action_unsavedwarn_queued = true;
             m_do_action_unsavedwarn_save = true;
             ImGui::CloseCurrentPopup();
@@ -149,7 +150,7 @@ void App::GUIModal()
 
         ImGui::SameLine();
         SetButtonColors(COLOR_BAD_NORMAL, COLOR_BAD_HOVER, COLOR_BAD_CLICK);
-        if (ImGui::Button("Discard", BUTTON_WIDER)) {
+        if (ImGui::Button(ICON_MDI_TRASH_CAN_OUTLINE" Discard", BUTTON_WIDER)) {
             m_is_action_unsavedwarn_queued = true;
             m_do_action_unsavedwarn_save = false;
             ImGui::CloseCurrentPopup();
@@ -157,7 +158,7 @@ void App::GUIModal()
         ResetButtonColors();
 
         ImGui::SameLine();
-        if (ImGui::Button("Cancel", BUTTON_WIDER)) { ImGui::CloseCurrentPopup(); }
+        if (ImGui::Button(ICON_MDI_CANCEL" Cancel", BUTTON_WIDER)) { ImGui::CloseCurrentPopup(); }
         // --- --- --- ---
         ImGui::EndPopup();
     }

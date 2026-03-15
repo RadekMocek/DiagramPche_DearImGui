@@ -49,26 +49,31 @@ void App::Update()
     // Post modal actions
     if (m_is_action_unsavedwarn_queued) {
         m_is_action_unsavedwarn_queued = false;
+        // Should we really do the action?
+        bool do_the_action = true;
         if (m_do_action_unsavedwarn_save) {
-            HandleRegularSave();
+            // If user pressed cancel on save dialog or saving somehow failed, we won't do the action
+            do_the_action = HandleRegularSave();
         }
-        switch (m_action_unsavedwarn_type) {
-        case ActionAfterUnsavedWarn_Invalid:
-            std::cerr << "ActionAfterUnsavedWarn_Invalid\n";
-            break;
-        case ActionAfterUnsavedWarn_Exit:
-            m_should_window_really_close = true;
-            glfwSetWindowShouldClose(m_window, GLFW_TRUE);
-            break;
-        case ActionAfterUnsavedWarn_New:
-            HandleRegularNew();
-            break;
-        case ActionAfterUnsavedWarn_OpenFile:
-            HandleRegularOpen();
-            break;
-        case ActionAfterUnsavedWarn_LoadExample:
-            LoadSourceFromFile(m_action_unsavedwarn_value.c_str(), true);
-            break;
+        if (do_the_action) {
+            switch (m_action_unsavedwarn_type) {
+            case ActionAfterUnsavedWarn_Invalid:
+                ShowErrorModal("ActionAfterUnsavedWarn_Invalid");
+                break;
+            case ActionAfterUnsavedWarn_Exit:
+                m_should_window_really_close = true;
+                glfwSetWindowShouldClose(m_window, GLFW_TRUE);
+                break;
+            case ActionAfterUnsavedWarn_New:
+                HandleRegularNew();
+                break;
+            case ActionAfterUnsavedWarn_OpenFile:
+                HandleRegularOpen();
+                break;
+            case ActionAfterUnsavedWarn_LoadExample:
+                LoadSourceFromFile(m_action_unsavedwarn_value.c_str(), true);
+                break;
+            }
         }
         m_action_unsavedwarn_type = ActionAfterUnsavedWarn_Invalid;
     }

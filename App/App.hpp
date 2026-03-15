@@ -127,7 +127,7 @@ private:
     std::string m_modal_error_message{};
     bool m_is_action_unsavedwarn_queued = false;
     bool m_do_action_unsavedwarn_save = false;
-    ActionAfterUnsavedWarn m_action_unsavedwarn_type{};
+    ActionAfterUnsavedWarn m_action_unsavedwarn_type = ActionAfterUnsavedWarn_Invalid;
     std::string m_action_unsavedwarn_value;
 
     // SVG export
@@ -190,12 +190,12 @@ private:
     // - Logic for buttons in MainMenuBar
     void HandleRegularNew();
     void HandleRegularOpen();
-    void HandleRegularSave();
+    bool HandleRegularSave();
     void HandleOpenExample(const char* filename);
     // - Underlying logic
     void LoadSourceFromFile(const char* filename, bool is_example);
     bool SaveSourceToFile(const char* filename) const;
-    void SaveSourceToFileFromDialog();
+    bool SaveSourceToFileFromDialog();
     // - "Outside of app" logic (open the file in system explorer / image viewer)
     static void ShowFileInFileManager(const std::string& filename);
     static void OpenFile(const std::string& filename);
