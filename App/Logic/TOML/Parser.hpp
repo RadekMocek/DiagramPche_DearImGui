@@ -7,25 +7,13 @@
 #include "../../../Dependency/toml.hpp"
 #include "../../Model/Node.hpp"
 #include "../../Model/Path.hpp"
+#include "NodePriority.hpp"
 
 using ColorTuple = std::tuple<unsigned char, unsigned char, unsigned char, unsigned char>;
 
 class Parser
 {
 public:
-    // Helper struct
-    struct NodePriority
-    {
-        int draw_batch_number = 0;
-        std::string id{};
-
-        bool operator<(const NodePriority& other) const
-        {
-            // Negative so lower `draw_batch_number` has priority in priority queue
-            return -draw_batch_number < -other.draw_batch_number;
-        }
-    };
-
     // Parsing results
     // [node]
     std::unordered_map<std::string, Node> m_result_nodes;

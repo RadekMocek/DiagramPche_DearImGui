@@ -21,6 +21,17 @@ void App::GUICanvasDrawPaths(ImDrawList* draw_list, const ImVec2 origin)
         // Get the "simple" values from path
         const auto color = GetImU32FromColorTuple(path.color);
 
+        // ---- Prepare for possible path label(s) --- --- --- --- --- --- --- --- --- ---
+        // (There may be multiple path labels on the same path,if it has multiple ends,
+        // but their text and background color is always the same)
+        const auto path_label_c_str = path.label_value.c_str();
+        const auto path_label_size = m_font_inconsolata_medium->
+            CalcTextSizeA(font_size_f, FLT_MAX, -1.0f, path_label_c_str);
+        // `label_bg=` can be set with color value to give background to the path label.
+        // Background rectangle size == label size.
+        const auto path_label_bg_imcolor = GetImU32FromColorTuple(path.label_bg_color);
+        // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
         // Prepare the start point
         ImVec2 start(static_cast<float>(path.start.x) * m_canvas_zoom_level,
                      static_cast<float>(path.start.y) * m_canvas_zoom_level);
@@ -181,7 +192,6 @@ void App::GUICanvasDrawPaths(ImDrawList* draw_list, const ImVec2 origin)
                 if (!path.label_value.empty()) {
                     // Path label is set in TOML as [string(1), int(2), int(3), int(4)]
                     // (1) is the label's text, Dear ImGui takes const char ptr
-                    const auto label_c_str = path.label_value.c_str();
                     // (2) is the point of the path on which the label is placed, use modulo to not get out of bounds
                     const auto label_point_curr_idx = path.label_point % result_pathpoints.size();
                     // (3) is the shift of the label position to the next point on the path, get next point using modulo as well
@@ -204,26 +214,21 @@ void App::GUICanvasDrawPaths(ImDrawList* draw_list, const ImVec2 origin)
                         label_position += ImVec2Orthogonalized(direction) * label_shift_orth * m_canvas_zoom_level;
                     }
 
-                    // `label_bg=` can be set with color value to give background to the path label; background rectangle size == label size
-                    const auto label_size = m_font_inconsolata_medium->
-                        CalcTextSizeA(font_size_f, FLT_MAX, -1.0f, label_c_str);
-                    const auto label_bg_imcolor = GetImU32FromColorTuple(path.label_bg_color);
-
                     // Final shift to make it that when (3)==0, label center sits on the path
-                    label_position -= label_size / 2.0f;
+                    label_position -= path_label_size / 2.0f;
 
                     // Draw the background rectangle
-                    draw_list->AddRectFilled(label_position, label_position + label_size, label_bg_imcolor);
+                    draw_list->AddRectFilled(label_position, label_position + path_label_size, path_label_bg_imcolor);
 
                     // Draw the text
                     draw_list->AddText(m_font_inconsolata_medium,
                                        font_size_f,
                                        label_position,
                                        COLOR_BLACK,
-                                       label_c_str);
+                                       path_label_c_str);
 
                     // SVG path label
-                    m_exporter.AddRect(z, label_position.x, label_position.y, label_size.x, label_size.y,
+                    m_exporter.AddRect(z, label_position.x, label_position.y, path_label_size.x, path_label_size.y,
                                        path.label_bg_color, path.label_bg_color, path_number + 1);
                     m_exporter.AddText(z, label_position.x, label_position.y, path.label_value, path_number + 1);
                 }
