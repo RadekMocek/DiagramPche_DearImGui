@@ -111,9 +111,18 @@ void Parser::ParsePath(const toml::table* path_table, Path& curr_path)
                 && value_arr_ptr->at(1).is_integer()
                 && value_arr_ptr->at(2).is_integer()
                 && value_arr_ptr->at(3).is_integer()) {
+                // Path label value
                 curr_path.label_value = value_arr_ptr->at(0).as_string()->value_or("");
-                curr_path.label_point = value_arr_ptr->at(1).as_integer()->value_or(0);
+                // Path label reference point index
+                const auto label_point = value_arr_ptr->at(1).as_integer()->value_or(0);
+                if (label_point < 0) {
+                    ReportError(value_arr_ptr->at(1).source(),
+                                "Path label reference point index shouldn't be a negative number");
+                }
+                curr_path.label_point = label_point;
+                // Path label shift to next point
                 curr_path.label_shift = value_arr_ptr->at(2).as_integer()->value_or(0);
+                // Path label perpendicular shift
                 curr_path.label_shift_orthogonal = value_arr_ptr->at(3).as_integer()->value_or(0);
             }
             else ReportError(value.source(), "An array [string, int, int, int] must follow after 'label='");

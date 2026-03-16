@@ -4,6 +4,9 @@ constexpr auto WELCOME_TOML = R"([variables]
 node_offset = 14
 path_offset = 40
 
+[node.ABCD]
+xy=[100,0]
+
 [node.hello]
 value = "Hello,"
 color = "#ff99b880"
@@ -65,6 +68,6 @@ ends=[
     ["teststh", "bottom", 20,0]
 ]
 shift=[200,100]
-label=["AAA\nBBB\nCCC\nDDD", 1, 250, 0]
+label=["AAA\nBBB\nCCC\nDDD", 6, 0, 0]
 label_bg = "#00FF008F"
 )";
