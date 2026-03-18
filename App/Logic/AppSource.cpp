@@ -28,10 +28,15 @@ void App::ReplaceInMSource(const toml::source_region& source, const std::string&
     }
 }
 
-void App::InsertNodeParameterInMSource(const Node& toolbar_node, const std::string& new_str)
+// This method is called when user changes node color or type via toolbar and the node TOML definition does not contain
+// the line with "color=" or "type=" (so default is used). In this situation, there is nothing to replace, but we need to
+// insert a new line into the source (that explicitly sets the color/type). The `end` parameter tells the function where
+// the last character of the line "[node.some_id]" is for the particular node. The parameter `new_str` is then inserted
+// to that position. It is expected that `new_str` begins with newline character, so the TOML is still valid after insert.
+void App::InsertNodeParameterInMSource(const toml::source_position& end, const std::string& new_str)
 {
     // ReSharper disable once CppTooWideScopeInitStatement
-    const auto node_def_end_idx = GetMSourceIdxFromSourceRegion(toolbar_node.node_source.end);
+    const auto node_def_end_idx = GetMSourceIdxFromSourceRegion(end);
     if (node_def_end_idx.has_value()) {
         m_source.insert(node_def_end_idx.value(), new_str);
     }

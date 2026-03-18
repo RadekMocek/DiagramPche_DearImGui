@@ -24,6 +24,7 @@ void App::GUICanvasDrawPaths(ImDrawList* draw_list, const ImVec2 origin)
         // ---- Prepare for possible path label(s) --- --- --- --- --- --- --- --- --- ---
         // (There may be multiple path labels on the same path,if it has multiple ends,
         // but their text and background color is always the same)
+        const bool do_path_label = !path.label_value.empty();
         const auto path_label_c_str = path.label_value.c_str();
         const auto path_label_size = m_font_inconsolata_medium->
             CalcTextSizeA(font_size_f, FLT_MAX, -1.0f, path_label_c_str);
@@ -189,7 +190,7 @@ void App::GUICanvasDrawPaths(ImDrawList* draw_list, const ImVec2 origin)
                 }
 
                 // Path label (`label=` && `label_bg=`)
-                if (!path.label_value.empty()) {
+                if (do_path_label) {
                     // Path label is set in TOML as [string(1), int(2), int(3), int(4)]
                     // (1) is the label's text, Dear ImGui takes const char ptr
                     // (2) is the point of the path on which the label is placed, use modulo to not get out of bounds

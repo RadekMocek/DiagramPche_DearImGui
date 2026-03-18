@@ -56,14 +56,14 @@ void App::GUICanvas(const float height)
     // .:==================:.
     // Using InvisibleButton() will advance the layout cursor and allows us to use IsItemHovered()/IsItemActive()
     ImGui::InvisibleButton("Canvas", canvas_size, ImGuiButtonFlags_MouseButtonLeft | ImGuiButtonFlags_MouseButtonRight);
-    const bool is_hovered = ImGui::IsItemHovered(); // Hovered (hot item)
-    const bool is_active = ImGui::IsItemActive(); // Held
+    const bool is_canvas_hovered = ImGui::IsItemHovered(); // Hovered (hot item)
+    const bool is_canvas_active = ImGui::IsItemActive(); // Held
 
     // RMB drag to move the canvas ("scrolling")
     // Pan (we use a zero mouse threshold when there's no context menu)
     // You may decide to make that threshold dynamic based on whether the mouse is hovering something etc.
     if (constexpr float mouse_threshold_for_pan = -1.0f;
-        is_active && ImGui::IsMouseDragging(ImGuiMouseButton_Right, mouse_threshold_for_pan)) {
+        is_canvas_active && ImGui::IsMouseDragging(ImGuiMouseButton_Right, mouse_threshold_for_pan)) {
         m_scrolling.x += io.MouseDelta.x;
         m_scrolling.y += io.MouseDelta.y;
         // Change cursor shape
@@ -80,10 +80,10 @@ void App::GUICanvas(const float height)
     auto mouse_pos_in_canvas = io.MousePos - origin;
 
     // Mousewheel to adjust the zoom level
-    if (is_hovered && io.MouseWheel != 0) {
+    if (is_canvas_hovered && io.MouseWheel != 0) {
         const auto old_zoom = m_canvas_zoom_level;
 
-        const int font_size_unclamped = m_canvas_font_size + io.MouseWheel * CANVAS_FONT_SIZE_STEP;
+        const int font_size_unclamped = m_canvas_font_size + io.MouseWheel * CANVAS_FONT_SIZE_STEP; // NOLINT(*-narrowing-conversions)
         ChangeCanvasFontSizeAndZoom(std::clamp(font_size_unclamped, CANVAS_FONT_SIZE_MIN, CANVAS_FONT_SIZE_MAX));
         zoom_level_slider_value = (m_canvas_font_size - CANVAS_FONT_SIZE_MIN) / CANVAS_FONT_SIZE_STEP;
 
@@ -185,59 +185,46 @@ void App::GUICanvas(const float height)
     draw_list->PopClipRect();
 
     // == Clicking on nodes in canvas ==
-    if (is_hovered) {
-        static bool is_some_node_hovered;
-        static std::string hovered_node_key;
+    if (is_canvas_hovered) {
         static int hovered_node_z_mul;
-
-        is_some_node_hovered = false;
+        // We need to check if some node is hovered. If there are multiple nodes under the cursor,
+        // we should choose the one with biggest `z_mul` (bigger z_mul == "closer" to the cursor).
         hovered_node_z_mul = -1;
+        m_selected_or_hovered_canvas_node_key = std::nullopt;
 
         for (const auto& [key, value] : m_canvas_nodes) {
             if (value.z_mul > hovered_node_z_mul && value.IsPointInsideIncl(mouse_pos_in_canvas)) {
-                is_some_node_hovered = true;
-                hovered_node_key = key;
+                //is_some_node_hovered = true;
                 hovered_node_z_mul = value.z_mul;
+                m_selected_or_hovered_canvas_node_key = key;
             }
         }
-        if (is_some_node_hovered) {
-            // Tooltip with selected node id
-            //ImGui::SetTooltip("%s", hovered_node_key.c_str());
-
-            // Left click on a hovered node
-            if (ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
-                const auto& hovered_node = m_canvas_nodes[hovered_node_key];
-                // Ctrl + Leftclick to show node's definition in the text editor
+        // If there is some node under the cursor, then:
+        // * LMB w/o modifiers selects the node so it can be modified via the toolbar
+        // * Ctrl+LMB to jump to node's definition in the text editor
+        if (ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
+            // Clicked on node
+            if (m_selected_or_hovered_canvas_node_key.has_value()) {
+                // Ctrl+LMB
                 if (io.KeyCtrl) {
                     if (m_do_use_alt_editor) {
+                        const auto& hovered_node = m_canvas_nodes[m_selected_or_hovered_canvas_node_key.value()];
                         m_alt_editor.SetCursorPosition({hovered_node.def_line_num, 0});
                     }
+                    // Vanilla textedit cannot move cursor, at least not without digging in imgui_internal.h, so show error instead
                     else {
                         ShowErrorModal("Vanilla text editor does not support jumping to node's definition.");
                     }
                 }
-                // Leftclick w/o modifiers to select the node
+                // LMB
                 else {
-                    m_selected_or_hovered_canvas_node_key = hovered_node_key;
                     m_is_canvas_node_selected = true;
+                    m_selected_canvas_node_key = m_selected_or_hovered_canvas_node_key.value();
                 }
             }
-
-            if (!m_is_canvas_node_selected) {
-                m_selected_or_hovered_canvas_node_key = hovered_node_key;
-            }
-        }
-        else {
-            // No node hovered
-            if (m_is_canvas_node_selected) {
-                if (ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
-                    // Left click to an empty space when some node is selected
-                    m_selected_or_hovered_canvas_node_key = std::nullopt;
-                    m_is_canvas_node_selected = false;
-                }
-            }
+            // Clicked on empty space in canvas
             else {
-                m_selected_or_hovered_canvas_node_key = std::nullopt;
+                m_is_canvas_node_selected = false;
             }
         }
     }

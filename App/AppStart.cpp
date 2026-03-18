@@ -50,10 +50,6 @@ void App::Start()
     // Style
     m_style_do_force_light_canvas = true;
 
-    //???[1]: this does not work as expected
-    DEFAULT_TOOLBAR_NODE.color = {114, 144, 154, 200};
-    DEFAULT_TOOLBAR_NODE.type = NTYPE_RECTANGLE;
-
     // Temporary
     //m_do_show_window_benchmark = true;
 }

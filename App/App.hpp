@@ -107,8 +107,11 @@ private:
     // Canvas interaction
     bool m_do_show_toolbar{};
     bool m_do_show_secondary_canvas_toolbar{};
+    // - mouse hover/click nodes in canvas
     std::optional<std::string> m_selected_or_hovered_canvas_node_key = std::nullopt;
     bool m_is_canvas_node_selected = false;
+    std::string m_selected_canvas_node_key{};
+    // - drag n drop new nodes onto a canvas
     bool m_is_dragndropping_node = false;
     NodeType m_dragndropping_node_type{};
 
@@ -212,7 +215,7 @@ private:
     // Source editing from canvas interaction
     std::optional<size_t> GetMSourceIdxFromSourceRegion(const toml::source_position& position);
     void ReplaceInMSource(const toml::source_region& source, const std::string& new_str);
-    void InsertNodeParameterInMSource(const Node& toolbar_node, const std::string& new_str);
+    void InsertNodeParameterInMSource(const toml::source_position& end, const std::string& new_str);
 
     // Style
     void ChangeAppearanceTheme(AppearanceTheme theme);
@@ -250,7 +253,4 @@ private:
     {
         glfwSetWindowTitle(m_window, title);
     }
-
-    //???[1]: this does not work as expected
-    Node DEFAULT_TOOLBAR_NODE;
 };

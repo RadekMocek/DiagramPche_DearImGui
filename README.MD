@@ -28,17 +28,6 @@ This is part of a IMGUI paradigm research, [go back to main repo](https://github
     * [x] _Save → Cancel_ should behave the same as unsavedwarn's _Cancel_
   * [x] Code editor syntax highlight
   * [ ] Klávesové zkratky (<kbd>Alt</kbd> pro navigaci v MainMenuBar, <kbd>Ctrl</kbd>+<kbd>S</kbd> pro uložení, <kbd>Ctrl</kbd>+<kbd>+</kbd> zoom atd.)
-* Pipeline: TOML parse → Draw to canvas / Render to SVG:
-  * [x] Remove `(expecting [X, Y])` from error message (does not make sense in wider context)
-  * [x] `[node].type = "text"`
-  * [x] `[node].type = "rectangle"`
-  * [x] `[node].type = "ellipse"`
-  * [x] `[node].type = "diamond"`
-  * [x] `[node].color_border`, don't forget to generalize the error message
-  * [x] `[node].label_shift`, allow for variables, don't forget about zoom level
-  * [x] Allow setting individual start/end path shift, keep backwards compatible
-  * [x] `[[path]].label`
-  * [x] `[[path]].label_bg`
 * Canvas features:
   * [x] Canvas zooming: anchor under mouse
   * [x] Change the cursor type while dragging the canvas
@@ -50,7 +39,7 @@ This is part of a IMGUI paradigm research, [go back to main repo](https://github
   * [x] Duplicate settings from app: view→grid/toolbar/toolbar2, text editor font size (so all things that can be set and saved are at one place)
   * [ ] Remember settings
 * Benchmark window:
-  * [ ] Do?
+  * [ ] Do
 * Icons:
   * [x] Main menu bar → File items
   * [x] Toolbar → Drop-down list with node types

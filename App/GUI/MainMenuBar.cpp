@@ -94,6 +94,10 @@ void App::GUIMainMenuBar()
             if (ImGui::MenuItem("Z-axis, out-of-order")) {
                 HandleOpenExample("./Resource/Example/Debug/Z-axis.toml");
             }
+            // . Path label with bg .
+            if (ImGui::MenuItem("Path label background")) {
+                HandleOpenExample("./Resource/Example/Debug/PathLabel.toml");
+            }
             // .::.
             ImGui::EndMenu();
         }
