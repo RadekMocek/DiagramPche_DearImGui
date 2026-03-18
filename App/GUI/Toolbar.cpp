@@ -162,6 +162,7 @@ void App::GUIToolbar(const float textedit_width)
     // .: Node ID label :.
     // .:===============:.
     VerticalSeparator();
+    std::ranges::replace(node_key_label_value, '\n', ' ');
     ImGui::Text("ID: %s", node_key_label_value.c_str());
 
     // --- --- --- --- ---
