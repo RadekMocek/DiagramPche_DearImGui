@@ -185,6 +185,11 @@ void App::GUICanvas(const float height)
     draw_list->PopClipRect();
 
     // == Clicking on nodes in canvas ==
+    // If selected node is removed from the TOML source, unselect it
+    if (m_is_canvas_node_selected && !m_parser.m_result_nodes.contains(m_selected_canvas_node_key)) {
+        m_is_canvas_node_selected = false;
+    }
+    // Check for nodes under the cursor
     if (is_canvas_hovered) {
         static int hovered_node_z_mul;
         // We need to check if some node is hovered. If there are multiple nodes under the cursor,

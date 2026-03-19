@@ -56,7 +56,7 @@ private:
     static constexpr auto COLOR_BLACK = IM_COL32(0, 0, 0, 255);
     const char* gl_info_renderer{};
 
-    // Helper structs / enums =
+    // = Helper structs / enums =
     enum ActionAfterExport
     {
         ActionAfterExport_DoNothing, ActionAfterExport_OpenFolder, ActionAfterExport_OpenFile
