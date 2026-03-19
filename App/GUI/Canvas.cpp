@@ -151,39 +151,6 @@ void App::GUICanvas(const float height)
     // .: User AABR interaction :.
     // .:=======================:.
 
-    // == Drag n drop new node logic ==
-    if (m_is_dragndropping_node) {
-        // Prepare for the ghost node
-        const auto node_padding = NODE_BORDER_OFFSET_BASE * m_canvas_zoom_level;
-
-        const auto ghost_label = std::format("node_{}", m_canvas_nodes.size());
-        const auto ghost_label_c_str = ghost_label.c_str();
-
-        const auto ghost_label_size = m_font_inconsolata_medium->
-            CalcTextSizeA(static_cast<float>(m_canvas_font_size), FLT_MAX, -1.0f, ghost_label_c_str);
-
-        const ImVec2 ghost_padding(ghost_label_size.x / 2 + node_padding,
-                                   ghost_label_size.y / 2 + node_padding);
-        // Draw the "ghost node"
-        GUICanvasDrawGhostNode(draw_list, io.MousePos, node_padding, ghost_padding, ghost_label_c_str);
-        // Check if LMB released inside canvas (To check if cursor is inside the canvas part of the app window, we ignore scrolling)
-        if (const auto mouse_pos_in_canvas_frame = io.MousePos - canvas_top_left;
-            !ImGui::IsMouseDown(ImGuiMouseButton_Left)) {
-            m_is_dragndropping_node = false;
-            if (mouse_pos_in_canvas_frame >= ImVec2(0, 0) && mouse_pos_in_canvas_frame <= canvas_size) {
-                // Add new node to canvas (TOML values are zoom level independent so we divide by that)
-                const auto node_x = static_cast<int>((mouse_pos_in_canvas.x - ghost_padding.x) / m_canvas_zoom_level);
-                const auto node_y = static_cast<int>((mouse_pos_in_canvas.y - ghost_padding.y) / m_canvas_zoom_level);
-                m_source += std::format("\n[node.{}]\ntype = \"{}\"\nxy = [{}, {}]\n",
-                                        ghost_label, GetStringFromNodeType(m_dragndropping_node_type), node_x, node_y);
-                OnMSourceChanged();
-            }
-        }
-    }
-
-    // Canvas drawing complete
-    draw_list->PopClipRect();
-
     // == Clicking on nodes in canvas ==
     // If selected node is removed from the TOML source, unselect it
     if (m_is_canvas_node_selected && !m_parser.m_result_nodes.contains(m_selected_canvas_node_key)) {
@@ -233,6 +200,45 @@ void App::GUICanvas(const float height)
             }
         }
     }
+
+    // == Drag n drop new node logic ==
+    if (m_is_dragndropping_node) {
+        // Prepare for the ghost node drawing
+        const auto node_padding = NODE_BORDER_OFFSET_BASE * m_canvas_zoom_level;
+
+        const auto ghost_label = std::format("node_{}", m_canvas_nodes.size());
+        const auto ghost_label_c_str = ghost_label.c_str();
+
+        const auto ghost_label_size = m_font_inconsolata_medium->
+            CalcTextSizeA(static_cast<float>(m_canvas_font_size), FLT_MAX, -1.0f, ghost_label_c_str);
+
+        const ImVec2 ghost_padding(ghost_label_size.x / 2 + node_padding,
+                                   ghost_label_size.y / 2 + node_padding);
+        // Draw the "ghost node"
+        GUICanvasDrawGhostNode(draw_list, io.MousePos, node_padding, ghost_padding, ghost_label_c_str);
+        // Check if LMB released inside canvas (To check if cursor is inside the canvas part of the app window, we ignore scrolling)
+        if (const auto mouse_pos_in_canvas_frame = io.MousePos - canvas_top_left;
+            !ImGui::IsMouseDown(ImGuiMouseButton_Left)) {
+            m_is_dragndropping_node = false;
+            if (mouse_pos_in_canvas_frame >= ImVec2(0, 0) && mouse_pos_in_canvas_frame <= canvas_size) {
+                // Add new node to canvas (TOML values are zoom level independent so we divide by that)
+                const auto node_x = static_cast<int>((mouse_pos_in_canvas.x - ghost_padding.x) / m_canvas_zoom_level);
+                const auto node_y = static_cast<int>((mouse_pos_in_canvas.y - ghost_padding.y) / m_canvas_zoom_level);
+                m_source += std::format("\n[node.{}]\ntype = \"{}\"\nxy = [{}, {}]\n",
+                                        ghost_label, GetStringFromNodeType(m_dragndropping_node_type), node_x, node_y);
+                OnMSourceChanged();
+                // Make the new node selected
+                m_is_canvas_node_selected = true;
+                m_selected_canvas_node_key = ghost_label;
+                if (m_do_use_alt_editor) {
+                    m_alt_editor.SetCursorPosition({m_alt_editor.GetTotalLines() - 4, 0});
+                }
+            }
+        }
+    }
+
+    // Canvas drawing complete
+    draw_list->PopClipRect();
 
     // .: Secondary canvas toolbar :.
     // .:==========================:.
