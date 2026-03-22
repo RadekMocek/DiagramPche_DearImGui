@@ -67,7 +67,7 @@ inline void ResetButtonColors()
     ImGui::PopStyleColor(3);
 }
 
-//
+// === === === === === === === === === === === === === === === === === === === === === ===
 
 inline void BenchmarkChangeColorImpl(unsigned char& r, unsigned char& g, unsigned char& b)
 {

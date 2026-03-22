@@ -4,42 +4,51 @@
 #include "../Helper/Color.hpp"
 #include "../Helper/GUILayout.hpp"
 
-// (In this benchmark, nodes are being added to the canvas. (They are added as pairs connected by arrow.))
-// After this passes, add new batch of nodes.
-constexpr auto TIME_INTERVAL = 0.3f;
+// (In this benchmark, nodes are being added to the canvas (they are added as pairs connected by arrow))
+// What percentage of the window's width will the text editor occupy during the benchmark
+constexpr auto TEXTEDIT_WIDTH_RATIO = 0.28f;
+// After this passes, add new batch of nodes
+constexpr auto TIME_INTERVAL = 0.3f; // s
 // How many nodes to add in a batch?
 constexpr auto N_NODES_IN_INTERVAL = 35;
-// Add this to each node x coordinate.
+// Add this to each node x coordinate
 constexpr auto X_COR_ADDITION = 12;
-// How many Z layers we use? Each node has Z one greater than the previous, moduled by this.
+// How many Z layers we use? Each node has Z one greater than the previous, moduled by this
 constexpr auto Z_MODULO = N_DL_USER_CHANNELS;
 // How many nodes on a row we want?
 constexpr auto MAX_NODES_ON_ROW = 220;
-// When we reach `MAX_NODES_ON_ROW`, we go on a new row, this is the offset of the new row.
+// When we reach `MAX_NODES_ON_ROW`, we go on a new row, this is the offset of the new row
 constexpr auto Y_COR_ADDITION = 100;
-// How many rows do we want? When we have this much of rows, benchamrk ends.
+// How many rows do we want? When we have this much of rows, benchmark ends
 constexpr auto MAX_ROWS = 21;
-// Used for the ending condition.
+// Used for the ending condition
 constexpr auto MAX_Y_COR = Y_COR_ADDITION * MAX_ROWS;
-// (While benchmarking, we also scroll and zoom, so we have some movement.)
-// Amount of scrolling right after each node batch added.
+// (While benchmarking, we also scroll and zoom, so we have some movement)
+// Amount of scrolling right after each node batch added
 constexpr auto AUTO_SCROLL_STEP_X = 10;
-// When to wrap to the beggining with the scrolling.
+// When to wrap to the beggining with the scrolling
 constexpr auto AUTO_SCROLL_MODULO_X = 600;
-// How many zoom levels we iterate, this corresponds to the slider and MW behavior.
+// How many zoom levels we iterate, this corresponds to the slider and MW behavior
 constexpr auto ZOOM_LEVEL_MODULO = 6;
 
+// This is called when user presses the 'Start benchmark' button
 void App::BenchmarkStart()
 {
-    // This is called when user presses the 'Start benchmark' button.
-    HandleRegularNew();
-    ResetCanvasScrollingAndZoom();
+    // Update state
     m_is_benchmark_running = true;
     m_is_benchmark_first_iter = true;
-    m_body_split_ratio = 0.28f;
+
+    // Clear the source and reset the view
+    HandleRegularNew();
+    ResetCanvasScrollingAndZoom();
+
+    // Change the ratio between textedit and canvas to make canvas bigger (more things to see)
+    m_body_split_ratio = TEXTEDIT_WIDTH_RATIO;
 
     // Reserve string space
     m_source.reserve(1000000);
+
+    std::cout << "Benchmark started.\n";
 }
 
 void App::BenchmarkUpdate()
@@ -60,7 +69,7 @@ void App::BenchmarkUpdate()
             m_is_benchmark_first_iter = false;
             // Initialize stats
             m_bench_stats_total_nodes = 0;
-            // Initialize helper variables.
+            // Initialize helper variables
             time_counter = 0;
             node_counter_total_pairs = 0;
             node_counter_row_pairs = 0;
@@ -71,18 +80,19 @@ void App::BenchmarkUpdate()
             color_b = 255;
             zoom_level = 0;
         }
-        // Get delta time from ImGui.
+        // Get delta time from Dear ImGui
         const ImGuiIO& io = ImGui::GetIO();
         time_counter += io.DeltaTime;
 
+        // Do the next batch only when certain amount of time has passed
         if (time_counter > TIME_INTERVAL) {
             time_counter -= TIME_INTERVAL;
 
             // Zoom frenzy
             zoom_level = (zoom_level + 1) % ZOOM_LEVEL_MODULO; // 0,1,2,3,4,5
-            ChangeCanvasFontSizeAndZoom(6 + 4 * zoom_level);
+            ChangeCanvasFontSizeAndZoomFromSliderValue(zoom_level);
 
-            // Add a new batch of nodes.
+            // Add a new batch of nodes
             for (int i = 0; i < N_NODES_IN_INTERVAL; i++) {
                 const auto z = node_counter_row_pairs % Z_MODULO;
                 m_source += std::format(
@@ -93,6 +103,7 @@ void App::BenchmarkUpdate()
                     node_counter_total_pairs, node_counter_total_pairs, z,
                     node_counter_total_pairs, node_counter_total_pairs
                 );
+                // Update values for next iteration
                 node_counter_total_pairs++;
                 node_counter_row_pairs++;
                 x_cor += X_COR_ADDITION;
@@ -106,7 +117,7 @@ void App::BenchmarkUpdate()
                 m_scrolling.x = 0;
             }
 
-            // Don't use `OnMSourceChanged` as it's marking the document as dirty (no need for that).
+            // Don't use `OnMSourceChanged` as it's marking the document as dirty (no need for that)
             if (m_do_use_alt_editor) m_alt_editor.SetText(m_source);
 
             // Jump to new row if needed
@@ -116,18 +127,18 @@ void App::BenchmarkUpdate()
                 y_cor += Y_COR_ADDITION;
             }
 
-            // End the benchmark if needed
-            if (y_cor > MAX_Y_COR) {
-                std::cout << "Benchmark done " << m_source.size() << "\n";
-                m_is_benchmark_running = false;
-            }
-
             // Stats
             m_bench_stats_total_nodes += 2 * N_NODES_IN_INTERVAL;
             BenchmarkStatsUpdate();
 
             //TODO log to CSV?
             //if (zoom_level == 1) {/*log stats*/}
+
+            // End the benchmark check
+            if (y_cor > MAX_Y_COR) {
+                m_is_benchmark_running = false;
+                std::cout << "Benchmark done.\n";
+            }
         }
     }
 }
@@ -147,11 +158,12 @@ void App::BenchmarkGUIUpdate()
     ImGui::Dummy(TINY_SKIP);
     if (ImGui::Button("Stop")) {
         m_is_benchmark_running = false;
+        std::cout << "Benchmark stopped.\n";
     }
 }
 
 void App::BenchmarkStatsUpdate()
 {
-    constexpr auto MIBI = 1024.0f * 1024.0f;
-    m_bench_stats_mem_usage_mib = getCurrentRSS() / MIBI;
+    constexpr auto MIBI = 1024.0 * 1024.0;
+    m_bench_stats_mem_usage_mib = static_cast<double>(getCurrentRSS()) / MIBI;
 }

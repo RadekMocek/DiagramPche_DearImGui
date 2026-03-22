@@ -148,7 +148,7 @@ private:
     bool m_is_benchmark_running = false;
     bool m_is_benchmark_first_iter = false;
     int m_bench_stats_total_nodes{};
-    float m_bench_stats_mem_usage_mib{};
+    double m_bench_stats_mem_usage_mib{};
 
     // = Functions =
     // Boilerplate
@@ -168,6 +168,7 @@ private:
     void GUICanvasDrawPaths(ImDrawList* draw_list, ImVec2 origin);
     void ResetCanvasScrollingAndZoom();
     void ChangeCanvasFontSizeAndZoom(int new_canvas_font_size);
+    void ChangeCanvasFontSizeAndZoomFromSliderValue(int value);
 
     // Ghost node == semi-transparent node, used for drag'n'drop functionality, shows where the node will be placed if user releases LMB on canvas
     void GUICanvasDrawGhostNode(ImDrawList* draw_list,

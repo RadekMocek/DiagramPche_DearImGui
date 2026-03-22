@@ -9,46 +9,10 @@ This is part of a IMGUI paradigm research, [go back to main repo](https://github
 
 ## TODO
 
-* General:
-  * [x] View → Jump to canvas origin
-  * [x] View → Toolbar
-    * [x] Source: Allow changing font size of the text editor
-    * [x] Source: Show cursor position in the text editor
-    * [x] Canvas: Change color node with color picker
-    * [x] Canvas: Change node's type via Drop-down list
-  * [x] View → Secondary canvas toolbar
-    * [x] Drag'n'Drop new node, button for each node type
-    * [x] Zoom slider, right aligned
-  * Saving/loading:
-    * [x] New, Open, Save, Save as
-    * [x] Confirm unsaved exit (OS close button, alt+f4, mainmenubar option)
-    * [x] Confirm unsaved new
-    * [x] Confirm unsaved open, including loading a debug diagram or an example
-    * [x] Change window name according to opened document (incl. star for unsaved)
-    * [x] _Save → Cancel_ should behave the same as unsavedwarn's _Cancel_
-  * [x] Code editor syntax highlight
-  * [ ] Klávesové zkratky (<kbd>Alt</kbd> pro navigaci v MainMenuBar, <kbd>Ctrl</kbd>+<kbd>S</kbd> pro uložení, <kbd>Ctrl</kbd>+<kbd>+</kbd> zoom atd.)
-* Canvas features:
-  * [x] Canvas zooming: anchor under mouse
-  * [x] Change the cursor type while dragging the canvas
-  * [x] Ctrl+Click to jump to node definition in text editor
-* Settings window:
-  * [x] Switch between vanilla and 3rd party text editor
-  * [x] Appearance: color theme
-  * [x] Option for forcing light canvas regardless of color theme
-  * [x] Duplicate settings from app: view→grid/toolbar/toolbar2, text editor font size (so all things that can be set and saved are at one place)
-  * [ ] Remember settings
+* [ ] Do not draw the ghost node if in this position releasing LMB won't place it? (this happens when the ghost is at the edge of the canvas but cursor is already outside of it)
 * Benchmark window:
   * [ ] Do
-* Icons:
-  * [x] Main menu bar → File items
-  * [x] Toolbar → Drop-down list with node types
-  * [x] Secondary canvas toolbar → Drag'n'Drop buttons
-  * [x] UnsavedWarn modal
-* TOML Parser:
-  * [x] Refactor TOML parsing: do not std::move into priority queue, use pq just for determining draw order and nothing more
 * Dear ImGui specific:
-  * [ ] Reorder elements in structs?
   * [ ] Benchmark without freetype?
 
 ## Building locally

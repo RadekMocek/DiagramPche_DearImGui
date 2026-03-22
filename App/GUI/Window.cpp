@@ -26,7 +26,9 @@ void App::GUIWinPreferences()
             }
             ImGui::Dummy(SMALL_SKIP);
             ImGui::SeparatorText("Canvas color theme");
+            ImGui::BeginDisabled(color_theme_int == 0);
             ImGui::Checkbox("Keep canvas light", &m_style_do_force_light_canvas);
+            ImGui::EndDisabled();
             // --- --- --- --- ---
             ImGui::EndTabItem();
         }

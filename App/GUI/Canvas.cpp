@@ -276,7 +276,7 @@ void App::GUICanvas(const float height)
         const auto slider_label = std::format("Zoom level: {:.2f}", m_canvas_zoom_level);
         if (ImGui::SliderInt("##ZoomLevel", &zoom_level_slider_value, SLIDER_MIN, SLIDER_MAX,
                              slider_label.c_str(), ImGuiSliderFlags_NoInput)) {
-            ChangeCanvasFontSizeAndZoom(CANVAS_FONT_SIZE_MIN + CANVAS_FONT_SIZE_STEP * zoom_level_slider_value);
+            ChangeCanvasFontSizeAndZoomFromSliderValue(zoom_level_slider_value);
         }
         ImGui::PopItemWidth();
     }
@@ -288,4 +288,9 @@ void App::ChangeCanvasFontSizeAndZoom(const int new_canvas_font_size)
 {
     m_canvas_font_size = new_canvas_font_size;
     m_canvas_zoom_level = static_cast<float>(m_canvas_font_size) / static_cast<float>(CANVAS_FONT_SIZE_BASE);
+}
+
+void App::ChangeCanvasFontSizeAndZoomFromSliderValue(const int value)
+{
+    ChangeCanvasFontSizeAndZoom(CANVAS_FONT_SIZE_MIN + CANVAS_FONT_SIZE_STEP * value);
 }

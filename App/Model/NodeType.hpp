@@ -1,12 +1,15 @@
 #pragma once
 
+// ReSharper disable once CppUnusedIncludeDirective
 #include "../../Dependency/IconsMaterialDesignIcons.h"
 
 #include <optional>
 #include <string>
 
-constexpr auto N_NTYPES = 4; // Not ideal, must be updated adding/removing enum value
+// Used to for-loop the num values. Not ideal, must be updated adding/removing enum value.
+constexpr auto N_NTYPES = 4;
 
+// These types of node are available
 enum NodeType
 {
     NTYPE_RECTANGLE,
@@ -15,6 +18,7 @@ enum NodeType
     NTYPE_TEXT,
 };
 
+// When parsing TOML, the value of "type=" parameter is converted to this enum
 constexpr std::optional<NodeType> GetNodeTypeFromString(const std::string& type_str)
 {
     if (type_str.empty() || type_str == "rectangle") return NTYPE_RECTANGLE;
@@ -24,9 +28,11 @@ constexpr std::optional<NodeType> GetNodeTypeFromString(const std::string& type_
     return std::nullopt;
 }
 
+// Show this error if user provides an unknown type
 const std::string NODETYPE_ERROR_MESSAGE =
     "Allowed NodeType values are: 'text', 'rectangle', 'ellipse', 'diamond'";
 
+// Used for icon buttons
 constexpr const char* GetIconFromNodeType(const NodeType type)
 {
     switch (type) {
@@ -43,6 +49,8 @@ constexpr const char* GetIconFromNodeType(const NodeType type)
     }
 }
 
+// Used when adding new node or editing node type via ComboBox (to know how to set "type=" value).
+// Also used in tooltips for buttons to add new node.
 constexpr const char* GetStringFromNodeType(const NodeType type)
 {
     switch (type) {
