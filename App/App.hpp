@@ -56,7 +56,7 @@ private:
     static constexpr auto COLOR_BLACK = IM_COL32(0, 0, 0, 255);
     const char* gl_info_renderer{};
 
-    // = Helper structs / enums =
+    // = Helper enums =
     enum ActionAfterExport
     {
         ActionAfterExport_DoNothing, ActionAfterExport_OpenFolder, ActionAfterExport_OpenFile
@@ -75,6 +75,13 @@ private:
     {
         AppearanceTheme_Light, AppearanceTheme_Dark, AppearanceTheme_Legacy
     };
+
+    enum BenchmarkType
+    {
+        BENCHMARK_LIGHT, BENCHMARK_HEAVY, BENCHMARK_GRADUAL
+    };
+
+    static constexpr std::array BENCHMARK_TYPE_NAMES = {"Light", "Heavy", "Gradual"};
 
     // = Members =
     GLFWwindow* m_window{};
@@ -146,6 +153,7 @@ private:
 
     // Benchmark
     bool m_is_benchmark_running = false;
+    BenchmarkType m_benchmark_type{};
     bool m_is_benchmark_first_iter = false;
     int m_bench_stats_total_nodes{};
     double m_bench_stats_mem_usage_mib{};
@@ -222,7 +230,7 @@ private:
     void ChangeAppearanceTheme(AppearanceTheme theme);
 
     // Benchmark
-    void BenchmarkStart();
+    void BenchmarkStart(BenchmarkType type);
     void BenchmarkUpdate();
     void BenchmarkGUIUpdate();
     void BenchmarkStatsUpdate();

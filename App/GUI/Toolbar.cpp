@@ -134,7 +134,7 @@ void App::GUIToolbar(const float textedit_width)
     // .: Type select :.
     // .:=============:.
     // This must correspond to `enum NodeType` values
-    const char* node_types[] = {
+    constexpr std::array node_types = {
         ICON_MDI_RECTANGLE_OUTLINE" Rectangle",
         ICON_MDI_ELLIPSE_OUTLINE" Ellipse  ",
         ICON_MDI_RHOMBUS_OUTLINE" Diamond  ",
@@ -145,8 +145,7 @@ void App::GUIToolbar(const float textedit_width)
     ImGui::Text("Type:");
     ImGui::SameLine();
 
-    if (GUICombo("##ComboNodeShape", node_types, IM_COUNTOF(node_types), node_type_selected_idx,
-                 ImGuiComboFlags_WidthFitPreview)) {
+    if (GUICombo("##ComboNodeShape", node_types, node_type_selected_idx, ImGuiComboFlags_WidthFitPreview)) {
         auto type_str = GetStringFromNodeType(static_cast<NodeType>(node_type_selected_idx));
         if (node_type_source.has_value()) {
             // Change type parameter's value in node's definition

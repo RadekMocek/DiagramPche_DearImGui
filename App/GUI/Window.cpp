@@ -1,5 +1,6 @@
 #include "../App.hpp"
 #include "../Config.hpp"
+#include "../Helper/GUICombo.hpp"
 #include "../Helper/GUILayout.hpp"
 
 void App::GUIWinPreferences()
@@ -83,16 +84,18 @@ void App::GUIWinBenchmark()
     ImGui::Begin("Benchmark", &m_do_show_window_benchmark, flags);
     // --- --- --- ---
     if (!m_is_benchmark_running) {
-        ImGui::SeparatorText("BEFORE YOU START:");
-        ImGui::BulletText("Epilepsy warning?");
-        ImGui::BulletText("Maximize the app for comparable results?");
-        ImGui::BulletText(
-            "3rd party text editor uses std::regex for syntax highlight,"
-            "\nswitching to vanilla editor may affect performance:"
-        );
+        ImGui::Text("Syntax highlight may affect performance:");
         WidgetTextEditorPreferredCombo();
+        ImGui::Dummy(TINY_SKIP);
+
+        ImGui::Text("Choose one of the three benchmarks:");
+        static int item_selected_idx = 0;
+        GUICombo("##BenchmarkTypeCombo", BENCHMARK_TYPE_NAMES, item_selected_idx);
+
+        ImGui::Dummy(TINY_SKIP);
         ImGui::Separator();
         ImGui::Dummy(TINY_SKIP);
+
         if (m_is_source_dirty) {
             ImGui::PushStyleColor(ImGuiCol_Text, COLOR_ERROR);
             ImGui::Text("You have unsaved changes, save your work before running the benchmark.");
@@ -101,7 +104,7 @@ void App::GUIWinBenchmark()
         }
         else {
             if (ImGui::Button("Start benchmark")) {
-                BenchmarkStart();
+                BenchmarkStart(static_cast<BenchmarkType>(item_selected_idx));
             }
         }
     }

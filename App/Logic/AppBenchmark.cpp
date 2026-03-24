@@ -32,10 +32,11 @@ constexpr auto AUTO_SCROLL_MODULO_X = 600;
 constexpr auto ZOOM_LEVEL_MODULO = 6;
 
 // This is called when user presses the 'Start benchmark' button
-void App::BenchmarkStart()
+void App::BenchmarkStart(const BenchmarkType type)
 {
     // Update state
     m_is_benchmark_running = true;
+    m_benchmark_type = type;
     m_is_benchmark_first_iter = true;
 
     // Clear the source and reset the view
@@ -46,9 +47,11 @@ void App::BenchmarkStart()
     m_body_split_ratio = TEXTEDIT_WIDTH_RATIO;
 
     // Reserve string space
-    m_source.reserve(1000000);
+    if (type == BENCHMARK_GRADUAL) {
+        m_source.reserve(1000000);
+    }
 
-    std::cout << "Benchmark started.\n";
+    std::cout << "Benchmark type=" << type << " started.\n";
 }
 
 void App::BenchmarkUpdate()

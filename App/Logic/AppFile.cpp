@@ -75,7 +75,7 @@ void App::LoadSourceFromFile(const char* filename, const bool is_example)
 bool App::SaveSourceToFile(const char* filename) const
 {
     /*if (m_do_use_alt_editor) {
-        m_source = m_alt_editor.GetText(); // This gets called every frame so shouldn't be needed to call here as well
+        m_source = m_alt_editor.GetText(); // This gets called every frame so no need to call it here as well
     }*/
     if (std::ofstream file(filename); file.is_open()) {
         file << m_source;
