@@ -51,7 +51,12 @@ if (MSVC)
     set_target_properties("${CMAKE_PROJECT_NAME}" PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup") # No console
 endif ()
 
-target_link_libraries("${BINARY_NAME}"
+if (WIN32)
+    target_link_libraries("${BINARY_NAME}" PRIVATE pdh)
+    target_compile_definitions("${CMAKE_PROJECT_NAME}" PUBLIC NOMINMAX)
+endif ()
+
+target_link_libraries("${BINARY_NAME}" PRIVATE
         glfw
         glad
         imgui

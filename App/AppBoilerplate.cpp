@@ -5,6 +5,7 @@
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "../Dependency/stb_image.h"
+#include "Helper/CPU.hpp"
 
 #ifdef _WIN32
 #include <windows.h>
@@ -39,6 +40,8 @@ bool App::Init()
         std::cerr << "CoInitializeEx != S_OK\n";
     }
 #endif
+
+    CPUStats::Init();
 
     std::cout << "RAM OK\n";
     std::cout << "ROM OK\n";

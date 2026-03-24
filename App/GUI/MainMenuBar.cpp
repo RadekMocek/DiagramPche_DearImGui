@@ -90,13 +90,16 @@ void App::GUIMainMenuBar()
     if (ImGui::BeginMenu("Debug")) {
         // .: Render tests :.
         if (ImGui::BeginMenu("Render tests")) {
-            // . Z-axis, out-of-order .
-            if (ImGui::MenuItem("Z-axis, out-of-order")) {
-                HandleOpenExample("./Resource/Example/Debug/Z-axis.toml");
-            }
-            // . Path label with bg .
-            if (ImGui::MenuItem("Path label background")) {
-                HandleOpenExample("./Resource/Example/Debug/PathLabel.toml");
+            constexpr std::array<std::pair<const char*, const char*>, 4> items = {{
+                {"Z-axis, out-of-order", "./Resource/Example/Debug/Z-axis.toml"},
+                {"Path label background", "./Resource/Example/Debug/PathLabel.toml"},
+                {"Benchmark light", BENCHMARK_LIGHT_PATH},
+                {"Benchmark heavy", BENCHMARK_HEAVY_PATH},
+            }};
+            for (const auto& [gui_name, path] : items) {
+                if (ImGui::MenuItem(gui_name)) {
+                    HandleOpenExample(path);
+                }
             }
             // .::.
             ImGui::EndMenu();

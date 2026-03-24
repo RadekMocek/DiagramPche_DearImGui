@@ -82,6 +82,8 @@ private:
     };
 
     static constexpr std::array BENCHMARK_TYPE_NAMES = {"Light", "Heavy", "Gradual"};
+    static constexpr auto BENCHMARK_LIGHT_PATH = "./Resource/Example/Debug/BenchmarkLight.toml";
+    static constexpr auto BENCHMARK_HEAVY_PATH = "./Resource/Example/Debug/BenchmarkHeavy.toml";
 
     // = Members =
     GLFWwindow* m_window{};
@@ -157,6 +159,7 @@ private:
     bool m_is_benchmark_first_iter = false;
     int m_bench_stats_total_nodes{};
     double m_bench_stats_mem_usage_mib{};
+    float m_bench_stats_cpu_usage_system{};
 
     // = Functions =
     // Boilerplate

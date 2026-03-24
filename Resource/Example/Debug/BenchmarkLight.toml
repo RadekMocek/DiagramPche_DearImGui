@@ -1,0 +1,42 @@
+[node.TL]
+xy = [5, 5]
+[node.T]
+xy = [650, 5]
+[node.TR]
+xy = [1300, 5]
+[node.BL]
+xy = ["TL", "bottom-left", 0, 770]
+[node.B]
+xy = ["T", "bottom-left", 0, 770]
+[node.BR]
+xy = ["TR", "bottom-left", 0, 770]
+[node.L]
+xy = ["TL", "bottom-left", 0, 350]
+[node.C]
+xy = ["T", "bottom-left", 0, 350]
+[node.R]
+xy = ["TR", "bottom-left", 0, 350]
+[[path]]
+start = ["L", "center", 0, 0]
+end = ["L", "center", 0, 0]
+points = [
+    ["R", "center", 0, "R", "center", 0],
+    ["BL", "center", 0, "BL", "center", 0],
+    ["T", "center", 0, "T", "center", 0],
+    ["BR", "center", 0, "BR", "center", 0],
+]
+z = 0
+[node.O0]
+xy = [1945, 5]
+[node.O1]
+xy = ["O0", "bottom-left", 0, 350]
+[node.O2]
+xy = ["O0", "bottom-left", 0, 770]
+[[path]]
+start = ["TR", "bottom-right", 0, 0]
+tips = "--"
+ends = [
+    ["O0", "bottom-left", 0, 0],
+    ["O1", "bottom-left", 0, 0],
+    ["O2", "bottom-left", 0, 0],
+]

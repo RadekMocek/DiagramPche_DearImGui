@@ -77,8 +77,7 @@ void App::GUIWinBenchmark()
     ImGuiWindowFlags flags = ImGuiWindowFlags_AlwaysAutoResize;
     if (m_is_benchmark_running) {
         flags |= ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoDecoration;
-        constexpr auto WINDOW_OFFSET = 12;
-        ImGui::SetNextWindowPos({WINDOW_OFFSET, WINDOW_OFFSET});
+        ImGui::SetNextWindowPos({8, 25});
     }
 
     ImGui::Begin("Benchmark", &m_do_show_window_benchmark, flags);

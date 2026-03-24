@@ -1,10 +1,14 @@
 #include "../../Dependency/RSS.hpp"
 
 #include "../App.hpp"
+#include "../Helper/BenchmarkCSV.hpp"
 #include "../Helper/Color.hpp"
+#include "../Helper/CPU.hpp"
 #include "../Helper/GUILayout.hpp"
 
-// (In this benchmark, nodes are being added to the canvas (they are added as pairs connected by arrow))
+// (In benchmark type GRADUAL, nodes are being added to the canvas (they are added as pairs connected by arrow))
+// (While benchmarking, we also scroll and zoom, so we have some movement)
+// (Benchmarks type LIGHT and HEAVY have prepared TOML and just do scroll and zoom above them)
 // What percentage of the window's width will the text editor occupy during the benchmark
 constexpr auto TEXTEDIT_WIDTH_RATIO = 0.28f;
 // After this passes, add new batch of nodes
@@ -30,6 +34,9 @@ constexpr auto AUTO_SCROLL_STEP_X = 10;
 constexpr auto AUTO_SCROLL_MODULO_X = 600;
 // How many zoom levels we iterate, this corresponds to the slider and MW behavior
 constexpr auto ZOOM_LEVEL_MODULO = 6;
+// Precalculated
+constexpr auto BENCHMARK_LIGHT_N_NODES = 12;
+constexpr auto BENCHMARK_HEAVY_N_NODES = 10780;
 
 // This is called when user presses the 'Start benchmark' button
 void App::BenchmarkStart(const BenchmarkType type)
@@ -39,8 +46,7 @@ void App::BenchmarkStart(const BenchmarkType type)
     m_benchmark_type = type;
     m_is_benchmark_first_iter = true;
 
-    // Clear the source and reset the view
-    HandleRegularNew();
+    // Reset the view
     ResetCanvasScrollingAndZoom();
 
     // Change the ratio between textedit and canvas to make canvas bigger (more things to see)
@@ -51,12 +57,27 @@ void App::BenchmarkStart(const BenchmarkType type)
         m_source.reserve(1000000);
     }
 
-    std::cout << "Benchmark type=" << type << " started.\n";
+    // Maximize the window
+    glfwMaximizeWindow(m_window);
+
+    // Prepare the source
+    if (type == BENCHMARK_LIGHT) {
+        HandleOpenExample(BENCHMARK_LIGHT_PATH);
+        m_bench_stats_total_nodes = BENCHMARK_LIGHT_N_NODES;
+    }
+    else if (type == BENCHMARK_HEAVY) {
+        HandleOpenExample(BENCHMARK_HEAVY_PATH);
+        m_bench_stats_total_nodes = BENCHMARK_HEAVY_N_NODES;
+    }
+    else if (type == BENCHMARK_GRADUAL) {
+        HandleRegularNew();
+        m_bench_stats_total_nodes = 0;
+    }
 }
 
 void App::BenchmarkUpdate()
 {
-    // Helper variables used during the benchmark.
+    // Helper variables used during the benchmark
     static float time_counter;
     static int node_counter_total_pairs;
     static int node_counter_row_pairs;
@@ -66,12 +87,11 @@ void App::BenchmarkUpdate()
     static unsigned char color_g;
     static unsigned char color_b;
     static int zoom_level;
+    static BenchmarkLogResults log_data;
 
     if (m_is_benchmark_running) {
         if (m_is_benchmark_first_iter) {
             m_is_benchmark_first_iter = false;
-            // Initialize stats
-            m_bench_stats_total_nodes = 0;
             // Initialize helper variables
             time_counter = 0;
             node_counter_total_pairs = 0;
@@ -82,6 +102,7 @@ void App::BenchmarkUpdate()
             color_g = 255;
             color_b = 255;
             zoom_level = 0;
+            log_data = {};
         }
         // Get delta time from Dear ImGui
         const ImGuiIO& io = ImGui::GetIO();
@@ -97,15 +118,17 @@ void App::BenchmarkUpdate()
 
             // Add a new batch of nodes
             for (int i = 0; i < N_NODES_IN_INTERVAL; i++) {
-                const auto z = node_counter_row_pairs % Z_MODULO;
-                m_source += std::format(
-                    "[node.\"A{}\"]\nxy=[{},{}]\nz={}\ncolor=[{},{},{},128]\n"
-                    "[node.\"B{}\"]\nxy=[\"A{}\",\"bottom-right\",10,10]\nz={}\ntype=\"ellipse\"\n"
-                    "[[path]]\nstart=[\"A{}\",\"left\",0,0]\nend=[\"B{}\",\"right\",0,0]\n",
-                    node_counter_total_pairs, x_cor, y_cor, z, color_r, color_g, color_b,
-                    node_counter_total_pairs, node_counter_total_pairs, z,
-                    node_counter_total_pairs, node_counter_total_pairs
-                );
+                if (m_benchmark_type == BENCHMARK_GRADUAL) {
+                    const auto z = node_counter_row_pairs % Z_MODULO;
+                    m_source += std::format(
+                        "[node.\"A{}\"]\nxy=[{},{}]\nz={}\ncolor=[{},{},{},128]\n"
+                        "[node.\"B{}\"]\nxy=[\"A{}\",\"bottom-right\",10,10]\nz={}\ntype=\"ellipse\"\n"
+                        "[[path]]\nstart=[\"A{}\",\"left\",0,0]\nend=[\"B{}\",\"right\",0,0]\n",
+                        node_counter_total_pairs, x_cor, y_cor, z, color_r, color_g, color_b,
+                        node_counter_total_pairs, node_counter_total_pairs, z,
+                        node_counter_total_pairs, node_counter_total_pairs
+                    );
+                }
                 // Update values for next iteration
                 node_counter_total_pairs++;
                 node_counter_row_pairs++;
@@ -131,7 +154,16 @@ void App::BenchmarkUpdate()
             }
 
             // Stats
-            m_bench_stats_total_nodes += 2 * N_NODES_IN_INTERVAL;
+            if (m_benchmark_type == BENCHMARK_GRADUAL) {
+                m_bench_stats_total_nodes += 2 * N_NODES_IN_INTERVAL;
+            }
+
+            if (zoom_level % 3 == 1) {
+                constexpr auto MIBI = 1024.0 * 1024.0;
+                m_bench_stats_mem_usage_mib = static_cast<double>(getCurrentRSS()) / MIBI;
+                m_bench_stats_cpu_usage_system = CPUStats::GetCurrentValue();
+            }
+
             BenchmarkStatsUpdate();
 
             //TODO log to CSV?
@@ -149,13 +181,15 @@ void App::BenchmarkUpdate()
 void App::BenchmarkGUIUpdate()
 {
     const ImGuiIO& io = ImGui::GetIO();
-
     ImGui::ProgressBar(-1.0f * static_cast<float>(ImGui::GetTime()), ImVec2(0.0f, 0.0f), "Benchmark is running...");
+    ImGui::Text("(GL renderer: %s)", gl_info_renderer);
+    ImGui::Dummy(TINY_SKIP);
+    ImGui::Separator();
 
-    ImGui::Text("      GL renderer: %s", gl_info_renderer);
-    ImGui::Text("Average framerate: %.1f FPS", io.Framerate);
+    ImGui::Text("    App framerate: %.1f FPS", io.Framerate);
     ImGui::Text("Total nodes drawn: %i", m_bench_stats_total_nodes);
     ImGui::Text(" Working set size: %.1f MiB", m_bench_stats_mem_usage_mib);
+    ImGui::Text(" System CPU usage: %.1f %", m_bench_stats_cpu_usage_system);
 
     ImGui::Separator();
     ImGui::Dummy(TINY_SKIP);

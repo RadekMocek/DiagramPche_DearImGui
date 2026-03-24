@@ -18,15 +18,17 @@ This is part of a IMGUI paradigm research, [go back to main repo](https://github
     * [x] Disable user interaction
     * [x] Reserve string space for gradual benchmark
     * [x] Change text/canvas layout ratio
-    * [ ] Maximize the window
-    * [ ] Move the bench-window top-left of the parent
+    * [x] Maximize the window
+    * [x] Move the bench-window top-left of the parent
   * During the benchmark:
-    * [ ] Set bench-window unclosable when bench running and show undetermined progress bar
-    * [ ] Don't mark the document as dirty
-    * [ ] Show FPS, total nodes, app ram usage, system cpu usage; win+linux
+    * [x] Set bench-window unclosable when bench running and show undetermined progress bar
+    * [x] Don't mark the document as dirty
+    * [x] Show FPS, total nodes, app ram usage, system cpu usage; win+linux
     * [ ] Record shown data with timestamp
   * Post:
     * [ ] Export to CSV
+    * [ ] CSV filename format "<framework><benchtype><timestasmp>"
+  * [ ] Zoom anchor is currently different from Qt
 * Dear ImGui specific:
   * [ ] Benchmark without freetype?
 
