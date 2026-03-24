@@ -5,17 +5,18 @@
 #include "../Helper/GUILayout.hpp"
 #include "../Model/CanvasNode.hpp"
 
-// ---  Canvas config  --- --- --- --- --- --- --- --- --- ---
+// ---  Canvas config  --- --- --- --- --- --- --- --- --- --- ---
 constexpr ImVec2 SCROLLING_DEFAULT = {5.0f, 5.0f};
 constexpr auto GRID_STEP_BASE = 100.0f;
 constexpr auto COLOR_GRID_LINE = IM_COL32(200, 200, 200, 40);
+constexpr auto COLOR_CANVAS_LIGHT = IM_COL32(240, 240, 240, 255);
 constexpr auto CANVAS_FONT_SIZE_BASE = 18;
 constexpr auto CANVAS_FONT_SIZE_STEP = 4;
 constexpr auto CANVAS_FONT_SIZE_MIN = 6;
 constexpr auto CANVAS_FONT_SIZE_MAX = 30;
 constexpr auto CANVAS_SECONDARY_TOOLBAR_HEIGHT = 26.0f;
 constexpr auto NODE_BORDER_OFFSET_BASE = 18.0f;
-// --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+// --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
 void App::ResetCanvasScrollingAndZoom()
 {
@@ -110,7 +111,7 @@ void App::GUICanvas(const float height)
 
     if (m_style_do_force_light_canvas && m_style_current_color_theme != AppearanceTheme_Light) {
         // (No need to add light canvas background if we're using the light theme)
-        draw_list->AddRectFilled(canvas_top_left, canvas_bottom_right, IM_COL32(240, 240, 240, 255));
+        draw_list->AddRectFilled(canvas_top_left, canvas_bottom_right, COLOR_CANVAS_LIGHT);
     }
 
     // == Draw grid ==
@@ -203,24 +204,26 @@ void App::GUICanvas(const float height)
 
     // == Drag n drop new node logic ==
     if (m_is_dragndropping_node) {
-        // Prepare for the ghost node drawing
-        const auto node_padding = NODE_BORDER_OFFSET_BASE * m_canvas_zoom_level;
-
-        const auto ghost_label = std::format("node_{}", m_canvas_nodes.size());
-        const auto ghost_label_c_str = ghost_label.c_str();
-
-        const auto ghost_label_size = m_font_inconsolata_medium->
-            CalcTextSizeA(static_cast<float>(m_canvas_font_size), FLT_MAX, -1.0f, ghost_label_c_str);
-
-        const ImVec2 ghost_padding(ghost_label_size.x / 2 + node_padding,
-                                   ghost_label_size.y / 2 + node_padding);
-        // Draw the "ghost node"
-        GUICanvasDrawGhostNode(draw_list, io.MousePos, node_padding, ghost_padding, ghost_label_c_str);
-        // Check if LMB released inside canvas (To check if cursor is inside the canvas part of the app window, we ignore scrolling)
+        //  For pointer position, we ignore scrolling here, we are checking if pointer is in part of the window
+        // Do not draw the ghost node if in this position releasing LMB won't place it
         if (const auto mouse_pos_in_canvas_frame = io.MousePos - canvas_top_left;
-            !ImGui::IsMouseDown(ImGuiMouseButton_Left)) {
-            m_is_dragndropping_node = false;
-            if (mouse_pos_in_canvas_frame >= ImVec2(0, 0) && mouse_pos_in_canvas_frame <= canvas_size) {
+            mouse_pos_in_canvas_frame >= ImVec2(0, 0) && mouse_pos_in_canvas_frame <= canvas_size) {
+            // Prepare for the ghost node drawing
+            const auto node_padding = NODE_BORDER_OFFSET_BASE * m_canvas_zoom_level;
+
+            const auto ghost_label = std::format("node_{}", m_canvas_nodes.size());
+            const auto ghost_label_c_str = ghost_label.c_str();
+
+            const auto ghost_label_size = m_font_inconsolata_medium->
+                CalcTextSizeA(static_cast<float>(m_canvas_font_size), FLT_MAX, -1.0f, ghost_label_c_str);
+
+            const ImVec2 ghost_padding(ghost_label_size.x / 2 + node_padding,
+                                       ghost_label_size.y / 2 + node_padding);
+            // Draw the "ghost node"
+            GUICanvasDrawGhostNode(draw_list, io.MousePos, node_padding, ghost_padding, ghost_label_c_str);
+            // Check if LMB released inside the canvas
+            if (!ImGui::IsMouseDown(ImGuiMouseButton_Left)) {
+                m_is_dragndropping_node = false;
                 // Add new node to canvas (TOML values are zoom level independent so we divide by that)
                 const auto node_x = static_cast<int>((mouse_pos_in_canvas.x - ghost_padding.x) / m_canvas_zoom_level);
                 const auto node_y = static_cast<int>((mouse_pos_in_canvas.y - ghost_padding.y) / m_canvas_zoom_level);
@@ -233,6 +236,12 @@ void App::GUICanvas(const float height)
                 if (m_do_use_alt_editor) {
                     m_alt_editor.SetCursorPosition({m_alt_editor.GetTotalLines() - 4, 0});
                 }
+            }
+        }
+        else {
+            // Check if LMB released outside the canvas
+            if (!ImGui::IsMouseDown(ImGuiMouseButton_Left)) {
+                m_is_dragndropping_node = false;
             }
         }
     }
