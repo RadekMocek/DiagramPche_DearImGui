@@ -236,7 +236,6 @@ private:
     void BenchmarkStart(BenchmarkType type);
     void BenchmarkUpdate();
     void BenchmarkGUIUpdate();
-    void BenchmarkStatsUpdate();
 
     // Call this after we change m_source somewhere from code instead of by editing text in the text edit widget
     void OnMSourceChanged()

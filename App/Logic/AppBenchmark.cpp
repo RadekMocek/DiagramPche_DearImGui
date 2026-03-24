@@ -88,6 +88,8 @@ void App::BenchmarkUpdate()
     static unsigned char color_b;
     static int zoom_level;
     static BenchmarkLogResults log_data;
+    static int log_index;
+    static std::chrono::time_point<std::chrono::steady_clock> time_start;
 
     if (m_is_benchmark_running) {
         if (m_is_benchmark_first_iter) {
@@ -103,6 +105,8 @@ void App::BenchmarkUpdate()
             color_b = 255;
             zoom_level = 0;
             log_data = {};
+            log_index = 0;
+            time_start = std::chrono::steady_clock::now();
         }
         // Get delta time from Dear ImGui
         const ImGuiIO& io = ImGui::GetIO();
@@ -162,17 +166,30 @@ void App::BenchmarkUpdate()
                 constexpr auto MIBI = 1024.0 * 1024.0;
                 m_bench_stats_mem_usage_mib = static_cast<double>(getCurrentRSS()) / MIBI;
                 m_bench_stats_cpu_usage_system = CPUStats::GetCurrentValue();
+
+                // LOG
+                log_data.timestamp[log_index] = ChronoTrigger(time_start).count();
+                log_data.fps[log_index] = io.Framerate;
+                log_data.n_nodes[log_index] = m_bench_stats_total_nodes;
+                log_data.mem_mib[log_index] = m_bench_stats_mem_usage_mib;
+                log_data.cpu_usage[log_index] = m_bench_stats_cpu_usage_system;
+                log_index++;
             }
-
-            BenchmarkStatsUpdate();
-
-            //TODO log to CSV?
-            //if (zoom_level == 1) {/*log stats*/}
 
             // End the benchmark check
             if (y_cor > MAX_Y_COR) {
                 m_is_benchmark_running = false;
-                std::cout << "Benchmark done.\n";
+
+                const auto filename = std::format("./BenchStats_DearImGui_{}_{}.csv",
+                                                  static_cast<int>(m_benchmark_type),
+                                                  GetUNIXTimestamp());
+
+                if (WriteBenchmarkResultsToCSV(filename.c_str(), log_data)) {
+                    std::cout << "Benchmark data written to '" << filename << "'.";
+                }
+                else {
+                    std::cout << "Error writing benchmark data to file.";
+                }
             }
         }
     }
@@ -189,7 +206,7 @@ void App::BenchmarkGUIUpdate()
     ImGui::Text("    App framerate: %.1f FPS", io.Framerate);
     ImGui::Text("Total nodes drawn: %i", m_bench_stats_total_nodes);
     ImGui::Text(" Working set size: %.1f MiB", m_bench_stats_mem_usage_mib);
-    ImGui::Text(" System CPU usage: %.1f %", m_bench_stats_cpu_usage_system);
+    ImGui::Text(" System CPU usage: %.1f %%", m_bench_stats_cpu_usage_system);
 
     ImGui::Separator();
     ImGui::Dummy(TINY_SKIP);
@@ -197,10 +214,4 @@ void App::BenchmarkGUIUpdate()
         m_is_benchmark_running = false;
         std::cout << "Benchmark stopped.\n";
     }
-}
-
-void App::BenchmarkStatsUpdate()
-{
-    constexpr auto MIBI = 1024.0 * 1024.0;
-    m_bench_stats_mem_usage_mib = static_cast<double>(getCurrentRSS()) / MIBI;
 }

@@ -9,28 +9,8 @@ This is part of a IMGUI paradigm research, [go back to main repo](https://github
 
 ## TODO
 
-* Benchmark window:
-  * Before the benchmark starts:
-    * [x] Warn about benchmark discarding current document
-    * [x] Allow disabling syntax highlight
-    * [x] Choose between 3 different benchmarks
-  * Do this automatically on the benchmark start:
-    * [x] Disable user interaction
-    * [x] Reserve string space for gradual benchmark
-    * [x] Change text/canvas layout ratio
-    * [x] Maximize the window
-    * [x] Move the bench-window top-left of the parent
-  * During the benchmark:
-    * [x] Set bench-window unclosable when bench running and show undetermined progress bar
-    * [x] Don't mark the document as dirty
-    * [x] Show FPS, total nodes, app ram usage, system cpu usage; win+linux
-    * [ ] Record shown data with timestamp
-  * Post:
-    * [ ] Export to CSV
-    * [ ] CSV filename format "<framework><benchtype><timestasmp>"
-  * [ ] Zoom anchor is currently different from Qt
-* Dear ImGui specific:
-  * [ ] Benchmark without freetype?
+* [ ] Zoom anchor is currently different from Qt
+* [ ] Benchmark without freetype?
 
 ## Building locally
 
@@ -65,6 +45,7 @@ cmake --build build
 * [ImGuiColorTextEdit](https://github.com/BalazsJako/ImGuiColorTextEdit) ([MIT](https://github.com/BalazsJako/ImGuiColorTextEdit/blob/master/LICENSE))
 * [IconFontCppHeaders](https://github.com/juliettef/IconFontCppHeaders) ([zlib](https://github.com/juliettef/IconFontCppHeaders/blob/main/licence.txt))
 * David Robert Nadeau's `getCurrentRSS` (CC BY 3.0)
+* [cpp-linux-system-stats](https://github.com/improvess/cpp-linux-system-stats) ([Apache-2.0](https://github.com/improvess/cpp-linux-system-stats/blob/main/LICENSE))
 
 <br>
 

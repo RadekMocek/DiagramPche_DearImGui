@@ -9,7 +9,7 @@ constexpr auto LOG_CAPACITY = 52;
 struct BenchmarkLogResults
 {
     std::array<long long, LOG_CAPACITY> timestamp{};
-    std::array<int, LOG_CAPACITY> fps{};
+    std::array<float, LOG_CAPACITY> fps{};
     std::array<int, LOG_CAPACITY> n_nodes{};
     std::array<double, LOG_CAPACITY> mem_mib{};
     std::array<float, LOG_CAPACITY> cpu_usage{};
@@ -44,4 +44,11 @@ template <
 auto ChronoTrigger(std::chrono::time_point<clock_t, duration_t> const& time_start)
 {
     return std::chrono::duration_cast<result_t>(clock_t::now() - time_start);
+}
+
+inline long long GetUNIXTimestamp()
+{
+    return std::chrono::duration_cast<std::chrono::seconds>(
+        std::chrono::system_clock::now().time_since_epoch()
+    ).count();
 }
