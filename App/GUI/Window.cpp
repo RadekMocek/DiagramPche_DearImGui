@@ -57,17 +57,7 @@ void App::GUIWinPreferences()
         // --- --- --- --- ---
         ImGui::EndTabBar();
     }
-    /*
-    ImGui::Dummy(BIG_SKIP);
-    ImGui::Button("Save");
-    ImGui::SameLine();
-    HelpMarker(
-        "This will save ALL settings to disk."
-        "Your unsaved preferences will only be valid for the current session."
-    );
-    */
     // --- --- --- ---
-    //std::cout << ImGui::GetWindowSize() << "\n";
     ImGui::End();
 }
 
@@ -80,7 +70,7 @@ void App::GUIWinBenchmark()
         ImGui::SetNextWindowPos({8, 25});
     }
 
-    ImGui::Begin("Benchmark", &m_do_show_window_benchmark, flags);
+    ImGui::Begin("Benchmark nodes", &m_do_show_window_benchmark, flags);
     // --- --- --- ---
     if (!m_is_benchmark_running) {
         ImGui::Text("Syntax highlight may affect performance:");
@@ -111,6 +101,5 @@ void App::GUIWinBenchmark()
         BenchmarkGUIUpdate();
     }
     // --- --- --- ---
-    //std::cout << ImGui::GetWindowSize() << "\n";
     ImGui::End();
 }

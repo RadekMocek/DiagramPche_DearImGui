@@ -28,8 +28,10 @@ void App::GLFWWindowCloseCallback(GLFWwindow* window)
     }
 }
 
-bool App::Init()
+bool App::Init(const AppStartupModifiers mod)
 {
+    m_app_startup_modifiers = mod;
+
 #ifdef _WIN32
     // Initializing the COM library for use by this thread so I can use `SHParseDisplayName` and `SHOpenFolderAndSelectItems` later.
     // With those functions I can open explorer with highlighted item (1) and reuse existing explorer window if it already has same path opened (2).
@@ -112,7 +114,7 @@ bool App::Init()
     images[0].pixels = stbi_load("./Resource/Icon/icon-256.png", &images[0].width, &images[0].height, nullptr, 4);
     glfwSetWindowIcon(m_window, 1, images);
     stbi_image_free(images[0].pixels);
-    std::cout << "STB OK\n";
+    std::cout << "ICON OK\n";
 
     // Init Glad
     if (!gladLoaderLoadGL()) {
@@ -165,6 +167,9 @@ void App::Run()
 
     // App start
     Start();
+
+    // cmd args
+    m_do_use_alt_editor = m_app_startup_modifiers.do_syntax_highlight;
 
     // Main loop
 #ifdef __EMSCRIPTEN__

@@ -10,13 +10,15 @@
 #include <GLES2/gl2.h>
 #endif
 
-// For glad to work, if it is imported after this (which it is in this project)
+// Glad is imported later, so we have to do this
 #define GLFW_INCLUDE_NONE
-// For native dialogs to work (fingers crossed)
+// For native dialogs to work, and also set OS_ID "globally" for benchmark filenames
 #ifdef _WIN32
 #define GLFW_EXPOSE_NATIVE_WIN32
+constexpr auto OS_ID = "win";
 #else
 #define GLFW_EXPOSE_NATIVE_X11
+constexpr auto OS_ID = "lin";
 #endif
 
 #include <GLFW/glfw3.h>
@@ -43,13 +45,21 @@
 #include "Model/CanvasNode.hpp"
 
 // By commenting this out, Dear ImGui demo window won't be accessible from the app
-#define INCLUDE_IMGUI_DEMO_WINDOW
+//#define INCLUDE_IMGUI_DEMO_WINDOW
+
+struct AppStartupModifiers
+{
+    bool do_benchmark_nodes = false;
+    int benchmark_type = 0;
+    bool do_syntax_highlight = true;
+    bool do_benchmark_widgets = false;
+};
 
 class App
 {
 public:
     App() = default;
-    bool Init();
+    bool Init(AppStartupModifiers mod);
     void Run();
 
 private:
@@ -86,6 +96,8 @@ private:
     static constexpr auto BENCHMARK_HEAVY_PATH = "./Resource/Example/Debug/BenchmarkHeavy.toml";
 
     // = Members =
+    AppStartupModifiers m_app_startup_modifiers;
+
     GLFWwindow* m_window{};
     bool m_should_window_really_close = false;
 
@@ -217,12 +229,12 @@ private:
 
     // Dialog
     void SetParentWindow(nfdwindowhandle_t* dialog_args_parent) const;
-    std::optional<std::string> SaveSVGDialog() const;
-    std::optional<std::string> SaveTOMLDialog() const;
+    [[nodiscard]] std::optional<std::string> SaveSVGDialog() const;
+    [[nodiscard]] std::optional<std::string> SaveTOMLDialog() const;
     std::optional<std::string> SaveFileDialog(const nfdu8char_t* default_name,
                                               const nfdu8filteritem_t* filters,
                                               nfdfiltersize_t n_filters) const;
-    std::optional<std::string> OpenTOMLDialog() const;
+    [[nodiscard]] std::optional<std::string> OpenTOMLDialog() const;
 
     // Source editing from canvas interaction
     std::optional<size_t> GetMSourceIdxFromSourceRegion(const toml::source_position& position);

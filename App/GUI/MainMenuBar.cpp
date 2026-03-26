@@ -90,12 +90,14 @@ void App::GUIMainMenuBar()
     if (ImGui::BeginMenu("Debug")) {
         // .: Render tests :.
         if (ImGui::BeginMenu("Render tests")) {
-            constexpr std::array<std::pair<const char*, const char*>, 4> items = {{
-                {"Z-axis, out-of-order", "./Resource/Example/Debug/Z-axis.toml"},
-                {"Path label background", "./Resource/Example/Debug/PathLabel.toml"},
-                {"Benchmark light", BENCHMARK_LIGHT_PATH},
-                {"Benchmark heavy", BENCHMARK_HEAVY_PATH},
-            }};
+            constexpr std::array<std::pair<const char*, const char*>, 4> items = {
+                {
+                    {"Z-axis, out-of-order", "./Resource/Example/Debug/Z-axis.toml"},
+                    {"Path label background", "./Resource/Example/Debug/PathLabel.toml"},
+                    {"Benchmark light", BENCHMARK_LIGHT_PATH},
+                    {"Benchmark heavy", BENCHMARK_HEAVY_PATH},
+                }
+            };
             for (const auto& [gui_name, path] : items) {
                 if (ImGui::MenuItem(gui_name)) {
                     HandleOpenExample(path);
@@ -105,8 +107,11 @@ void App::GUIMainMenuBar()
             ImGui::EndMenu();
         }
         // . Benchmark .
-        if (ImGui::MenuItem("Benchmark", nullptr, m_do_show_window_benchmark)) {
+        if (ImGui::MenuItem("Benchmark nodes", nullptr, m_do_show_window_benchmark)) {
             m_do_show_window_benchmark = !m_do_show_window_benchmark;
+        }
+        if (ImGui::MenuItem("Benchmark widgets")) {
+            //todo
         }
         // . Dear ImGui demo window .
 #ifdef INCLUDE_IMGUI_DEMO_WINDOW

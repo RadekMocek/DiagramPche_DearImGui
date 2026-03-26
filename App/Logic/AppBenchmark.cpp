@@ -141,14 +141,16 @@ void App::BenchmarkUpdate()
                 BenchmarkChangeColor(color_r, color_g, color_b, zoom_level);
             }
 
+            if (m_do_use_alt_editor && m_benchmark_type == BENCHMARK_GRADUAL) {
+                // Don't use `OnMSourceChanged` as it's marking the document as dirty (no need for that)
+                m_alt_editor.SetText(m_source);
+            }
+
             // Auto scrolling
             m_scrolling.x -= AUTO_SCROLL_STEP_X;
             if (m_scrolling.x < -AUTO_SCROLL_MODULO_X) {
                 m_scrolling.x = 0;
             }
-
-            // Don't use `OnMSourceChanged` as it's marking the document as dirty (no need for that)
-            if (m_do_use_alt_editor) m_alt_editor.SetText(m_source);
 
             // Jump to new row if needed
             if (node_counter_row_pairs > MAX_NODES_ON_ROW) {
@@ -179,13 +181,12 @@ void App::BenchmarkUpdate()
             // End the benchmark check
             if (y_cor > MAX_Y_COR) {
                 m_is_benchmark_running = false;
-
-                const auto filename = std::format("./BenchStats_DearImGui_{}_{}.csv",
-                                                  static_cast<int>(m_benchmark_type),
-                                                  GetUNIXTimestamp());
-
+                const auto bench_id = std::format("b{}", static_cast<int>(m_benchmark_type));
+                const auto sh_info = (m_do_use_alt_editor) ? "shon" : "shoff";
+                const auto filename = std::format("./bnchres_DearImGui_{}_{}_{}_{}.csv",
+                                                  OS_ID, bench_id, sh_info, GetUNIXTimestamp());
                 if (WriteBenchmarkResultsToCSV(filename.c_str(), log_data)) {
-                    std::cout << "Benchmark data written to '" << filename << "'.";
+                    std::cout << "Benchmark data written to '" << filename << "'.\n";
                 }
                 else {
                     std::cout << "Error writing benchmark data to file.";

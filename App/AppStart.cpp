@@ -49,7 +49,4 @@ void App::Start()
 
     // Style
     m_style_do_force_light_canvas = true;
-
-    // Temporary
-    m_do_show_window_benchmark = true;
 }

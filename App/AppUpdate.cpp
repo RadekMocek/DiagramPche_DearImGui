@@ -87,4 +87,10 @@ void App::Update()
     window_title += m_source_filename.value_or("Untitled");
     window_title += " – DiagramPche :: Dear ImGui";
     SetWindowTitle(window_title.c_str());
+
+    // cmd args
+    if (m_app_startup_modifiers.do_benchmark_nodes) {
+        m_app_startup_modifiers.do_benchmark_nodes = false;
+        BenchmarkStart(static_cast<BenchmarkType>(m_app_startup_modifiers.benchmark_type));
+    }
 }
