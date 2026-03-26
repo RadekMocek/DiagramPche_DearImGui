@@ -28,7 +28,7 @@ int main(const int argc, const char** argv)
         mod.do_benchmark_nodes = true;
     }
     else if (argc == 2 && strcmp(argv[1], "w") == 0) {
-        //todo
+        mod.do_benchmark_widgets = true;
     }
 
     if (app.Init(mod)) {

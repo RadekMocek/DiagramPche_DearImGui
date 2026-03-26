@@ -43,6 +43,7 @@ constexpr auto OS_ID = "lin";
 #include "Logic/SVG/Exporter.hpp"
 #include "Logic/TOML/Parser.hpp"
 #include "Model/CanvasNode.hpp"
+#include "Helper/BenchmarkCSV.hpp"
 
 // By commenting this out, Dear ImGui demo window won't be accessible from the app
 //#define INCLUDE_IMGUI_DEMO_WINDOW
@@ -165,13 +166,21 @@ private:
     ImU32 m_style_color_modal{};
     ImU32 m_style_color_secondary_toolbar{};
 
-    // Benchmark
+    // Benchmark nodes
     bool m_is_benchmark_running = false;
     BenchmarkType m_benchmark_type{};
     bool m_is_benchmark_first_iter = false;
     int m_bench_stats_total_nodes{};
     double m_bench_stats_mem_usage_mib{};
     float m_bench_stats_cpu_usage_system{};
+
+    // Benchmark widgets ("WB" == WidgetBench)
+    bool m_WB_do_show_window = false;
+    int m_WB_n_batches{};
+    int m_WB_batch_iter{};
+    bool m_WB_is_running = false;
+    std::chrono::time_point<std::chrono::steady_clock> m_WB_timestamp_window_queued;
+    WidgetbenchLogResults m_WB_log_data;
 
     // = Functions =
     // Boilerplate
@@ -203,6 +212,7 @@ private:
     // Additional windows
     void GUIWinPreferences();
     void GUIWinBenchmark();
+    void GUIWinWidgetbench();
 
     // All modals
     void GUIModal();
@@ -244,10 +254,13 @@ private:
     // Style
     void ChangeAppearanceTheme(AppearanceTheme theme);
 
-    // Benchmark
+    // Benchmark nodes
     void BenchmarkStart(BenchmarkType type);
     void BenchmarkUpdate();
     void BenchmarkGUIUpdate();
+
+    // Benchmark widgets
+    void HandleWidgetbench();
 
     // Call this after we change m_source somewhere from code instead of by editing text in the text edit widget
     void OnMSourceChanged()

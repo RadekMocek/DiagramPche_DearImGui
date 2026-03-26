@@ -1,7 +1,6 @@
 #include "../../Dependency/RSS.hpp"
 
 #include "../App.hpp"
-#include "../Helper/BenchmarkCSV.hpp"
 #include "../Helper/Color.hpp"
 #include "../Helper/CPU.hpp"
 #include "../Helper/GUILayout.hpp"
@@ -88,7 +87,6 @@ void App::BenchmarkUpdate()
     static unsigned char color_b;
     static int zoom_level;
     static BenchmarkLogResults log_data;
-    static int log_index;
     static std::chrono::time_point<std::chrono::steady_clock> time_start;
 
     if (m_is_benchmark_running) {
@@ -105,7 +103,6 @@ void App::BenchmarkUpdate()
             color_b = 255;
             zoom_level = 0;
             log_data = {};
-            log_index = 0;
             time_start = std::chrono::steady_clock::now();
         }
         // Get delta time from Dear ImGui
@@ -170,12 +167,11 @@ void App::BenchmarkUpdate()
                 m_bench_stats_cpu_usage_system = CPUStats::GetCurrentValue();
 
                 // LOG
-                log_data.timestamp[log_index] = ChronoTrigger(time_start).count();
-                log_data.fps[log_index] = io.Framerate;
-                log_data.n_nodes[log_index] = m_bench_stats_total_nodes;
-                log_data.mem_mib[log_index] = m_bench_stats_mem_usage_mib;
-                log_data.cpu_usage[log_index] = m_bench_stats_cpu_usage_system;
-                log_index++;
+                log_data.timestamp.push_back(ChronoTrigger(time_start).count());
+                log_data.fps.push_back(io.Framerate);
+                log_data.n_nodes.push_back(m_bench_stats_total_nodes);
+                log_data.mem_mib.push_back(m_bench_stats_mem_usage_mib);
+                log_data.cpu_usage.push_back(m_bench_stats_cpu_usage_system);
             }
 
             // End the benchmark check

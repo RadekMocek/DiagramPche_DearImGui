@@ -46,6 +46,9 @@ void App::Update()
     // .: Modals :.
     GUIModal();
 
+    // .: Widget benchmark :.
+    GUIWinWidgetbench();
+
     // Post modal actions
     if (m_is_action_unsavedwarn_queued) {
         m_is_action_unsavedwarn_queued = false;
@@ -87,6 +90,9 @@ void App::Update()
     window_title += m_source_filename.value_or("Untitled");
     window_title += " – DiagramPche :: Dear ImGui";
     SetWindowTitle(window_title.c_str());
+
+    // Widget benchmark
+    HandleWidgetbench();
 
     // cmd args
     if (m_app_startup_modifiers.do_benchmark_nodes) {

@@ -111,7 +111,8 @@ void App::GUIMainMenuBar()
             m_do_show_window_benchmark = !m_do_show_window_benchmark;
         }
         if (ImGui::MenuItem("Benchmark widgets")) {
-            //todo
+            m_WB_do_show_window = true;
+            m_WB_n_batches = 16;
         }
         // . Dear ImGui demo window .
 #ifdef INCLUDE_IMGUI_DEMO_WINDOW
