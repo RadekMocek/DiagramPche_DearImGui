@@ -1,6 +1,7 @@
 #include "../../Dependency/RSS.hpp"
 
 #include "../App.hpp"
+#include "../Config.hpp"
 #include "../Helper/Color.hpp"
 #include "../Helper/CPU.hpp"
 #include "../Helper/GUILayout.hpp"
@@ -189,6 +190,11 @@ void App::BenchmarkUpdate()
                 }
                 else {
                     std::cout << "Error writing benchmark data to file.";
+                }
+
+                // ReSharper disable once CppRedundantBooleanExpressionArgument
+                if (EXIT_AFTER_BENCHMARK_FROM_TERMINAL && m_app_startup_modifiers.is_benchmark_run_from_terminal) {
+                    glfwSetWindowShouldClose(m_window, GLFW_TRUE);
                 }
 
                 /*

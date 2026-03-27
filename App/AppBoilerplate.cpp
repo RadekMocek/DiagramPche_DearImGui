@@ -174,6 +174,9 @@ void App::Run()
     m_do_use_alt_editor = m_app_startup_modifiers.do_syntax_highlight;
     m_do_skip_textedit = m_app_startup_modifiers.do_skip_textedit;
 
+    // Before the loop, as far as possible from the first call of this, so we have two values
+    m_CPU_usage = CPUStats::GetCurrentValue();
+
     // Main loop
 #ifdef __EMSCRIPTEN__
     // For an Emscripten build we are disabling file-system access, so let's not attempt to do a fopen() of the imgui.ini file.

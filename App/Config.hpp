@@ -2,6 +2,9 @@
 
 #include "imgui.h"
 
+// Benchmarks
+constexpr auto EXIT_AFTER_BENCHMARK_FROM_TERMINAL = true;
+
 // Used in toolbar and settings window to set boundaries for the InputInt
 constexpr auto FONT_SIZE_SOURCE_MIN = 8;
 constexpr auto FONT_SIZE_SOURCE_MAX = 40;

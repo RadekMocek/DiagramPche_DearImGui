@@ -28,10 +28,13 @@ int main(const int argc, const char** argv)
         else if (strcmp(argv[3], "2") == 0) {
             mod.do_skip_textedit = true;
         }
+
         mod.do_benchmark_nodes = true;
+        mod.is_benchmark_run_from_terminal = true;
     }
     else if (argc == 2 && strcmp(argv[1], "w") == 0) {
         mod.do_benchmark_widgets = true;
+        mod.is_benchmark_run_from_terminal = true;
     }
 
     if (app.Init(mod)) {

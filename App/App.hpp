@@ -50,11 +50,14 @@ constexpr auto OS_ID = "lin";
 
 struct AppStartupModifiers
 {
+    bool is_benchmark_run_from_terminal = false;
+    //
     bool do_benchmark_nodes = false;
     int benchmark_type = 0;
     bool do_syntax_highlight = true;
-    bool do_benchmark_widgets = false;
     bool do_skip_textedit = false;
+    //
+    bool do_benchmark_widgets = false;
 };
 
 class App

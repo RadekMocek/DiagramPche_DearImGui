@@ -3,13 +3,13 @@
 #include "../../Dependency/RSS.hpp"
 
 #include "../App.hpp"
+#include "../Config.hpp"
 #include "../Helper/CPU.hpp"
 
 void App::HandleWidgetbench()
 {
     // ReSharper disable once CppTooWideScopeInitStatement
-    //constexpr auto WIDGETBENCH_STOP = 262144;
-    constexpr auto WIDGETBENCH_STOP = 16;
+    constexpr auto DURATION_THRESHOLD_MS = 15000;
 
     // RUNNING
     if (m_WB_is_running) {
@@ -21,7 +21,8 @@ void App::HandleWidgetbench()
             m_WB_log_data.n_batches.push_back(m_WB_n_batches);
             m_WB_log_data.batch_iter.push_back(m_WB_batch_iter);
             // LOG DURATION
-            m_WB_log_data.duration.push_back(ChronoTrigger(m_WB_timestamp_window_queued).count());
+            const auto duration_ms = ChronoTrigger(m_WB_timestamp_window_queued).count();
+            m_WB_log_data.duration.push_back(duration_ms);
             // LOG RAM
             constexpr auto MIBI = 1024.0 * 1024.0;
             m_WB_log_data.mem_mib.push_back(static_cast<double>(getCurrentRSS()) / MIBI);
@@ -36,20 +37,12 @@ void App::HandleWidgetbench()
             }
             // Prepare batch for the next iter
             m_WB_batch_iter++;
-            if (m_WB_batch_iter > 10) {
+            if (m_WB_batch_iter > 9) {
                 m_WB_batch_iter = 0;
                 m_WB_n_batches *= 2;
             }
-        }
-        else {
-            // Widgetbench keep-going condition
-            if (m_WB_n_batches <= WIDGETBENCH_STOP) {
-                // This is where the widgetbench starts
-                // We'll set var to show the window next iter
-                m_WB_timestamp_window_queued = std::chrono::steady_clock::now();
-                m_WB_do_show_window = true;
-            }
-            else {
+            // STOP CONDITION
+            if (duration_ms > DURATION_THRESHOLD_MS) {
                 // This is where the widgetbench ends
                 m_WB_is_running = false;
                 // Filename
@@ -67,7 +60,18 @@ void App::HandleWidgetbench()
                     // Don't use `OnMSourceChanged` as it's marking the document as dirty (no need for that)
                     m_alt_editor.SetText(m_source);
                 }
+                // Exit actually
+                // ReSharper disable once CppRedundantBooleanExpressionArgument
+                if (EXIT_AFTER_BENCHMARK_FROM_TERMINAL && m_app_startup_modifiers.is_benchmark_run_from_terminal) {
+                    glfwSetWindowShouldClose(m_window, GLFW_TRUE);
+                }
             }
+        }
+        else {
+            // This is where the widgetbench starts
+            // We'll set var to show the window next iter
+            m_WB_timestamp_window_queued = std::chrono::steady_clock::now();
+            m_WB_do_show_window = true;
         }
     }
     // INIT
