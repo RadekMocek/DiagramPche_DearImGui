@@ -25,6 +25,9 @@ int main(const int argc, const char** argv)
         if (strcmp(argv[3], "0") == 0) {
             mod.do_syntax_highlight = false;
         }
+        else if (strcmp(argv[3], "2") == 0) {
+            mod.do_skip_textedit = true;
+        }
         mod.do_benchmark_nodes = true;
     }
     else if (argc == 2 && strcmp(argv[1], "w") == 0) {

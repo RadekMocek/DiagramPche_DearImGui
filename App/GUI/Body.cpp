@@ -42,12 +42,21 @@ void App::GUIBody()
     // - TextEdit
     ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
     ImGui::PushFont(nullptr, static_cast<float>(m_source_font_size));
-    if (!m_do_use_alt_editor) {
+
+    if (m_do_skip_textedit /*(Benchmark purposes)*/) {
+        const ImVec2 textedit_size(textedit_width, main_columns_height);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
+        ImGui::BeginChild("SourceParent", textedit_size, 0);
+        ImGui::PopStyleVar();
+        ImGui::EndChild();
+    }
+    else if (!m_do_use_alt_editor) {
         GUITextEditor(textedit_width, main_columns_height);
     }
     else {
         GUITextEditorAlt(textedit_width, main_columns_height);
     }
+
     ImGui::PopFont();
     // - Separator
     ImGui::SameLine();

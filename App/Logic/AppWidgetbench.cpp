@@ -26,7 +26,7 @@ void App::HandleWidgetbench()
             constexpr auto MIBI = 1024.0 * 1024.0;
             m_WB_log_data.mem_mib.push_back(static_cast<double>(getCurrentRSS()) / MIBI);
             // LOG CPU
-            m_WB_log_data.cpu_usage.push_back(CPUStats::GetCurrentValue());
+            m_WB_log_data.cpu_usage.push_back(m_CPU_usage);
             // --- --- --- --- --- --- --- --- --- --- --- ---
             // Report progress
             m_source = std::format("[node.\"{} {}\"]", m_WB_n_batches, m_WB_batch_iter);
@@ -48,7 +48,6 @@ void App::HandleWidgetbench()
                 // We'll set var to show the window next iter
                 m_WB_timestamp_window_queued = std::chrono::steady_clock::now();
                 m_WB_do_show_window = true;
-                CPUStats::GetCurrentValue(); // Refresh CPU usage (?)
             }
             else {
                 // This is where the widgetbench ends
@@ -81,7 +80,5 @@ void App::HandleWidgetbench()
         m_WB_is_running = true;
         // Maximize the window
         glfwMaximizeWindow(m_window);
-        // Refresh CPU usage (?)
-        CPUStats::GetCurrentValue();
     }
 }

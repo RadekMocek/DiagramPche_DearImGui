@@ -43,7 +43,9 @@ bool App::Init(const AppStartupModifiers mod)
     }
 #endif
 
+    // Init CPU measuring for benchmarking purposes
     CPUStats::Init();
+    m_CPU_usage = CPUStats::GetCurrentValue();
 
     std::cout << "RAM OK\n";
     std::cout << "ROM OK\n";
@@ -170,6 +172,7 @@ void App::Run()
 
     // cmd args
     m_do_use_alt_editor = m_app_startup_modifiers.do_syntax_highlight;
+    m_do_skip_textedit = m_app_startup_modifiers.do_skip_textedit;
 
     // Main loop
 #ifdef __EMSCRIPTEN__
@@ -196,6 +199,17 @@ void App::Run()
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
+
+        // CPU measure for benchmarking purposes
+        static float time_counter = 0;
+        if (m_is_benchmark_running || m_WB_is_running) {
+            const ImGuiIO& io = ImGui::GetIO();
+            time_counter += io.DeltaTime;
+            if (time_counter > CPU_MEASURE_INTERVAL_S) {
+                time_counter = 0;
+                m_CPU_usage = CPUStats::GetCurrentValue();
+            }
+        }
 
         // App update
         Update();

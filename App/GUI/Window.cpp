@@ -77,6 +77,10 @@ void App::GUIWinBenchmark()
         WidgetTextEditorPreferredCombo();
         ImGui::Dummy(TINY_SKIP);
 
+        ImGui::Text("Or hide the text editor completely:");
+        ImGui::Checkbox("hide text editor", &m_do_skip_textedit);
+        ImGui::Dummy(TINY_SKIP);
+
         ImGui::Text("Choose one of the three benchmarks:");
         static int item_selected_idx = 0;
         GUICombo("##BenchmarkTypeCombo", BENCHMARK_TYPE_NAMES, item_selected_idx);

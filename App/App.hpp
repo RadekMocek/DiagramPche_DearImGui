@@ -54,6 +54,7 @@ struct AppStartupModifiers
     int benchmark_type = 0;
     bool do_syntax_highlight = true;
     bool do_benchmark_widgets = false;
+    bool do_skip_textedit = false;
 };
 
 class App
@@ -166,15 +167,16 @@ private:
     ImU32 m_style_color_modal{};
     ImU32 m_style_color_secondary_toolbar{};
 
-    // Benchmark nodes
+    // Benchmark
+    float m_CPU_usage{};
+    // - Benchmark nodes
     bool m_is_benchmark_running = false;
     BenchmarkType m_benchmark_type{};
     bool m_is_benchmark_first_iter = false;
     int m_bench_stats_total_nodes{};
     double m_bench_stats_mem_usage_mib{};
-    float m_bench_stats_cpu_usage_system{};
-
-    // Benchmark widgets ("WB" == WidgetBench)
+    bool m_do_skip_textedit = false;
+    // - Benchmark widgets ("WB" == WidgetBench)
     bool m_WB_do_show_window = false;
     int m_WB_n_batches{};
     int m_WB_batch_iter{};

@@ -23,7 +23,7 @@ constexpr auto MAX_NODES_ON_ROW = 220;
 // When we reach `MAX_NODES_ON_ROW`, we go on a new row, this is the offset of the new row
 constexpr auto Y_COR_ADDITION = 100;
 // How many rows do we want? When we have this much of rows, benchmark ends
-constexpr auto MAX_ROWS = 21;
+constexpr auto MAX_ROWS = 26;
 // Used for the ending condition
 constexpr auto MAX_Y_COR = Y_COR_ADDITION * MAX_ROWS;
 // (While benchmarking, we also scroll and zoom, so we have some movement)
@@ -35,7 +35,7 @@ constexpr auto AUTO_SCROLL_MODULO_X = 600;
 constexpr auto ZOOM_LEVEL_MODULO = 6;
 // Precalculated
 constexpr auto BENCHMARK_LIGHT_N_NODES = 12;
-constexpr auto BENCHMARK_HEAVY_N_NODES = 10780;
+constexpr auto BENCHMARK_HEAVY_N_NODES = 13230;
 
 // This is called when user presses the 'Start benchmark' button
 void App::BenchmarkStart(const BenchmarkType type)
@@ -53,7 +53,7 @@ void App::BenchmarkStart(const BenchmarkType type)
 
     // Reserve string space
     if (type == BENCHMARK_GRADUAL) {
-        m_source.reserve(1000000);
+        m_source.reserve(1224747);
     }
 
     // Maximize the window
@@ -164,29 +164,37 @@ void App::BenchmarkUpdate()
             if (zoom_level % 3 == 1) {
                 constexpr auto MIBI = 1024.0 * 1024.0;
                 m_bench_stats_mem_usage_mib = static_cast<double>(getCurrentRSS()) / MIBI;
-                m_bench_stats_cpu_usage_system = CPUStats::GetCurrentValue();
-
                 // LOG
                 log_data.timestamp.push_back(ChronoTrigger(time_start).count());
                 log_data.fps.push_back(io.Framerate);
                 log_data.n_nodes.push_back(m_bench_stats_total_nodes);
                 log_data.mem_mib.push_back(m_bench_stats_mem_usage_mib);
-                log_data.cpu_usage.push_back(m_bench_stats_cpu_usage_system);
+                log_data.cpu_usage.push_back(m_CPU_usage);
             }
 
             // End the benchmark check
             if (y_cor > MAX_Y_COR) {
                 m_is_benchmark_running = false;
                 const auto bench_id = std::format("b{}", static_cast<int>(m_benchmark_type));
-                const auto sh_info = (m_do_use_alt_editor) ? "shon" : "shoff";
+
+                auto bench_info = (m_do_use_alt_editor) ? "shon" : "shoff";
+                if (m_do_skip_textedit) {
+                    bench_info = "txoff";
+                }
+
                 const auto filename = std::format("./bnchres_DearImGui_{}_{}_{}_{}.csv",
-                                                  OS_ID, bench_id, sh_info, GetUNIXTimestamp());
+                                                  OS_ID, bench_id, bench_info, GetUNIXTimestamp());
                 if (WriteBenchmarkResultsToCSV(filename.c_str(), log_data)) {
                     std::cout << "Benchmark data written to '" << filename << "'.\n";
                 }
                 else {
                     std::cout << "Error writing benchmark data to file.";
                 }
+
+                /*
+                std::cout << m_bench_stats_total_nodes << "\n";
+                std::cout << m_source.size() << "\n";
+                //*/
             }
         }
     }
@@ -203,7 +211,7 @@ void App::BenchmarkGUIUpdate()
     ImGui::Text("    App framerate: %.1f FPS", io.Framerate);
     ImGui::Text("Total nodes drawn: %i", m_bench_stats_total_nodes);
     ImGui::Text(" Working set size: %.1f MiB", m_bench_stats_mem_usage_mib);
-    ImGui::Text(" System CPU usage: %.1f %%", m_bench_stats_cpu_usage_system);
+    ImGui::Text(" System CPU usage: %.1f %%", m_CPU_usage);
 
     ImGui::Separator();
     ImGui::Dummy(TINY_SKIP);

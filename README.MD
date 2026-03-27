@@ -9,7 +9,17 @@ This is part of a IMGUI paradigm research, [go back to main repo](https://github
 
 ## TODO
 
-* [ ] ...
+* [x] (hopefully) more stable CPU usage monitor (update every 500ms)
+* allow benchmark without textedit
+  * [x] from GUI
+  * [x] from terminal
+  * [x] unique CSV filename for results
+* nodes benchmark MAX ROWS 21 → 26
+  * [x] Change the constant itself
+  * [x] Update the TOML for heavy benchmark
+  * [x] Update the precal BENCHMARK_HEAVY_N_NODES 10780 → 13230
+  * [x] Update the reserve string 1000000 → 1224747
+* [ ] New widgetbench stop condition – stop immediatelly if showing the window took more than 15 seconds ?
 
 ## Building locally
 
