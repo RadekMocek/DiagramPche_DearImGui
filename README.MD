@@ -9,12 +9,7 @@ This is part of a IMGUI paradigm research, [go back to main repo](https://github
 
 ## TODO
 
-* [x] Benchmark csv filename should be `./bnchres_{framework}_{os_id}_{bench_id}_{sh_info}_{timestamp}.csv`
-* [x] Accept cmd args to start benchmark immediatelly
-* [ ] Widgetbench – benchmark that creates window full of widgets and measures to time to show&hide it
-  * Maximize main window
-  * BenchWin must be as top left as possible
-  * Run from terminal
+* [ ] ...
 
 ## Building locally
 

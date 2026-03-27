@@ -8,7 +8,8 @@
 void App::HandleWidgetbench()
 {
     // ReSharper disable once CppTooWideScopeInitStatement
-    constexpr auto WIDGETBENCH_STOP = 262144;
+    //constexpr auto WIDGETBENCH_STOP = 262144;
+    constexpr auto WIDGETBENCH_STOP = 16;
 
     // RUNNING
     if (m_WB_is_running) {
@@ -27,6 +28,12 @@ void App::HandleWidgetbench()
             // LOG CPU
             m_WB_log_data.cpu_usage.push_back(CPUStats::GetCurrentValue());
             // --- --- --- --- --- --- --- --- --- --- --- ---
+            // Report progress
+            m_source = std::format("[node.\"{} {}\"]", m_WB_n_batches, m_WB_batch_iter);
+            if (m_do_use_alt_editor) {
+                // Don't use `OnMSourceChanged` as it's marking the document as dirty (no need for that)
+                m_alt_editor.SetText(m_source);
+            }
             // Prepare batch for the next iter
             m_WB_batch_iter++;
             if (m_WB_batch_iter > 10) {
@@ -35,7 +42,7 @@ void App::HandleWidgetbench()
             }
         }
         else {
-            // Widgetbench stop condition
+            // Widgetbench keep-going condition
             if (m_WB_n_batches <= WIDGETBENCH_STOP) {
                 // This is where the widgetbench starts
                 // We'll set var to show the window next iter
