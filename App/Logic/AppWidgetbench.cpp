@@ -31,10 +31,7 @@ void App::HandleWidgetbench()
             // --- --- --- --- --- --- --- --- --- --- --- ---
             // Report progress
             m_source = std::format("[node.\"{} {}\"]", m_WB_n_batches, m_WB_batch_iter);
-            if (m_do_use_alt_editor) {
-                // Don't use `OnMSourceChanged` as it's marking the document as dirty (no need for that)
-                m_alt_editor.SetText(m_source);
-            }
+            OnMSourceChanged(false);
             // Prepare batch for the next iter
             m_WB_batch_iter++;
             if (m_WB_batch_iter > 9) {
@@ -56,11 +53,8 @@ void App::HandleWidgetbench()
                 }
                 // Let know
                 m_source = "[node.\"Widget benchmark done\"]";
-                if (m_do_use_alt_editor) {
-                    // Don't use `OnMSourceChanged` as it's marking the document as dirty (no need for that)
-                    m_alt_editor.SetText(m_source);
-                }
-                // Exit actually
+                OnMSourceChanged(false);
+                // Exit actually?
                 // ReSharper disable once CppRedundantBooleanExpressionArgument
                 if (EXIT_AFTER_BENCHMARK_FROM_TERMINAL && m_app_startup_modifiers.is_benchmark_run_from_terminal) {
                     glfwSetWindowShouldClose(m_window, GLFW_TRUE);

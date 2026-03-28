@@ -12,7 +12,7 @@
 void App::HandleRegularNew()
 {
     m_source.clear();
-    m_alt_editor.SetText(m_source);
+    OnMSourceChanged(false);
     m_source_filename = std::nullopt;
     m_is_source_dirty = false;
 }
@@ -63,7 +63,7 @@ void App::LoadSourceFromFile(const char* filename, const bool is_example)
 
     std::erase(m_source, '\r'); // \r\n → \n
 
-    m_alt_editor.SetText(m_source);
+    OnMSourceChanged(false);
 
     ResetCanvasScrollingAndZoom();
 

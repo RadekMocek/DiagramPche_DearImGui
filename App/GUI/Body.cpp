@@ -29,7 +29,8 @@ void App::GUIBody()
     ImGui::Begin("Main", nullptr, flags);
 
     // Do the TOML parse
-    m_parser.Parse(m_source);
+    m_parser.Update(m_source, m_reparse_request);
+    m_reparse_request = false; // This will be set to true by textedit if source changes
 
     // Two main columns with draggable separator between them
     const auto textedit_width = ImGui::GetContentRegionAvail().x * m_body_split_ratio;

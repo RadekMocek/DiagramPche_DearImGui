@@ -128,7 +128,7 @@ void App::GUIToolbar(const float textedit_width)
         else {
             InsertNodeParameterInMSource(node_source_end, std::format("\ncolor = \"{}\"", GetRGBAHexFromImVec4(color)));
         }
-        OnMSourceChanged();
+        OnMSourceChanged(true);
     }
 
     // .: Type select :.
@@ -155,7 +155,7 @@ void App::GUIToolbar(const float textedit_width)
             // Add type parameter to node's definition
             InsertNodeParameterInMSource(node_source_end, std::format("\ntype = \"{}\"", type_str));
         }
-        OnMSourceChanged();
+        OnMSourceChanged(true);
     }
 
     // .: Node ID label :.

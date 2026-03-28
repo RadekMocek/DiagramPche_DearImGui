@@ -25,6 +25,7 @@ void App::GUITextEditor(const float textedit_width, const float height)
                                   ImGui::GetContentRegionAvail(),
                                   ImGuiInputTextFlags_AllowTabInput)) {
         m_is_source_dirty = true;
+        m_reparse_request = true;
     }
 
     const auto textedit_real_id = ImGui::GetID(TEXTEDIT_ID);
