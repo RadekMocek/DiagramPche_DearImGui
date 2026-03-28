@@ -43,7 +43,7 @@ void App::HandleWidgetbench()
                 // This is where the widgetbench ends
                 m_WB_is_running = false;
                 // Filename
-                const auto filename = std::format("./widgetbechres_DearImGui_{}_{}.csv", OS_ID, GetUNIXTimestamp());
+                const auto filename = std::format("./widgetbechres_Qt_{}_{}.csv", OS_ID, GetUNIXTimestamp());
                 // Save
                 if (WriteWidgetbenchResultsToCSV(filename.c_str(), m_WB_log_data)) {
                     std::cout << "Benchmark data written to '" << filename << "'.\n";
