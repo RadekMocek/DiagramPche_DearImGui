@@ -53,7 +53,7 @@ void App::BenchmarkStart(const BenchmarkType type)
     m_body_split_ratio = TEXTEDIT_WIDTH_RATIO;
 
     // Reserve string space
-    if (type == BENCHMARK_GRADUAL) {
+    if (type == BENCHMARK_GRADUAL || type == BENCHMARK_COMPLETE) {
         m_source.reserve(1224747);
     }
 
@@ -73,13 +73,19 @@ void App::BenchmarkStart(const BenchmarkType type)
         HandleRegularNew();
         m_bench_stats_total_nodes = 0;
     }
+    else if (type == BENCHMARK_COMPLETE) {
+        HandleRegularNew();
+        m_source = "[node.\"Hang onto yer helmet!\\nThe complete benchmark has started...\"]\n";
+        if (m_do_use_alt_editor) m_alt_editor.SetText(m_source);
+        m_bench_stats_total_nodes = 0;
+    }
 }
 
 void App::BenchmarkUpdate()
 {
     // Helper variables used during the benchmark
     static float time_counter;
-    static int node_counter_total_pairs;
+    static int gradual_node_id;
     static int node_counter_row_pairs;
     static int x_cor;
     static int y_cor;
@@ -89,13 +95,14 @@ void App::BenchmarkUpdate()
     static int zoom_level;
     static BenchmarkLogResults log_data;
     static std::chrono::time_point<std::chrono::steady_clock> time_start;
+    static int complete_bench_phase_n;
 
     if (m_is_benchmark_running) {
         if (m_is_benchmark_first_iter) {
             m_is_benchmark_first_iter = false;
             // Initialize helper variables
             time_counter = 0;
-            node_counter_total_pairs = 0;
+            gradual_node_id = 0;
             node_counter_row_pairs = 0;
             x_cor = 0;
             y_cor = 0;
@@ -105,6 +112,7 @@ void App::BenchmarkUpdate()
             zoom_level = 0;
             log_data = {};
             time_start = std::chrono::steady_clock::now();
+            complete_bench_phase_n = 1; // Basically: 1 – Light, 2 – Gradual, 3 – Heavy
         }
         // Get delta time from Dear ImGui
         const ImGuiIO& io = ImGui::GetIO();
@@ -118,28 +126,31 @@ void App::BenchmarkUpdate()
             zoom_level = (zoom_level + 1) % ZOOM_LEVEL_MODULO; // 0,1,2,3,4,5
             ChangeCanvasFontSizeAndZoomFromSliderValue(zoom_level);
 
+            const auto is_gradual =
+                m_benchmark_type == BENCHMARK_GRADUAL
+                || (m_benchmark_type == BENCHMARK_COMPLETE && complete_bench_phase_n == 2);
+
             // Add a new batch of nodes
             for (int i = 0; i < N_NODES_IN_INTERVAL; i++) {
-                if (m_benchmark_type == BENCHMARK_GRADUAL) {
+                if (is_gradual) {
                     const auto z = node_counter_row_pairs % Z_MODULO;
                     m_source += std::format(
                         "[node.\"A{}\"]\nxy=[{},{}]\nz={}\ncolor=[{},{},{},128]\n"
                         "[node.\"B{}\"]\nxy=[\"A{}\",\"bottom-right\",10,10]\nz={}\ntype=\"ellipse\"\n"
                         "[[path]]\nstart=[\"A{}\",\"left\",0,0]\nend=[\"B{}\",\"right\",0,0]\n",
-                        node_counter_total_pairs, x_cor, y_cor, z, color_r, color_g, color_b,
-                        node_counter_total_pairs, node_counter_total_pairs, z,
-                        node_counter_total_pairs, node_counter_total_pairs
+                        gradual_node_id, x_cor, y_cor, z, color_r, color_g, color_b,
+                        gradual_node_id, gradual_node_id, z,
+                        gradual_node_id, gradual_node_id
                     );
+                    gradual_node_id++;
                 }
-                // Update values for next iteration
-                node_counter_total_pairs++;
                 node_counter_row_pairs++;
                 x_cor += X_COR_ADDITION;
                 // Modify the color for next node; accepts number from 0 to 5 as last param to shuffle things up, we can use zoom level
                 BenchmarkChangeColor(color_r, color_g, color_b, zoom_level);
             }
 
-            if (m_do_use_alt_editor && m_benchmark_type == BENCHMARK_GRADUAL) {
+            if (m_do_use_alt_editor && is_gradual) {
                 // Don't use `OnMSourceChanged` as it's marking the document as dirty (no need for that)
                 m_alt_editor.SetText(m_source);
             }
@@ -158,7 +169,7 @@ void App::BenchmarkUpdate()
             }
 
             // Stats
-            if (m_benchmark_type == BENCHMARK_GRADUAL) {
+            if (is_gradual) {
                 m_bench_stats_total_nodes += 2 * N_NODES_IN_INTERVAL;
             }
 
@@ -175,32 +186,39 @@ void App::BenchmarkUpdate()
 
             // End the benchmark check
             if (y_cor > MAX_Y_COR) {
-                m_is_benchmark_running = false;
-                const auto bench_id = std::format("b{}", static_cast<int>(m_benchmark_type));
-
-                auto bench_info = (m_do_use_alt_editor) ? "shon" : "shoff";
-                if (m_do_skip_textedit) {
-                    bench_info = "txoff";
-                }
-
-                const auto filename = std::format("./bnchres_DearImGui_{}_{}_{}_{}.csv",
-                                                  OS_ID, bench_id, bench_info, GetUNIXTimestamp());
-                if (WriteBenchmarkResultsToCSV(filename.c_str(), log_data)) {
-                    std::cout << "Benchmark data written to '" << filename << "'.\n";
+                if (m_benchmark_type == BENCHMARK_COMPLETE && complete_bench_phase_n < 3) {
+                    complete_bench_phase_n++;
+                    x_cor = 0;
+                    y_cor = 0;
                 }
                 else {
-                    std::cout << "Error writing benchmark data to file.";
-                }
+                    m_is_benchmark_running = false;
+                    const auto bench_id = std::format("b{}", static_cast<int>(m_benchmark_type));
 
-                // ReSharper disable once CppRedundantBooleanExpressionArgument
-                if (EXIT_AFTER_BENCHMARK_FROM_TERMINAL && m_app_startup_modifiers.is_benchmark_run_from_terminal) {
-                    glfwSetWindowShouldClose(m_window, GLFW_TRUE);
-                }
+                    auto bench_info = (m_do_use_alt_editor) ? "shon" : "shoff";
+                    if (m_do_skip_textedit) {
+                        bench_info = "txoff";
+                    }
 
-                /*
-                std::cout << m_bench_stats_total_nodes << "\n";
-                std::cout << m_source.size() << "\n";
-                //*/
+                    const auto filename = std::format("./bnchres_DearImGui_{}_{}_{}_{}.csv",
+                                                      OS_ID, bench_id, bench_info, GetUNIXTimestamp());
+                    if (WriteBenchmarkResultsToCSV(filename.c_str(), log_data)) {
+                        std::cout << "Benchmark data written to '" << filename << "'.\n";
+                    }
+                    else {
+                        std::cout << "Error writing benchmark data to file.";
+                    }
+
+                    // ReSharper disable once CppRedundantBooleanExpressionArgument
+                    if (EXIT_AFTER_BENCHMARK_FROM_TERMINAL && m_app_startup_modifiers.is_benchmark_run_from_terminal) {
+                        glfwSetWindowShouldClose(m_window, GLFW_TRUE);
+                    }
+
+                    /*
+                    std::cout << m_bench_stats_total_nodes << "\n";
+                    std::cout << m_source.size() << "\n";
+                    //*/
+                }
             }
         }
     }

@@ -8,7 +8,7 @@ int main(const int argc, const char** argv)
 
     if (argc == 4 && strcmp(argv[1], "b") == 0) {
         constexpr auto benchmark_type_err_msg =
-            "Second parameter (benchmark type) must be a number:\n\n\t0 - light\n\t1 - heavy\n\t2 - gradual\n\n";
+            "Second parameter (benchmark type) must be a number:\n\n\t0 - light\n\t1 - heavy\n\t2 - gradual\n\t3 - complete 3in1\n\n";
 
         try {
             mod.benchmark_type = std::stoi(argv[2]);
@@ -17,7 +17,7 @@ int main(const int argc, const char** argv)
             std::cerr << benchmark_type_err_msg;
             return 1;
         }
-        if (mod.benchmark_type < 0 || mod.benchmark_type > 2) {
+        if (mod.benchmark_type < 0 || mod.benchmark_type > 3) {
             std::cerr << benchmark_type_err_msg;
             return 1;
         }

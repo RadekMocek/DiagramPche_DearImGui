@@ -93,10 +93,10 @@ private:
 
     enum BenchmarkType
     {
-        BENCHMARK_LIGHT, BENCHMARK_HEAVY, BENCHMARK_GRADUAL
+        BENCHMARK_LIGHT, BENCHMARK_HEAVY, BENCHMARK_GRADUAL, BENCHMARK_COMPLETE
     };
 
-    static constexpr std::array BENCHMARK_TYPE_NAMES = {"Light", "Heavy", "Gradual"};
+    static constexpr std::array BENCHMARK_TYPE_NAMES = {"Light", "Heavy", "Gradual", "Complete 3in1"};
     static constexpr auto BENCHMARK_LIGHT_PATH = "./Resource/Example/Debug/BenchmarkLight.toml";
     static constexpr auto BENCHMARK_HEAVY_PATH = "./Resource/Example/Debug/BenchmarkHeavy.toml";
 
