@@ -27,7 +27,7 @@ public:
     std::string m_error_description;
 
     // Methods
-    void Update(const std::string& source, bool do_parse);
+    void Parse(const std::string& source);
 
 private:
     // [variables]

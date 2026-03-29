@@ -229,7 +229,7 @@ void App::GUICanvas(const float height)
                 const auto node_y = static_cast<int>((mouse_pos_in_canvas.y - ghost_padding.y) / m_canvas_zoom_level);
                 m_source += std::format("\n[node.{}]\ntype = \"{}\"\nxy = [{}, {}]\n",
                                         ghost_label, GetStringFromNodeType(m_dragndropping_node_type), node_x, node_y);
-                OnMSourceChanged(true);
+                OnMSourceChanged();
                 // Make the new node selected
                 m_is_canvas_node_selected = true;
                 m_selected_canvas_node_key = ghost_label;

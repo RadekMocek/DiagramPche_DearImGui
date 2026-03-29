@@ -6,7 +6,7 @@
 #include "../../Helper/Color.hpp"
 #include "../../Helper/DrawLayer.hpp"
 
-void Parser::Update(const std::string& source, const bool do_parse)
+void Parser::Parse(const std::string& source)
 {
     m_is_error = false;
 
@@ -18,12 +18,6 @@ void Parser::Update(const std::string& source, const bool do_parse)
     catch (const toml::parse_error& err) {
         ReportError(err.source(), std::string(err.description()));
         // By returning here, and filling PQ with nodes from previous iteration, last valid TOML will be drawn (better than everything dissappearing).
-        UpdatePQ();
-        return;
-    }
-
-    // If we don't need to parse, just use the previous data to fill the priority queues again (they were popped empty)
-    if (!do_parse) {
         UpdatePQ();
         return;
     }

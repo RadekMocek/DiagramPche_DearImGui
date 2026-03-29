@@ -116,7 +116,6 @@ private:
     // TOML source related
     Parser m_parser{};
     std::string m_source{};
-    bool m_reparse_request = true;
     std::optional<std::string> m_source_filename = std::nullopt;
     bool m_is_source_dirty{}; // Dirty == edited without saving to disk
     int m_source_font_size{};
@@ -269,20 +268,18 @@ private:
     void HandleWidgetbench();
 
     // Call this after we change m_source somewhere from code instead of by editing text in the text edit widget
-    void OnMSourceChanged(const bool do_mark_as_dirty)
+    void OnMSourceChanged()
     {
         // Source was edited externally => source is dirty
-        if (do_mark_as_dirty) {
-            // We can set this to false during benchmark (no need to mark as dirty)
-            m_is_source_dirty = true;
-        }
-
-        // => Source was changed, we need to reparse the TOML
-        m_reparse_request = true;
+        m_is_source_dirty = true;
 
         // If alt text editor is used, its text must be updated
         if (m_do_use_alt_editor) {
+            //const auto cursor_pos = m_alt_editor.GetCursorPosition();
             m_alt_editor.SetText(m_source);
+            //m_alt_editor.SetCursorPosition(cursor_pos);
+
+            // This resets scroll even if I do the GetCursorPosition + SetCursorPosition ¯\_(ツ)_/¯
         }
     }
 

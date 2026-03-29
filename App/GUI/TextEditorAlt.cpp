@@ -21,7 +21,6 @@ void App::GUITextEditorAlt(const float textedit_width, const float height)
 
     if (m_alt_editor.IsTextChanged()) {
         m_is_source_dirty = true;
-        m_reparse_request = true;
     }
 
     m_alt_editor.GetErrorMarkersRef().clear();

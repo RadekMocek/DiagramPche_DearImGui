@@ -76,7 +76,7 @@ void App::BenchmarkStart(const BenchmarkType type)
     else if (type == BENCHMARK_COMPLETE) {
         HandleRegularNew();
         m_source = "[node.\"Hang onto yer helmet!\\nThe complete benchmark has started...\"]\n";
-        OnMSourceChanged(false);
+        if (m_do_use_alt_editor) m_alt_editor.SetText(m_source);
         m_bench_stats_total_nodes = 0;
     }
 }
@@ -150,6 +150,11 @@ void App::BenchmarkUpdate()
                 BenchmarkChangeColor(color_r, color_g, color_b, zoom_level);
             }
 
+            if (m_do_use_alt_editor && is_gradual) {
+                // Don't use `OnMSourceChanged` as it's marking the document as dirty (no need for that)
+                m_alt_editor.SetText(m_source);
+            }
+
             // Auto scrolling
             m_scrolling.x -= AUTO_SCROLL_STEP_X;
             if (m_scrolling.x < -AUTO_SCROLL_MODULO_X) {
@@ -165,7 +170,6 @@ void App::BenchmarkUpdate()
 
             // Stats
             if (is_gradual) {
-                OnMSourceChanged(false);
                 m_bench_stats_total_nodes += 2 * N_NODES_IN_INTERVAL;
             }
 
