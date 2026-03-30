@@ -84,11 +84,11 @@ void App::GUIToolbar(const float textedit_width)
         node_type_source = node.type_source;
         node_key_label_value = node.id;
     }
-    else if (m_selected_or_hovered_canvas_node_key.has_value()
-        && m_parser.m_result_nodes.contains(m_selected_or_hovered_canvas_node_key.value())) {
+    else if (m_hovered_canvas_node_key.has_value()
+        && m_parser.m_result_nodes.contains(m_hovered_canvas_node_key.value())) {
         // Node is not selected, but is at least hovered, get info from it
         // No need to set the "source" values, toolbar is disabled
-        const auto& node = m_parser.m_result_nodes[m_selected_or_hovered_canvas_node_key.value()];
+        const auto& node = m_parser.m_result_nodes[m_hovered_canvas_node_key.value()];
         node_color = node.color;
         node_type_selected_idx = node.type;
         node_key_label_value = node.id;

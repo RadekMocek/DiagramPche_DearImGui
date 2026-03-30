@@ -130,11 +130,14 @@ private:
     std::unordered_map<std::string, CanvasNode> m_canvas_nodes{};
     int m_canvas_font_size{};
     float m_canvas_zoom_level{};
+    // (Dear ImGui sliders don't support step size, so we have to map 6,10,14,18,... to 1,2,3,4,...)
+    static constexpr auto ZOOM_LEVEL_SLIDER_DEFAULT_VALUE = 3;
+    int m_canvas_zoom_level_slider_value;
     // Canvas interaction
     bool m_do_show_toolbar{};
     bool m_do_show_secondary_canvas_toolbar{};
     // - mouse hover/click nodes in canvas
-    std::optional<std::string> m_selected_or_hovered_canvas_node_key = std::nullopt;
+    std::optional<std::string> m_hovered_canvas_node_key = std::nullopt;
     bool m_is_canvas_node_selected = false;
     std::string m_selected_canvas_node_key{};
     // - drag n drop new nodes onto a canvas

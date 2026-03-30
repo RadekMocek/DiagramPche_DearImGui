@@ -23,14 +23,13 @@ void App::ResetCanvasScrollingAndZoom()
     m_scrolling = SCROLLING_DEFAULT;
     m_canvas_font_size = CANVAS_FONT_SIZE_BASE;
     m_canvas_zoom_level = 1.0f;
+    m_canvas_zoom_level_slider_value = ZOOM_LEVEL_SLIDER_DEFAULT_VALUE;
 }
 
 void App::GUICanvas(const float height)
 {
     // For getting the mouse position
     static ImGuiIO& io = ImGui::GetIO();
-    // Dear ImGui sliders don't support step size, so we have to map 6,10,14,18,... to 1,2,3,4,... (Straightening tool for bending machine)
-    static int zoom_level_slider_value = 3;
 
     // .: Prepare ground for the canvas :.
     // .:===============================:.
@@ -86,7 +85,7 @@ void App::GUICanvas(const float height)
 
         const int font_size_unclamped = m_canvas_font_size + io.MouseWheel * CANVAS_FONT_SIZE_STEP; // NOLINT(*-narrowing-conversions)
         ChangeCanvasFontSizeAndZoom(std::clamp(font_size_unclamped, CANVAS_FONT_SIZE_MIN, CANVAS_FONT_SIZE_MAX));
-        zoom_level_slider_value = (m_canvas_font_size - CANVAS_FONT_SIZE_MIN) / CANVAS_FONT_SIZE_STEP;
+        m_canvas_zoom_level_slider_value = (m_canvas_font_size - CANVAS_FONT_SIZE_MIN) / CANVAS_FONT_SIZE_STEP;
 
         // Zoom anchor under mouse
         if (const auto new_zoom = m_canvas_zoom_level; old_zoom != new_zoom) {
@@ -163,13 +162,13 @@ void App::GUICanvas(const float height)
         // We need to check if some node is hovered. If there are multiple nodes under the cursor,
         // we should choose the one with biggest `z_mul` (bigger z_mul == "closer" to the cursor).
         hovered_node_z_mul = -1;
-        m_selected_or_hovered_canvas_node_key = std::nullopt;
+        m_hovered_canvas_node_key = std::nullopt;
 
         for (const auto& [key, value] : m_canvas_nodes) {
             if (value.z_mul > hovered_node_z_mul && value.IsPointInsideIncl(mouse_pos_in_canvas)) {
                 //is_some_node_hovered = true;
                 hovered_node_z_mul = value.z_mul;
-                m_selected_or_hovered_canvas_node_key = key;
+                m_hovered_canvas_node_key = key;
             }
         }
         // If there is some node under the cursor, then:
@@ -177,11 +176,11 @@ void App::GUICanvas(const float height)
         // * Ctrl+LMB to jump to node's definition in the text editor
         if (ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
             // Clicked on node
-            if (m_selected_or_hovered_canvas_node_key.has_value()) {
+            if (m_hovered_canvas_node_key.has_value()) {
                 // Ctrl+LMB
                 if (io.KeyCtrl) {
                     if (m_do_use_alt_editor) {
-                        const auto& hovered_node = m_canvas_nodes[m_selected_or_hovered_canvas_node_key.value()];
+                        const auto& hovered_node = m_canvas_nodes[m_hovered_canvas_node_key.value()];
                         m_alt_editor.SetCursorPosition({hovered_node.def_line_num, 0});
                     }
                     // Vanilla textedit cannot move cursor, at least not without digging in imgui_internal.h, so show error instead
@@ -192,7 +191,7 @@ void App::GUICanvas(const float height)
                 // LMB
                 else {
                     m_is_canvas_node_selected = true;
-                    m_selected_canvas_node_key = m_selected_or_hovered_canvas_node_key.value();
+                    m_selected_canvas_node_key = m_hovered_canvas_node_key.value();
                 }
             }
             // Clicked on empty space in canvas
@@ -200,6 +199,9 @@ void App::GUICanvas(const float height)
                 m_is_canvas_node_selected = false;
             }
         }
+    }
+    else {
+        m_hovered_canvas_node_key = std::nullopt;
     }
 
     // == Drag n drop new node logic ==
@@ -283,9 +285,9 @@ void App::GUICanvas(const float height)
         constexpr auto SLIDER_MIN = 0;
         constexpr auto SLIDER_MAX = (CANVAS_FONT_SIZE_MAX - CANVAS_FONT_SIZE_MIN) / CANVAS_FONT_SIZE_STEP;
         const auto slider_label = std::format("Zoom level: {:.2f}", m_canvas_zoom_level);
-        if (ImGui::SliderInt("##ZoomLevel", &zoom_level_slider_value, SLIDER_MIN, SLIDER_MAX,
+        if (ImGui::SliderInt("##ZoomLevel", &m_canvas_zoom_level_slider_value, SLIDER_MIN, SLIDER_MAX,
                              slider_label.c_str(), ImGuiSliderFlags_NoInput)) {
-            ChangeCanvasFontSizeAndZoomFromSliderValue(zoom_level_slider_value);
+            ChangeCanvasFontSizeAndZoomFromSliderValue(m_canvas_zoom_level_slider_value);
         }
         ImGui::PopItemWidth();
     }

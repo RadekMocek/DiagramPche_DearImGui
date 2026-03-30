@@ -18,6 +18,8 @@ void App::GLFWErrorCallback(const int error, const char* description)
 
 void App::GLFWWindowCloseCallback(GLFWwindow* window)
 {
+    glfwFocusWindow(window);
+
     // ReSharper disable once CppTooWideScopeInitStatement
     const auto this_inst = static_cast<App*>(glfwGetWindowUserPointer(window));
 
