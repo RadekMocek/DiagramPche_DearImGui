@@ -96,12 +96,13 @@ void App::GUIToolbar(const float textedit_width)
 
     // Place the toolbar in the UI
     ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(SEPARATOR_WIDTH, 0));
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, TOOLBAR_PADDING);
     ImGui::SameLine();
     const ImVec2 toolbar2_size(ImGui::GetContentRegionAvail().x, TOOLBAR_HEIGHT);
-    ImGui::BeginDisabled(!m_is_canvas_node_selected);
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, TOOLBAR_PADDING);
     ImGui::BeginChild("Toolbar2Parent", toolbar2_size, 0);
     ImGui::PopStyleVar(2);
+    // This must be called after `PopStyleVar`, otherwise assert check fails at debug
+    ImGui::BeginDisabled(!m_is_canvas_node_selected);
 
     // Text vertical align: center; calling this once in child seems to be enough (I guess it's because we're using `ImGui::SameLine()`?)
     ImGui::AlignTextToFramePadding();

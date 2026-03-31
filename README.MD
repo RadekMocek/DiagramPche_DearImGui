@@ -76,6 +76,8 @@ cmake --build build
   * Sometimes it thinks the "#RRGGBBAA" string is comment (TOML comments start with '#'), comments with `"` also not ideal
   * Setting curosr position when the text is selected will move the cursor, but won't unselect the text and won't highlight the new line
 * Error highlight breaks on tab (can fix by counting tabs (`\t`) on the row with error and shifting EH_x accordingly)
-* Hacky SVG edit
-  * It seems that only some SVG browsers support fill transparency via rgba(r,g,b,a) or #RRGGBBAA, so I'm using the style="..." option, which the svg library wasn't made for. The way I added it is not very pretty.
-  * ⇒ Exported SVG currently does not support node border transparency (alpha is always 255, this is true for Nodes and Path labels' background)
+* SVG exporter:
+  * Hacky SVG edit
+    * It seems that only some SVG browsers support fill transparency via rgba(r,g,b,a) or #RRGGBBAA, so I'm using the style="..." option, which the svg library wasn't made for. The way I added it is not very pretty.
+    * ⇒ Exported SVG currently does not support node border transparency (alpha is always 255, this is true for Nodes and Path labels' background)
+  * Symbols like '&', '<', '>' are not getting escaped
