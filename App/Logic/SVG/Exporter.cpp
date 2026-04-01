@@ -135,11 +135,31 @@ void Exporter::AddText(const int z, const double tl_x, const double tl_y, const 
 {
     if (!m_is_enabled) return;
 
+    // XML escape
+    std::string escaped;
+    escaped.reserve(value.size());
+    for (const char& pos : value) {
+        switch (pos) {
+        case '&': escaped.append("&amp;");
+            break;
+        case '\"': escaped.append("&quot;");
+            break;
+        case '\'': escaped.append("&apos;");
+            break;
+        case '<': escaped.append("&lt;");
+            break;
+        case '>': escaped.append("&gt;");
+            break;
+        default: escaped.append(&pos, 1);
+            break;
+        }
+    }
+
     // Draw command
     double y_offset = 0;
     const auto y_start = tl_y - SVG_LINE_HEIGHT / 6; // Magic
 
-    std::istringstream iss(value);
+    std::istringstream iss(escaped);
     std::string line;
 
     size_t max_line_length = 0;

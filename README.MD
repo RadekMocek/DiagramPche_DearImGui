@@ -80,4 +80,3 @@ cmake --build build
   * Hacky SVG edit
     * It seems that only some SVG browsers support fill transparency via rgba(r,g,b,a) or #RRGGBBAA, so I'm using the style="..." option, which the svg library wasn't made for. The way I added it is not very pretty.
     * ⇒ Exported SVG currently does not support node border transparency (alpha is always 255, this is true for Nodes and Path labels' background)
-  * Symbols like '&', '<', '>' are not getting escaped
