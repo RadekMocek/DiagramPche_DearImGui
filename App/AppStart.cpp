@@ -5,6 +5,7 @@
 
 void App::Start()
 {
+    // Setup cursor that is used while dragging the canvas
     m_cursor_crosshair = glfwCreateStandardCursor(GLFW_CROSSHAIR_CURSOR);
 
     // = Load Fonts =
@@ -12,7 +13,7 @@ void App::Start()
     constexpr auto FONT_SIZE_DEFAULT = 20.0f;
     m_font_inconsolata_medium = io.Fonts->AddFontFromFileTTF("./Resource/Font/Inconsolata-Medium.ttf",
                                                              FONT_SIZE_DEFAULT);
-    IM_ASSERT(m_font_inconsolata_medium != nullptr);
+    IM_ASSERT(m_font_inconsolata_medium != nullptr); // Be aware that IM_ASSERTs only work in Debug mode
 
     // Icon font
     ImFontConfig icons_config;
@@ -24,7 +25,7 @@ void App::Start()
                                  &icons_config);
 
     // = App config =
-    // Cannot move windows by dragging their body, only titlebar counts, just like god intended
+    // Make it so user can't move windows by dragging their body; only dragging titlebar works, just like god intended
     io.ConfigWindowsMoveFromTitleBarOnly = true;
 
     // = Alternative text editor =
@@ -32,7 +33,7 @@ void App::Start()
     m_alt_editor.SetLanguageDefinition(TextEditor::LanguageDefinition::NSOLD());
     m_alt_editor.SetShowWhitespaces(false);
     m_alt_editor.SetText(WELCOME_TOML);
-    // (Color palette is set elsewhere)
+    // (Color palette is set elsewhere: AppBoilerplate.cpp -> Init -> ChangeAppearanceTheme)
 
     // = Initialize all other members =
     m_do_show_grid = true;

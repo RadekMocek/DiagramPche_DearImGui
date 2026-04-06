@@ -132,7 +132,7 @@ private:
     float m_canvas_zoom_level{};
     // (Dear ImGui sliders don't support step size, so we have to map 6,10,14,18,... to 1,2,3,4,...)
     static constexpr auto ZOOM_LEVEL_SLIDER_DEFAULT_VALUE = 3;
-    int m_canvas_zoom_level_slider_value;
+    int m_canvas_zoom_level_slider_value{};
     // Canvas interaction
     bool m_do_show_toolbar{};
     bool m_do_show_secondary_canvas_toolbar{};

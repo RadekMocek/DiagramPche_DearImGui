@@ -52,7 +52,7 @@ cmake --build build
 * Changes done to _simple-svg_:
   * Modified to support transparency (not very pretty)
 * Changes done to _ImGuiColorTextEdit_:
-  * Added support for NSOLD (the diagram language)
+  * Added syntax highlight support for the "diagram language"
   * Added a custom color palette
   * Disabled line numbers
   * Disabled error and identifier tooltips
@@ -68,14 +68,14 @@ cmake --build build
 * InputTextMultiline problems:
   * Loses focus on AltGR
   * Horizontal scrolling is problematic [...](https://github.com/hoffstadt/DearPyGui/issues/2381#issuecomment-2303922790)
-  * Scrollbar flashing while typing
+  * Scrollbar is "shaking" while typing / scrolling via arrow keys
+  * (not widget issue) Error highlight breaks on tab (can fix by counting tabs (`\t`) on the row with error and shifting EH_x accordingly)
 * ImGuiColorTextEdit problems:
-  * Scrolling by holding up/down arrow key weird "jumpy" behavior, it's even worse with horizontal scroll (right arrow), it does not do that in their demo, but that's older version on older Dear ImGui
+  * Scrolling by holding up/down arrow key has weird "jumpy" behavior, it's even worse with horizontal scroll (right arrow), it does not do that in their demo, but that's older version on older Dear ImGui
   * No Ctrl + Backspace for removing the whole word (same for Delete)
-  * Selecting text by holding LMB and dragging pauses when curosr is out of the widget area
-  * Sometimes it thinks the "#RRGGBBAA" string is comment (TOML comments start with '#'), comments with `"` also not ideal
-  * Setting curosr position when the text is selected will move the cursor, but won't unselect the text and won't highlight the new line
-* Error highlight breaks on tab (can fix by counting tabs (`\t`) on the row with error and shifting EH_x accordingly)
+  * Selecting text by holding LMB and dragging pauses when the cursor is out of the widget area
+  * Sometimes it thinks the "#RRGGBBAA" string is comment (TOML comments start with '#'), comments that contain `"` are also not ideal
+  * Setting cursor position when the text is selected will move the cursor, but won't unselect the text and won't highlight the new line
 * SVG exporter:
   * Hacky SVG edit
     * It seems that only some SVG browsers support fill transparency via rgba(r,g,b,a) or #RRGGBBAA, so I'm using the style="..." option, which the svg library wasn't made for. The way I added it is not very pretty.

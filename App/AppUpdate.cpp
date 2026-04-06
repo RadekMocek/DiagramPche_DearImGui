@@ -3,6 +3,7 @@
 
 void App::Update()
 {
+    // .: Benchmark :.
     BenchmarkUpdate();
     ImGui::BeginDisabled(m_is_benchmark_running);
 
@@ -23,7 +24,8 @@ void App::Update()
 
     ImGui::EndDisabled(/*m_is_benchmark_running*/);
 
-    // Must be called before modals because Export modal starts the exporter
+    // .: Complete the SVG export :.
+    // Must be called before modals because Export modal starts the exporter (so calling this after modals would be too soon)
     if (m_exporter.IsEnabled()) {
         if (m_exporter.Save()) {
             if (m_action_after_export_choice == ActionAfterExport_OpenFolder) {
@@ -46,7 +48,7 @@ void App::Update()
     // .: Modals :.
     GUIModal();
 
-    // .: Widget benchmark :.
+    // Widget benchmark :: The window that gets shown
     GUIWinWidgetbench();
 
     // Post modal actions
@@ -91,10 +93,11 @@ void App::Update()
     window_title += " – DiagramPche :: Dear ImGui";
     SetWindowTitle(window_title.c_str());
 
-    // Widget benchmark
+    // Widget benchmark :: The logic
     HandleWidgetbench();
 
-    // cmd args
+    // Handle command line arguments to start the nodes benchmark
+    // (we wait one oteration before starting it, maybe not 100% necessary but feels right)
     if (m_app_startup_modifiers.do_benchmark_nodes) {
         m_app_startup_modifiers.do_benchmark_nodes = false;
         BenchmarkStart(static_cast<BenchmarkType>(m_app_startup_modifiers.benchmark_type));

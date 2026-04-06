@@ -5,6 +5,7 @@
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "../Dependency/stb_image.h"
+
 #include "Helper/CPU.hpp"
 
 #ifdef _WIN32
@@ -146,10 +147,10 @@ bool App::Init(const AppStartupModifiers mod)
 
     // Setup scaling
     ImGuiStyle& style = ImGui::GetStyle();
+    // Bake a fixed style scale
     style.ScaleAllSizes(main_scale);
-    // Bake a fixed style scale. (until we have a solution for dynamic style scaling, changing this requires resetting Style + calling this again)
+    // Set initial font scale
     style.FontScaleDpi = main_scale;
-    // Set initial font scale. (using io.ConfigDpiScaleFonts=true makes this unnecessary. We leave both here for documentation purpose)
 
     // Setup Platform/Renderer backends
     ImGui_ImplGlfw_InitForOpenGL(m_window, true);
@@ -160,6 +161,7 @@ bool App::Init(const AppStartupModifiers mod)
 
     std::cout << "DEAR IMGUI OK\n";
 
+    // Store GL renderer info so we can show it in the benchmark window, no other purpose for this
     gl_info_renderer = reinterpret_cast<const char*>(glGetString(GL_RENDERER));
 
     return true;
@@ -167,16 +169,14 @@ bool App::Init(const AppStartupModifiers mod)
 
 void App::Run()
 {
-    constexpr auto clear_color = ImVec4(0.0f, 0.0f, 0.0f, 1.00f);
-
-    // App start
+    // App start (initial app logic setup after initializing all the libraries, but before the main loop begins)
     Start();
 
-    // cmd args
+    // Handle command line arguments (benchmark setup)
     m_do_use_alt_editor = m_app_startup_modifiers.do_syntax_highlight;
     m_do_skip_textedit = m_app_startup_modifiers.do_skip_textedit;
 
-    // Before the loop, as far as possible from the first call of this, so we have two values
+    // (Measure CPU before the loop, as far as possible from the first call of this, so we have two values)
     m_CPU_usage = CPUStats::GetCurrentValue();
 
     // Main loop
@@ -205,7 +205,7 @@ void App::Run()
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        // CPU measure for benchmarking purposes
+        // CPU measure at regular intervals for benchmarking purposes
         static float time_counter = 0;
         if (m_is_benchmark_running || m_WB_is_running) {
             const ImGuiIO& io = ImGui::GetIO();
@@ -216,7 +216,7 @@ void App::Run()
             }
         }
 
-        // App update
+        // App update (this is where all the app's logic happen)
         Update();
 
         // Rendering
@@ -224,6 +224,10 @@ void App::Run()
         int display_w, display_h;
         glfwGetFramebufferSize(m_window, &display_w, &display_h);
         glViewport(0, 0, display_w, display_h);
+
+        // Doesn't really matter because background should not be visible (we use a full-viewport ImGui window that covers it)
+        constexpr auto clear_color = ImVec4(0.0f, 0.0f, 0.0f, 1.00f);
+
         glClearColor(clear_color.x * clear_color.w,
                      clear_color.y * clear_color.w,
                      clear_color.z * clear_color.w,

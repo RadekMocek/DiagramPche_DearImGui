@@ -8,12 +8,12 @@
 void App::GUIBody()
 {
     // --- Body config --- --- --- --- ---
-    constexpr auto BOTTOM_BAR_HEIGHT = 20;
+    constexpr auto BOTTOM_BAR_HEIGHT = 18;
     // --- --- --- --- --- --- --- --- ---
 
     // Full-viewport window setup
     constexpr ImGuiWindowFlags flags
-        // Main windows must be always on background so it does not get infront of ther modal windows
+        // Main windows must be always on background so it does not get in front of ther modal windows
         = ImGuiWindowFlags_NoBringToFrontOnFocus
         // ImGuiWindowFlags_NoDecoration = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse:
         | ImGuiWindowFlags_NoDecoration
@@ -43,7 +43,7 @@ void App::GUIBody()
     ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
     ImGui::PushFont(nullptr, static_cast<float>(m_source_font_size));
 
-    if (m_do_skip_textedit /*(Benchmark purposes)*/) {
+    if (m_do_skip_textedit /*(We can skip textedit for benchmark purposes)*/) {
         const ImVec2 textedit_size(textedit_width, main_columns_height);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
         ImGui::BeginChild("SourceParent", textedit_size, 0);
