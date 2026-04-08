@@ -62,8 +62,8 @@ void App::GUIBody()
     ImGui::SameLine();
     ImGui::InvisibleButton("BodySeparator", ImVec2(SEPARATOR_WIDTH, main_columns_height));
     if (ImGui::IsItemActive()) {
-        m_body_split_ratio = (textedit_width + ImGui::GetIO().MouseDelta.x) / content_region_available.x;
-        m_body_split_ratio = ImClamp(m_body_split_ratio, 0.1f, 0.9f);
+        m_body_split_ratio = ImClamp((textedit_width + ImGui::GetIO().MouseDelta.x) / content_region_available.x,
+                                     0.1f, 0.9f);
     }
     if (ImGui::IsItemHovered() || ImGui::IsItemActive()) {
         ImGui::SetMouseCursor(ImGuiMouseCursor_ResizeEW);
@@ -78,14 +78,20 @@ void App::GUIBody()
         ImGui::PushStyleColor(ImGuiCol_Text, COLOR_ERROR);
         std::ranges::replace(m_parser.m_error_description, '\n', ' ');
         ImGui::TextUnformatted(m_parser.m_error_description.c_str());
-        // Tooltip if the error is too long
-        // Wait, what will come of this? https://github.com/ocornut/imgui/issues/9140
-        /*
+        // Tooltip with error message on mouse hover; useful if the error is too long to fit into window's width
+        //*
         if (ImGui::BeginItemTooltip()) {
+            const auto style = ImGui::GetStyle();
+            const auto wrap_posistion
+                = ImGui::GetWindowViewport()->WorkSize.x
+                - style.DisplaySafeAreaPadding.x
+                - style.WindowPadding.x;
+            ImGui::PushTextWrapPos(wrap_posistion);
             ImGui::TextWrapped("%s", m_parser.m_error_description.c_str());
+            ImGui::PopTextWrapPos();
             ImGui::EndTooltip();
         }
-        */
+        //*/
         ImGui::PopStyleColor();
     }
 
