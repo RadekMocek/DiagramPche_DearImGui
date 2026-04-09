@@ -137,10 +137,14 @@ bool App::Init(const AppStartupModifiers mod)
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
+
+    // Enable keyboard/gamepad controls?
+    /*
     ImGuiIO& io = ImGui::GetIO();
     (void)io;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad; // Enable Gamepad Controls
+    //*/
 
     // Setup Dear ImGui style
     ChangeAppearanceTheme(m_style_current_color_theme);
@@ -173,8 +177,10 @@ void App::Run()
     Start();
 
     // Handle command line arguments (benchmark setup)
-    m_do_use_alt_editor = m_app_startup_modifiers.do_syntax_highlight;
-    m_do_skip_textedit = m_app_startup_modifiers.do_skip_textedit;
+    if (m_app_startup_modifiers.is_benchmark_run_from_terminal) {
+        m_do_use_alt_editor = m_app_startup_modifiers.do_syntax_highlight;
+        m_do_skip_textedit = m_app_startup_modifiers.do_skip_textedit;
+    }
 
     // (Measure CPU before the loop, as far as possible from the first call of this, so we have two values)
     m_CPU_usage = CPUStats::GetCurrentValue();

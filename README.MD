@@ -66,7 +66,6 @@ cmake --build build
 * Design problems:
   * No undo for changing node's color via the color picker, changing color even clears the history 😬
 * InputTextMultiline problems:
-  * Loses focus on AltGR
   * Horizontal scrolling is problematic [...](https://github.com/hoffstadt/DearPyGui/issues/2381#issuecomment-2303922790)
   * Scrollbar is "shaking" while typing / scrolling via arrow keys
   * (not widget issue) Error highlight breaks on tab (can fix by counting tabs (`\t`) on the row with error and shifting EH_x accordingly)
