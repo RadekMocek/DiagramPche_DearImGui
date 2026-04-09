@@ -4,7 +4,7 @@ const TextEditor::Palette& TextEditor::GetDiagramPchePaletteLight()
 {
     static constexpr Palette p = {
         {
-            0xff7f7f7f, // None
+            0xff7f7f7f, // Default
             IM_COL32(55, 61, 194, 255), // Keyword
             0xff2020a0, // Number
             IM_COL32(77, 89, 1, 255), // String
@@ -30,25 +30,28 @@ const TextEditor::Palette& TextEditor::GetDiagramPchePaletteLight()
     return p;
 }
 
+// Inspired by https://docs.rs/egui_code_editor/0.2.21/egui_code_editor/struct.ColorTheme.html#associatedconstant.SONOKAI
+// (https://github.com/sainnhe/sonokai)
+// (https://github.com/p4ymak/egui_code_editor)
 const TextEditor::Palette& TextEditor::GetDiagramPchePaletteDark()
 {
     static constexpr Palette p = {
         {
-            0xff7f7f7f, // Default
-            0xffd69c56, // Keyword
-            IM_COL32(0, 216, 0, 255), // Number
-            0xff7070e0, // String
+            IM_COL32(226, 226, 227, 255), // Default
+            IM_COL32(252, 93, 124, 255), // Keyword
+            IM_COL32(179, 157, 243, 255), // Number
+            IM_COL32(231, 198, 100, 255), // String
             0xff70a0e0, // Char literal
-            0xffffffff, // Punctuation
+            IM_COL32(127, 132, 144, 255), // Punctuation
             0xff408080, // Preprocessor
-            0xffaaaaaa, // Identifier
-            0xff9bc64d, // Known identifier
+            IM_COL32(226, 226, 227, 255), // Identifier
+            IM_COL32(57, 158, 230, 255), // Known identifier
             0xffc040a0, // Preproc identifier
-            0xff206020, // Comment (single line)
-            0xff406020, // Comment (multi line)
+            IM_COL32(127, 132, 144, 255), // Comment (single line)
+            IM_COL32(127, 132, 144, 255), // Comment (multi line)
             0xff101010, // Background
             0xffe0e0e0, // Cursor
-            0x80a06020, // Selection
+            IM_COL32(68, 72, 82, 255), // Selection
             0x800020ff, // ErrorMarker
             0x40f08000, // Breakpoint
             0xff707000, // Line number
@@ -64,18 +67,18 @@ const TextEditor::Palette& TextEditor::GetDiagramPchePaletteLegacy()
 {
     static constexpr Palette p = {
         {
-            0xff00ffff, // None
+            0xff00ffff, // Default
             0xffffff00, // Keyword
-            IM_COL32(0, 204, 0, 255), // Number
-            0xff808000, // String
+            IM_COL32(179, 157, 243, 255), // Number
+            IM_COL32(231, 198, 100, 255), // String
             0xff808000, // Char literal
-            0xffffffff, // Punctuation
+            0xff808000, // Punctuation
             0xff008000, // Preprocessor
-            0xff00ffff, // Identifier
-            0xffffffff, // Known identifier
+            0xffffffff, // Identifier
+            IM_COL32(254, 219, 169, 255), // Known identifier
             0xffff00ff, // Preproc identifier
-            0xff808080, // Comment (single line)
-            0xff404040, // Comment (multi line)
+            IM_COL32(0, 128, 0, 255), // Comment (single line)
+            IM_COL32(0, 128, 0, 255), // Comment (multi line)
             IM_COL32(1, 39, 86, 255), // Background
             0xff0080ff, // Cursor
             IM_COL32(254, 219, 169, 64), // Selection
