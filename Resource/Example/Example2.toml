@@ -49,14 +49,14 @@ size = [0, "node_height"]
 type = "ellipse"
 value = "Zahájení\npoptávky"
 xy = ["bg_z", "top-left", 75, "node_bg_offset"]
-color="#f2f2f2cf"
+color = "#f2f2f2cf"
 
 [node.z1]
 size = [0, "node_height"]
 value = "Kontaktuje\npodnik"
 pivot = "left"
 xy = ["z0", "right", "space", 0]
-color="#c6daf2cf"
+color = "#c6daf2cf"
 
 [[path]]
 start = ["z0", "right", 0, 0]
@@ -66,7 +66,7 @@ end = ["z1", "left", 0, 0]
 size = [0, "node_height"]
 value = "Zahájí\nzpracování\nobjednávky"
 xy = ["bg_p", "top-left", 110, "node_bg_offset"]
-color="#c6daf2cf"
+color = "#c6daf2cf"
 
 [[path]]
 start = ["z1", "bottom", 0, 0]
@@ -79,7 +79,7 @@ label_shift = [6, 0]
 type = "diamond"
 value = "Existuje\nzákaznický\núčet?"
 xy = ["bg_s", "top-left", 93, 15]
-color="#f0f2c6cf"
+color = "#f0f2c6cf"
 
 [[path]]
 start = ["p0", "bottom", 0, 0]
@@ -89,13 +89,13 @@ end = ["s0", "top", 0, 0]
 size = [0, "node_height"]
 value = "Vytvoří\nzákaznický\núčet v systému"
 xy = ["p0", "top-right", 45, 0]
-color="#c6daf2cf"
+color = "#c6daf2cf"
 
 [node.p2]
 size = [0, "node_height"]
 value = "Zadá parametry\npoptávaných\nproduktů"
 xy = ["p1", "top-right", "space", 0]
-color="#c6daf2cf"
+color = "#c6daf2cf"
 
 [[path]]
 start = ["p1", "right", 0, 0]
@@ -126,7 +126,7 @@ label_shift = [12, 0]
 type = "diamond"
 value = "Existuje\nodpovídající\nprodukt?"
 xy = ["s0", "top-right", 45, 0]
-color="#f0f2c6cf"
+color = "#f0f2c6cf"
 
 [[path]]
 start = ["p2", "bottom", 15, 0]
@@ -139,7 +139,7 @@ size = [0, "node_height"]
 value = "Automaticky\nvytvoří\nprodukt"
 pivot = "left"
 xy = ["s1", "right", 50, 0]
-color="#c6daf2cf"
+color = "#c6daf2cf"
 
 [[path]]
 start = ["s1", "right", 0, 0]
@@ -152,7 +152,7 @@ size = [0, "node_height"]
 value = "Načte produkt\na jeho cenu"
 pivot = "left"
 xy = ["s2", "right", "space", 0]
-color="#c6daf2cf"
+color = "#c6daf2cf"
 
 [[path]]
 start = ["s1", "bottom", 0, 0]
@@ -166,7 +166,7 @@ size = [0, "node_height"]
 value = "Stanoví cenu\nproduktu"
 pivot = "left"
 xy = ["p2", "right", "space", 0]
-color="#c6daf2cf"
+color = "#c6daf2cf"
 
 [[path]]
 start = ["s2", "top-right", 0, 0]
@@ -178,7 +178,7 @@ size = [0, "node_height"]
 value = "Doplní zbývající\núdaje objednávky"
 pivot = "left"
 xy = ["p3", "right", "space", 0]
-color="#c6daf2cf"
+color = "#c6daf2cf"
 
 [[path]]
 start = ["p3", "right", 0, 0]
@@ -194,7 +194,7 @@ size = [0, "node_height"]
 value = "Uloží objednávku\njako nepotvrzenou"
 pivot = "left"
 xy = ["s3", "right", "space", 0]
-color="#c6daf2cf"
+color = "#c6daf2cf"
 
 [[path]]
 start = ["p4", "bottom", 20, 0]
@@ -205,7 +205,7 @@ size = [0, "node_height"]
 value = "Odešle zákazníkovi\ncenovou nabídku\nk odsouhlasení"
 pivot = "left"
 xy = ["s4", "right", 40, 0]
-color="#c6daf2cf"
+color = "#c6daf2cf"
 
 [[path]]
 start = ["s4", "right", 0, 0]
@@ -218,7 +218,7 @@ type = "diamond"
 value = "Souhlasí\ns cenovou\nnabídkou?"
 pivot = "bottom"
 xy = ["s5", "top", 0, -190]
-color="#f0f2c6cf"
+color = "#f0f2c6cf"
 
 [[path]]
 start = ["s5", "top", 0, 0]
@@ -229,7 +229,7 @@ size = [0, "node_height"]
 value = "Upraví\nparametry\nobjednávky"
 pivot = "left"
 xy = ["p4", "right", "space", 0]
-color="#c6daf2cf"
+color = "#c6daf2cf"
 
 [[path]]
 start = ["z2", "left", 0, 0]
@@ -248,7 +248,7 @@ size = [0, "node_height"]
 value = "Změní stav\nobjednávky\nna aktivní"
 pivot = "left"
 xy = ["s5", "right", "space", 0]
-color="#c6daf2cf"
+color = "#c6daf2cf"
 
 [[path]]
 start = ["z2", "right", 0, 0]
@@ -264,7 +264,7 @@ value = "Zařazení\nproduktů\ndo výroby"
 label_shift = [2, 0]
 pivot = "left"
 xy = ["s6", "right", "space", 0]
-color="#f2f2f2cf"
+color = "#f2f2f2cf"
 
 [[path]]
 start = ["s6", "right", 0, 0]

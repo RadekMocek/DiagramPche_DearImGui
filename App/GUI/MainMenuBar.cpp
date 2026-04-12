@@ -136,6 +136,10 @@ void App::GUIMainMenuBar()
                 if (ImGui::MenuItem("Example 2: BPMN")) {
                     HandleOpenExample("./Resource/Example/Example2.toml");
                 }
+                // . Example 3 :: Simple bubble chart .
+                if (ImGui::MenuItem("Example 3: Simple bubble chart")) {
+                    HandleOpenExample("./Resource/Example/Example3.toml");
+                }
                 // .::.
                 ImGui::EndMenu();
             }

@@ -1,0 +1,38 @@
+[variables]
+ori = 300
+xup = -5
+yup = -15
+
+[[path]]
+start = [0, "ori"]
+end = [0, 0]
+label = ["Update frequency", 1, -10, -68]
+
+[[path]]
+start = [0, "ori"]
+end = [500, "ori"]
+label = ["Ease of update", 1, -70, 0]
+
+[node.B]
+pivot = "bottom-left"
+xy = [0, "ori"]
+type = "ellipse"
+value = "Bootloader"
+
+[node.K]
+pivot = "bottom-left"
+xy = ["B", "top-right", "xup", "yup"]
+type = "ellipse"
+value = "Kernel"
+
+[node.R]
+pivot = "bottom-left"
+xy = ["K", "top-right", "xup", "yup"]
+type = "ellipse"
+value = "RootFileSystem"
+
+[node.A]
+pivot = "bottom-left"
+xy = ["R", "top-right", "xup", "yup"]
+type = "ellipse"
+value = "SystemApps"
