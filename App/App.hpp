@@ -214,7 +214,7 @@ private:
     void GUICanvasDrawGhostNode(ImDrawList* draw_list,
                                 ImVec2 mouse_pos,
                                 float node_padding,
-                                ImVec2 ghost_padding,
+                                ImVec2 ghost_size,
                                 const char* ghost_label_c_str) const;
 
     // Additional windows
@@ -255,7 +255,7 @@ private:
     [[nodiscard]] std::optional<std::string> OpenTOMLDialog() const;
 
     // Source editing from canvas interaction
-    std::optional<size_t> GetMSourceIdxFromSourceRegion(const toml::source_position& position);
+    std::optional<size_t> GetMSourceIdxFromTOMLSourcePosition(const toml::source_position& position);
     void ReplaceInMSource(const toml::source_region& source, const std::string& new_str);
     void InsertNodeParameterInMSource(const toml::source_position& end, const std::string& new_str);
 

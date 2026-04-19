@@ -1,6 +1,6 @@
 #include "../App.hpp"
 
-std::optional<size_t> App::GetMSourceIdxFromSourceRegion(const toml::source_position& position)
+std::optional<size_t> App::GetMSourceIdxFromTOMLSourcePosition(const toml::source_position& position)
 {
     size_t result_idx = 0;
     auto line_n = 0;
@@ -17,9 +17,11 @@ std::optional<size_t> App::GetMSourceIdxFromSourceRegion(const toml::source_posi
 
 void App::ReplaceInMSource(const toml::source_region& source, const std::string& new_str)
 {
-    const auto start_opt = GetMSourceIdxFromSourceRegion(source.begin);
+    // THIS COULD BE OPTIMIZED by determining `start_opt` + `end_opt` in one go.
+
+    const auto start_opt = GetMSourceIdxFromTOMLSourcePosition(source.begin);
     // ReSharper disable once CppTooWideScopeInitStatement
-    const auto end_opt = GetMSourceIdxFromSourceRegion(source.end);
+    const auto end_opt = GetMSourceIdxFromTOMLSourcePosition(source.end);
     if (start_opt.has_value() && end_opt.has_value()) {
         const auto start = start_opt.value() - 1;
         const auto end = end_opt.value() - 1;
@@ -28,15 +30,15 @@ void App::ReplaceInMSource(const toml::source_region& source, const std::string&
     }
 }
 
-// This method is called when user changes node color or type via toolbar and the node TOML definition does not contain
-// the line with "color=" or "type=" (so default is used). In this situation, there is nothing to replace, but we need to
-// insert a new line into the source (that explicitly sets the color/type). The `end` parameter tells the function where
-// the last character of the line "[node.some_id]" is for the particular node. The parameter `new_str` is then inserted
-// to that position. It is expected that `new_str` begins with newline character, so the TOML is still valid after insert.
+// This method is called when user changes node color/type via toolbar, and the node TOML definition does not contain
+// the line with "color=" or "type=" (so default was used). In this situation, there is nothing to replace and we need to
+// insert a new line into the source instead (that explicitly sets the color/type). The `end` parameter tells the function
+// where the last character of the line "[node.some_id]" is for the particular node. The parameter `new_str` is then inserted
+// to that position. It is expected that `new_str` begins with newline character, so the TOML is still valid after the insert.
 void App::InsertNodeParameterInMSource(const toml::source_position& end, const std::string& new_str)
 {
     // ReSharper disable once CppTooWideScopeInitStatement
-    const auto node_def_end_idx = GetMSourceIdxFromSourceRegion(end);
+    const auto node_def_end_idx = GetMSourceIdxFromTOMLSourcePosition(end);
     if (node_def_end_idx.has_value()) {
         m_source.insert(node_def_end_idx.value(), new_str);
     }

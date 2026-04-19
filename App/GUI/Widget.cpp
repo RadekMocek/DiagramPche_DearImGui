@@ -5,8 +5,13 @@
 void App::WidgetTextEditorFontSizeInputInt()
 {
     ImGui::InputInt("##FontSizeInputInt", &m_source_font_size, 2);
+
+    /*
     if (m_source_font_size < FONT_SIZE_SOURCE_MIN) { m_source_font_size = FONT_SIZE_SOURCE_MIN; }
     else if (m_source_font_size > FONT_SIZE_SOURCE_MAX) { m_source_font_size = FONT_SIZE_SOURCE_MAX; }
+    //*/
+
+    m_source_font_size = std::clamp(m_source_font_size, FONT_SIZE_SOURCE_MIN, FONT_SIZE_SOURCE_MAX);
 }
 
 void App::WidgetTextEditorPreferredCombo()

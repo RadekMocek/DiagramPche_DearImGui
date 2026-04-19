@@ -10,7 +10,6 @@ void App::GUICanvasDrawPaths(ImDrawList* draw_list, const ImVec2 origin)
     // For SVG export → `Exporter.DrawCommand.same_z_priority`. Arrow tips should be on the same exact "SVG layer" as their path.
     // If there were multiple colliding paths, then without this, tips could be sorted differently than their corresponsing paths
     // (and that could be seen if colliding paths have different colors).
-
     // This value is incremented by 3 for each path, we need to keep two empty slots for possible path labels (rectangle and text)
     int path_number = 0;
 
@@ -112,7 +111,7 @@ void App::GUICanvasDrawPaths(ImDrawList* draw_list, const ImVec2 origin)
                 case PPTYPE_ABSOLUTE:
                     curr.x += origin.x;
                     break;
-                // AABRs in `m_canvas_nodes` are stored "zoomed and absolute", so they take zoom_level into account, but not origin.
+                // AABRs in `m_canvas_nodes` are stored "zoomed and absolute", so they take zoom level into account, but not origin.
                 // So we have to add origin here, later code depends on "originated" Pathpoint.
                 case PPTYPE_REFERENCE:
                     if (const auto it = m_canvas_nodes.find(pathpoint.x_parent_id); it != m_canvas_nodes.end()) {

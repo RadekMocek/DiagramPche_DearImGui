@@ -16,7 +16,7 @@ void App::Update()
     // .: Show the big demo window if enabled :.
 #ifdef INCLUDE_IMGUI_DEMO_WINDOW
     if (m_do_show_window_demo) {
-        ImGui::PushFont(nullptr, 16.0f);
+        ImGui::PushFont(nullptr, 18.0f);
         ImGui::ShowDemoWindow(&m_do_show_window_demo); // Putting the bool here will add close button to the demo window
         ImGui::PopFont();
     }
@@ -97,7 +97,7 @@ void App::Update()
     HandleWidgetbench();
 
     // Handle command line arguments to start the nodes benchmark
-    // (we wait one oteration before starting it, maybe not 100% necessary but feels right)
+    // (we wait one iteration before starting it, maybe not 100% necessary, but feels right)
     if (m_app_startup_modifiers.do_benchmark_nodes) {
         m_app_startup_modifiers.do_benchmark_nodes = false;
         BenchmarkStart(static_cast<BenchmarkType>(m_app_startup_modifiers.benchmark_type));

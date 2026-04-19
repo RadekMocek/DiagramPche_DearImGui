@@ -16,7 +16,7 @@ void App::GUIToolbar(const float textedit_width)
     constexpr ImVec2 ADDITIONAL_LEFT_PADDING = {0.0f, 0.0f};
 
     // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-    // [!] using `umgui_internal.h` for vertical separator, which is still in development (?)
+    // [!] using `imgui_internal.h` for vertical separator, which is still in development (?)
     const auto VerticalSeparator = [] {
         ImGui::SameLine();
         ImGui::SeparatorEx(ImGuiSeparatorFlags_Vertical, 1.0f);
@@ -137,16 +137,17 @@ void App::GUIToolbar(const float textedit_width)
     // This must correspond to `enum NodeType` values
     constexpr std::array node_types = {
         ICON_MDI_RECTANGLE_OUTLINE" Rectangle",
-        ICON_MDI_ELLIPSE_OUTLINE" Ellipse  ",
-        ICON_MDI_RHOMBUS_OUTLINE" Diamond  ",
-        ICON_MDI_FORMAT_TEXT_VARIANT" Text     "
+        ICON_MDI_ELLIPSE_OUTLINE" Ellipse",
+        ICON_MDI_RHOMBUS_OUTLINE" Diamond",
+        ICON_MDI_FORMAT_TEXT_VARIANT" Text"
     };
 
     VerticalSeparator();
     ImGui::Text("Type:");
     ImGui::SameLine();
 
-    if (GUICombo("##ComboNodeShape", node_types, node_type_selected_idx, ImGuiComboFlags_WidthFitPreview)) {
+    ImGui::PushItemWidth(160);
+    if (GUICombo("##ComboNodeType", node_types, node_type_selected_idx)) {
         auto type_str = GetStringFromNodeType(static_cast<NodeType>(node_type_selected_idx));
         if (node_type_source.has_value()) {
             // Change type parameter's value in node's definition
@@ -158,6 +159,7 @@ void App::GUIToolbar(const float textedit_width)
         }
         OnMSourceChanged();
     }
+    ImGui::PopItemWidth();
 
     // .: Node ID label :.
     // .:===============:.

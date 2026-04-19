@@ -233,35 +233,37 @@ void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, const f
     }
 }
 
+// --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
 void App::GUICanvasDrawGhostNode(ImDrawList* draw_list,
                                  const ImVec2 mouse_pos,
                                  const float node_padding,
-                                 const ImVec2 ghost_padding,
+                                 const ImVec2 ghost_size,
                                  const char* ghost_label_c_str) const
 {
     const auto font_size_f = static_cast<float>(m_canvas_font_size);
     constexpr auto COLOR_GHOST_EDGE = IM_COL32(0, 0, 0, 128);
     constexpr auto COLOR_GHOST_FILL = IM_COL32(255, 255, 255, 128);
-    const auto ghost_top_left = mouse_pos - ghost_padding; // Used for rectangle and text
+    const auto ghost_top_left = mouse_pos - ghost_size; // Used for rectangle and text
 
     switch (m_dragndropping_node_type) {
     case NTYPE_RECTANGLE:
         {
-            const auto ghost_bottom_right = mouse_pos + ghost_padding;
+            const auto ghost_bottom_right = mouse_pos + ghost_size;
             draw_list->AddRectFilled(ghost_top_left, ghost_bottom_right, COLOR_GHOST_FILL, 0, 0);
             draw_list->AddRect(ghost_top_left, ghost_bottom_right, COLOR_GHOST_EDGE, 0, 0, m_canvas_zoom_level);
         }
         break;
     case NTYPE_ELLIPSE:
-        draw_list->AddEllipseFilled(mouse_pos, ghost_padding, COLOR_GHOST_FILL);
-        draw_list->AddEllipse(mouse_pos, ghost_padding, COLOR_GHOST_EDGE, 0, 0, m_canvas_zoom_level);
+        draw_list->AddEllipseFilled(mouse_pos, ghost_size, COLOR_GHOST_FILL);
+        draw_list->AddEllipse(mouse_pos, ghost_size, COLOR_GHOST_EDGE, 0, 0, m_canvas_zoom_level);
         break;
     case NTYPE_DIAMOND:
         {
-            const auto top = mouse_pos + ImVec2(0.0f, ghost_padding.y);
-            const auto right = mouse_pos + ImVec2(ghost_padding.x, 0.0f);
-            const auto bottom = mouse_pos - ImVec2(0.0f, ghost_padding.y);
-            const auto left = mouse_pos - ImVec2(ghost_padding.x, 0.0f);
+            const auto top = mouse_pos + ImVec2(0.0f, ghost_size.y);
+            const auto right = mouse_pos + ImVec2(ghost_size.x, 0.0f);
+            const auto bottom = mouse_pos - ImVec2(0.0f, ghost_size.y);
+            const auto left = mouse_pos - ImVec2(ghost_size.x, 0.0f);
             draw_list->AddQuadFilled(top, right, bottom, left, COLOR_GHOST_FILL);
             draw_list->AddQuad(top, right, bottom, left, COLOR_GHOST_EDGE, m_canvas_zoom_level);
         }

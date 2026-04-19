@@ -14,7 +14,7 @@ struct CanvasNode
 
     // Another metric to determine node's z-value. This one is used while interacting with nodes through the canvas.
     // If more nodes are on top of each other on the z-axis, we need to determine one, that will be chosen e.g. on click.
-    // Preferably the one that was drawn last in the imdrawlist channel with biggest layer.
+    // Preferably the one that was drawn last in the ImDrawList channel with biggest layer number.
     // With this number, bigger means better ("closer" to the cursor).
     int z_mul{};
 

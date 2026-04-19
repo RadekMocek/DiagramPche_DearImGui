@@ -54,7 +54,7 @@ void App::GUICanvas(const float height)
 
     // .: User interaction :.
     // .:==================:.
-    // Using InvisibleButton() will advance the layout cursor and allows us to use IsItemHovered()/IsItemActive()
+    // Using `InvisibleButton` will advance the layout cursor and allows us to use `IsItemHovered`/`IsItemActive`
     ImGui::InvisibleButton("Canvas", canvas_size, ImGuiButtonFlags_MouseButtonLeft | ImGuiButtonFlags_MouseButtonRight);
     const bool is_canvas_hovered = ImGui::IsItemHovered(); // Hovered (hot item)
     const bool is_canvas_active = ImGui::IsItemActive(); // Held
@@ -96,8 +96,8 @@ void App::GUICanvas(const float height)
         }
     }
 
-    // If we are creating a SVG this frame, we reset zoom_level here so we don't have have to "revert it" in the SVG.
-    // This is the place to do it because we already handled the user interaction this frame (RMB scroll and MW zoom).
+    // If we are creating a SVG this frame, we reset the zoom level here so we don't have to "revert it" in the SVG.
+    // This is the place to do it, because we already handled the user interaction this frame (RMB scroll and MW zoom).
     if (m_exporter.IsEnabled()) {
         ResetCanvasScrollingAndZoom();
     }
@@ -132,14 +132,14 @@ void App::GUICanvas(const float height)
 
     // == Draw diagram ==
 
-    // AABR = axis aligned bounding rectangle :)
-    // This map is used to store some additional info about nodes and also to keep track about which nodes were already drawn.
-    // One thing we need to store is node's AABR. Relative nodes, which are drawn later, can then use it to determine their position. Paths also need AABR info.
-    // Stored AABRs take zoom_level into account, but not scrolling.
+    // This map is used to store some additional info about nodes.
+    // One thing we need to store is node's AABR (axis aligned bounding rectangle).
+    // Relative nodes, which are drawn later, can then use it to determine their position. Paths also need AABR info.
+    // Stored AABRs take zoom level into account, but not scrolling.
     m_canvas_nodes.clear();
 
     // 10 draw layers which can be set by user in TOML with values: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
-    // But number of real layers is actually 20 to ensure that path is always above node when they have the same 'z' value
+    // But number of real layers is actually 20 to ensure that path is always above node when they have the same `z` value
     // (We use 2*z for nodes and 2*z+1 for paths)
     draw_list->ChannelsSplit(N_DL_REAL_CHANNELS);
     // Default draw layer for nodes is 4 (Model → Node.hpp → int z)
@@ -183,7 +183,7 @@ void App::GUICanvas(const float height)
                         const auto& hovered_node = m_canvas_nodes[m_hovered_canvas_node_key.value()];
                         m_alt_editor.SetCursorPosition({hovered_node.def_line_num, 0});
                     }
-                    // Vanilla textedit cannot move cursor, at least not without digging in imgui_internal.h, so show error instead
+                    // Vanilla textedit cannot move cursor, at least not without digging in `imgui_internal.h`, so show error instead
                     else {
                         ShowErrorModal("Vanilla text editor does not support jumping to node's definition.");
                     }
@@ -219,16 +219,16 @@ void App::GUICanvas(const float height)
             const auto ghost_label_size = m_font_inconsolata_medium->
                 CalcTextSizeA(static_cast<float>(m_canvas_font_size), FLT_MAX, -1.0f, ghost_label_c_str);
 
-            const ImVec2 ghost_padding(ghost_label_size.x / 2 + node_padding,
-                                       ghost_label_size.y / 2 + node_padding);
+            const ImVec2 ghost_size(ghost_label_size.x / 2 + node_padding,
+                                    ghost_label_size.y / 2 + node_padding);
             // Draw the "ghost node"
-            GUICanvasDrawGhostNode(draw_list, io.MousePos, node_padding, ghost_padding, ghost_label_c_str);
+            GUICanvasDrawGhostNode(draw_list, io.MousePos, node_padding, ghost_size, ghost_label_c_str);
             // Check if LMB released inside the canvas
             if (!ImGui::IsMouseDown(ImGuiMouseButton_Left)) {
                 m_is_dragndropping_node = false;
                 // Add new node to canvas (TOML values are zoom level independent so we divide by that)
-                const auto node_x = static_cast<int>((mouse_pos_in_canvas.x - ghost_padding.x) / m_canvas_zoom_level);
-                const auto node_y = static_cast<int>((mouse_pos_in_canvas.y - ghost_padding.y) / m_canvas_zoom_level);
+                const auto node_x = static_cast<int>((mouse_pos_in_canvas.x - ghost_size.x) / m_canvas_zoom_level);
+                const auto node_y = static_cast<int>((mouse_pos_in_canvas.y - ghost_size.y) / m_canvas_zoom_level);
                 m_source += std::format("\n[node.{}]\ntype = \"{}\"\nxy = [{}, {}]\n",
                                         ghost_label, GetStringFromNodeType(m_dragndropping_node_type), node_x, node_y);
                 OnMSourceChanged();
@@ -255,9 +255,9 @@ void App::GUICanvas(const float height)
     // .:==========================:.
     if (m_do_show_secondary_canvas_toolbar) {
         // Different background color for secondary toolbar
-        const auto& cursor_screen_pos = ImGui::GetCursorScreenPos();
-        draw_list->AddRectFilled(cursor_screen_pos,
-                                 cursor_screen_pos + ImGui::GetContentRegionAvail(),
+        const auto& mouse_pos_screen = ImGui::GetCursorScreenPos();
+        draw_list->AddRectFilled(mouse_pos_screen,
+                                 mouse_pos_screen + ImGui::GetContentRegionAvail(),
                                  m_style_color_secondary_toolbar);
 
         // == Add node buttons ==

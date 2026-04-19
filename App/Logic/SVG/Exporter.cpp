@@ -14,21 +14,23 @@ void Exporter::Start(const std::string& path)
 
 bool Exporter::Save()
 {
-    constexpr svg::Layout::Origin ORIGIN = svg::Layout::TopLeft;
-
     if (!m_is_enabled) return false;
     m_is_enabled = false;
 
     const svg::Dimensions dimensions(m_boundaries_max_x - m_boundaries_min_x + 2 * SVG_DOCUMENT_PADDING,
                                      m_boundaries_max_y - m_boundaries_min_y + 2 * SVG_DOCUMENT_PADDING);
 
+    constexpr svg::Layout::Origin ORIGIN = svg::Layout::TopLeft;
     const auto layout = svg::Layout(dimensions, ORIGIN);
 
     svg::Document document(m_path, layout);
 
+    const auto offset_point = svg::Point(SVG_DOCUMENT_PADDING - m_boundaries_min_x,
+                                         SVG_DOCUMENT_PADDING - m_boundaries_min_y);
+
     for (; !m_draw_commands.empty(); m_draw_commands.pop()) {
         const auto& [z1, z2, shape] = m_draw_commands.top();
-        shape->offset(svg::Point(SVG_DOCUMENT_PADDING - m_boundaries_min_x, SVG_DOCUMENT_PADDING - m_boundaries_min_y));
+        shape->offset(offset_point);
         document << *shape;
     }
 

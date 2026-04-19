@@ -63,14 +63,12 @@ cmake --build build
 
 ## Problems
 
-* Design problems:
-  * No undo for changing node's color via the color picker, changing color even clears the history 😬
 * InputTextMultiline problems:
   * Horizontal scrolling is problematic [...](https://github.com/hoffstadt/DearPyGui/issues/2381#issuecomment-2303922790)
   * Scrollbar is "shaking" while typing / scrolling via arrow keys
   * (not widget issue) Error highlight breaks on tab (can fix by counting tabs (`\t`) on the row with error and shifting EH_x accordingly)
 * ImGuiColorTextEdit problems:
-  * Scrolling by holding up/down arrow key has weird "jumpy" behavior, it's even worse with horizontal scroll (right arrow), it does not do that in their demo, but that's older version on older Dear ImGui
+  * Scrolling by holding up/down arrow key has weird "jumpy" behavior, it's even worse with horizontal scroll (right arrow). This happens only sometimes?
   * No Ctrl + Backspace for removing the whole word (same for Delete)
   * Selecting text by holding LMB and dragging pauses when the cursor is out of the widget area
   * Sometimes it thinks the "#RRGGBBAA" string is comment (TOML comments start with '#'), comments that contain `"` are also not ideal

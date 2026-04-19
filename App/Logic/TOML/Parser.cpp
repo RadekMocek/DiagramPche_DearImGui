@@ -17,7 +17,7 @@ void Parser::Parse(const std::string& source)
     }
     catch (const toml::parse_error& err) {
         ReportError(err.source(), std::string(err.description()));
-        // By returning here, and filling PQ with nodes from previous iteration, last valid TOML will be drawn (better than everything dissappearing).
+        // By returning here and filling PQ with nodes from previous iteration, last valid TOML will be drawn (better than everything dissappearing)
         UpdatePQ();
         return;
     }
@@ -42,7 +42,7 @@ void Parser::Parse(const std::string& source)
     // .:=======:.
     // This map is used to store nodes while they are being parsed (key == node ID)
     // and then for checking node references and updating their draw order (more info below).
-    // (After that, node IDs and their draw order is moved into priority queue, which is used by the canvas to draw Nodes in correct order.)
+    // (After that, node IDs and their draw order are pushed into priority queue, which is used by the canvas to draw Nodes in correct order.)
     m_result_nodes.clear();
 
     // Each node can have its coordinates defined absolutely (xy=[10,10]) or relatively (xy=["some_id","center",10,10]).
@@ -193,6 +193,7 @@ void Parser::ReportError(const toml::source_region& error_source_region, const s
     }
 }
 
+// Pushes node keys from `m_result_nodes` into `m_result_nodes_pq` ordered by their `draw_batch_number`
 void Parser::UpdatePQ()
 {
     m_result_nodes_pq = std::priority_queue<NodePriority>();

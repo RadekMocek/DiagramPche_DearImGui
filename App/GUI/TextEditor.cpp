@@ -53,7 +53,7 @@ void App::GUITextEditor(const float textedit_width, const float height)
         const auto EH_y_start = (error_y - 1) * text_line_height - textedit_scroll_offset_y + textedit_padding.y;
 
         // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-        // [!] using `umgui_internal.h` to make EH work with TextInput Horizontal scroll
+        // [!] using `imgui_internal.h` to make EH work with TextInput Horizontal scroll
         if (const auto* input_text_state = ImGui::GetInputTextState(textedit_real_id); input_text_state != nullptr) {
             EH_x_start -= input_text_state->Scroll.x;
         }
