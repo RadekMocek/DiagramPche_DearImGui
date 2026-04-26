@@ -21,7 +21,7 @@ struct CanvasNode
     // For jumping to source via Ctrl+LMB
     int def_line_num{};
 
-    [[nodiscard]] constexpr ImVec2 GetExactPointFromPivot(const Pivot pivot) const
+    constexpr ImVec2 GetExactPointFromPivot(const Pivot pivot) const
     {
         switch (pivot) {
         default:
@@ -47,7 +47,7 @@ struct CanvasNode
         }
     }
 
-    [[nodiscard]] constexpr bool IsPointInsideIncl(const ImVec2 point) const
+    constexpr bool IsPointInsideIncl(const ImVec2 point) const
     {
         return point.x >= top_left.x && point.x <= bottom_right.x && point.y >= top_left.y && point.y <= bottom_right.y;
     }

@@ -247,12 +247,12 @@ private:
 
     // Dialog
     void SetParentWindow(nfdwindowhandle_t* dialog_args_parent) const;
-    [[nodiscard]] std::optional<std::string> SaveSVGDialog() const;
-    [[nodiscard]] std::optional<std::string> SaveTOMLDialog() const;
+    std::optional<std::string> SaveSVGDialog() const;
+    std::optional<std::string> SaveTOMLDialog() const;
     std::optional<std::string> SaveFileDialog(const nfdu8char_t* default_name,
                                               const nfdu8filteritem_t* filters,
                                               nfdfiltersize_t n_filters) const;
-    [[nodiscard]] std::optional<std::string> OpenTOMLDialog() const;
+    std::optional<std::string> OpenTOMLDialog() const;
 
     // Source editing from canvas interaction
     std::optional<size_t> GetMSourceIdxFromTOMLSourcePosition(const toml::source_position& position);

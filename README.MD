@@ -73,7 +73,6 @@ cmake --build build
   * Selecting text by holding LMB and dragging pauses when the cursor is out of the widget area
   * Sometimes it thinks the "#RRGGBBAA" string is comment (TOML comments start with '#'), comments that contain `"` are also not ideal
   * Setting cursor position when the text is selected will move the cursor, but won't unselect the text and won't highlight the new line
-* SVG exporter:
-  * Hacky SVG edit
-    * It seems that only some SVG browsers support fill transparency via rgba(r,g,b,a) or #RRGGBBAA, so I'm using the style="..." option, which the svg library wasn't made for. The way I added it is not very pretty.
-    * ⇒ Exported SVG currently does not support node border transparency (alpha is always 255, this is true for Nodes and Path labels' background)
+* SVG exporter, hacky _simple-svg_ edit:
+  * It seems that only some SVG browsers support fill transparency via rgba(r,g,b,a) or #RRGGBBAA, so I'm using the style="..." option, which the svg library wasn't made for. The way I added it is not very pretty.
+  * ⇒ Exported SVG currently does not support node border transparency (alpha is always 255, this is true for Nodes and Path labels' background)

@@ -34,7 +34,7 @@ struct Path
     ColorTuple label_bg_color = {0, 0, 0, 0};
 
     //
-    [[nodiscard]] constexpr ImVec2 GetShiftVector(const Pivot pivot, const float zoom_level, const bool is_start) const
+    constexpr ImVec2 GetShiftVector(const Pivot pivot, const float zoom_level, const bool is_start) const
     {
         const auto sf = static_cast<float>((is_start) ? shift_start : shift_end) * zoom_level;
         switch (pivot) {
