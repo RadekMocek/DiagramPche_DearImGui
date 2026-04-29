@@ -7,6 +7,8 @@ This is part of a IMGUI paradigm research, [go back to main repo](https://github
   * [Dependencies](#dependencies)
   * [Problems](#problems)
 
+![screenshot](./Screenshot.png)
+
 ## Building locally
 
 ### Debian based distros

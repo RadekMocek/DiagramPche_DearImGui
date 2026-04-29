@@ -133,7 +133,7 @@ void Exporter::AddDiamond(const int z, const double c_x, const double c_y,
 }
 
 void Exporter::AddText(const int z, const double tl_x, const double tl_y, const std::string& value,
-                       const int additional_priority)
+                       const ColorTuple& color, const int additional_priority)
 {
     if (!m_is_enabled) return;
 
@@ -170,7 +170,7 @@ void Exporter::AddText(const int z, const double tl_x, const double tl_y, const 
         m_draw_commands.push(
             {
                 z, SVG_PRIORITY_TEXT + additional_priority,
-                std::make_unique<svg::Text>(svg::Point(tl_x, y_start + y_offset), line, SVG_FILL_BLACK, SVG_FONT)
+                std::make_unique<svg::Text>(svg::Point(tl_x, y_start + y_offset), line, svg::Fill(color), SVG_FONT)
             });
         y_offset += SVG_LINE_HEIGHT;
 

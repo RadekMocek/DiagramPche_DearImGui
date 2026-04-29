@@ -15,6 +15,7 @@ void App::HandleRegularNew()
     m_alt_editor.SetText(m_source);
     m_source_filename = std::nullopt;
     m_is_source_dirty = false;
+    ResetCanvasScrollingAndZoom();
 }
 
 void App::HandleRegularOpen()

@@ -13,9 +13,11 @@ private:
     static constexpr auto SVG_PRIORITY_SHAPE = 0;
     static constexpr auto SVG_PRIORITY_TEXT = 1;
 
-    const svg::Fill SVG_FILL_BLACK = svg::Fill(svg::Color::Black, 1.0);
     const svg::Font SVG_FONT = svg::Font(18, "Inconsolata");
-    const svg::Size SVG_CHAR_BB = svg::Text(svg::Point(0, 0), "A", SVG_FILL_BLACK, SVG_FONT).getBoundingBox().size;
+
+    const svg::Size SVG_CHAR_BB = svg::Text(svg::Point(0, 0), "A", svg::Fill(svg::Color::Black), SVG_FONT)
+                                  .getBoundingBox().size;
+
     const double SVG_LINE_HEIGHT = SVG_CHAR_BB.height;
     const double SVG_CHAR_WIDTH = SVG_CHAR_BB.width;
 
@@ -69,7 +71,8 @@ public:
                     const ColorTuple& color, const ColorTuple& color_border);
 
     // Text
-    void AddText(int z, double tl_x, double tl_y, const std::string& value, int additional_priority = 0);
+    void AddText(int z, double tl_x, double tl_y, const std::string& value,
+                 const ColorTuple& color, int additional_priority = 0);
 
     // Line
     void StartPolyLine();

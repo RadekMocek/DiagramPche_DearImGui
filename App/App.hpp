@@ -68,7 +68,8 @@ public:
     void Run();
 
 private:
-    static constexpr auto COLOR_BLACK = IM_COL32(0, 0, 0, 255);
+    static constexpr auto COLOR_IM_BLACK = IM_COL32(0, 0, 0, 255);
+    static constexpr ColorTuple COLOR_TUP_BLACK = {0, 0, 0, 255};
     const char* gl_info_renderer{};
 
     // = Helper enums =

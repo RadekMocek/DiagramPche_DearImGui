@@ -223,13 +223,14 @@ void App::GUICanvasDrawNodes(ImDrawList* draw_list, const ImVec2 origin, const f
         draw_list->AddText(m_font_inconsolata_medium,
                            font_size_f,
                            draw_label_position,
-                           COLOR_BLACK,
+                           COLOR_IM_BLACK,
                            label_c_str);
         // SVG node text
         m_exporter.AddText(z,
                            draw_label_position.x,
                            draw_label_position.y,
-                           node.value);
+                           node.value,
+                           COLOR_TUP_BLACK);
     }
 }
 

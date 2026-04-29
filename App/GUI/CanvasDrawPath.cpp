@@ -224,13 +224,14 @@ void App::GUICanvasDrawPaths(ImDrawList* draw_list, const ImVec2 origin)
                     draw_list->AddText(m_font_inconsolata_medium,
                                        font_size_f,
                                        label_position,
-                                       COLOR_BLACK,
+                                       color,
                                        path_label_c_str);
 
                     // SVG path label
                     m_exporter.AddRect(z, label_position.x, label_position.y, path_label_size.x, path_label_size.y,
                                        path.label_bg_color, path.label_bg_color, path_number + 1);
-                    m_exporter.AddText(z, label_position.x, label_position.y, path.label_value, path_number + 1);
+                    m_exporter.AddText(z, label_position.x, label_position.y, path.label_value,
+                                       path.color, path_number + 1);
                 }
             }
         }
