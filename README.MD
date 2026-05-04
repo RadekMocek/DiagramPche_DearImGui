@@ -1,6 +1,6 @@
 # DiagramPche :: Dear ImGui
 
-This is part of a IMGUI paradigm research, [go back to main repo](https://github.com/RadekMocek/DP).
+__This is part of a IMGUI paradigm research, [go back to the homepage](https://radekmocek.github.io/DPDoc).__
 
 * Jump to:
   * [Building locally](#building-locally)
