@@ -9,7 +9,6 @@ using ColorTuple = std::tuple<unsigned char, unsigned char, unsigned char, unsig
 class Exporter
 {
 private:
-    static constexpr auto SVG_DOCUMENT_PADDING = 25.0f;
     static constexpr auto SVG_PRIORITY_SHAPE = 0;
     static constexpr auto SVG_PRIORITY_TEXT = 1;
 
@@ -58,7 +57,7 @@ public:
 
     //
     void Start(const std::string& path);
-    bool Save();
+    bool Save(int svg_padding);
 
     // Shapes
     void AddRect(int z, double tl_x, double tl_y, double width, double height,

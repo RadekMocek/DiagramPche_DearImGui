@@ -3,10 +3,12 @@
 #include "../Helper/GUICombo.hpp"
 #include "../Helper/GUILayout.hpp"
 
+constexpr ImGuiWindowFlags WINDOW_FLAGS = ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings;
+
 void App::GUIWinPreferences()
 {
     ImGui::SetNextWindowSizeConstraints(ImVec2(450, 205), ImVec2(FLT_MAX, FLT_MAX));
-    ImGui::Begin("Preferences", &m_do_show_window_preferences, ImGuiWindowFlags_AlwaysAutoResize);
+    ImGui::Begin("Preferences", &m_do_show_window_preferences, WINDOW_FLAGS);
     // --- --- --- ---
     if (ImGui::BeginTabBar("PreferencesTabBar")) {
         // == Appearance ==
@@ -64,7 +66,7 @@ void App::GUIWinPreferences()
 // This method handles the benchmark window only before the user starts the benchmark. Everything else benchmark related is in a special file `Logic→AppBenchmark.cpp`
 void App::GUIWinBenchmark()
 {
-    ImGuiWindowFlags flags = ImGuiWindowFlags_AlwaysAutoResize;
+    ImGuiWindowFlags flags = WINDOW_FLAGS;
     if (m_is_benchmark_running) {
         flags |= ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoDecoration;
         ImGui::SetNextWindowPos({8, 25});

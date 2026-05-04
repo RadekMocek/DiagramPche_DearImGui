@@ -166,6 +166,7 @@ private:
     // SVG export
     Exporter m_exporter{};
     std::string m_path_export;
+    int m_svg_padding = 25;
     int m_action_after_export_choice{};
 
     // Style

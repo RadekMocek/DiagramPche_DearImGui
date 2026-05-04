@@ -12,21 +12,21 @@ void Exporter::Start(const std::string& path)
     m_boundaries_max_y = std::numeric_limits<double>::min();
 }
 
-bool Exporter::Save()
+bool Exporter::Save(const int svg_padding)
 {
     if (!m_is_enabled) return false;
     m_is_enabled = false;
 
-    const svg::Dimensions dimensions(m_boundaries_max_x - m_boundaries_min_x + 2 * SVG_DOCUMENT_PADDING,
-                                     m_boundaries_max_y - m_boundaries_min_y + 2 * SVG_DOCUMENT_PADDING);
+    const svg::Dimensions dimensions(m_boundaries_max_x - m_boundaries_min_x + 2 * svg_padding,
+                                     m_boundaries_max_y - m_boundaries_min_y + 2 * svg_padding);
 
     constexpr svg::Layout::Origin ORIGIN = svg::Layout::TopLeft;
     const auto layout = svg::Layout(dimensions, ORIGIN);
 
     svg::Document document(m_path, layout);
 
-    const auto offset_point = svg::Point(SVG_DOCUMENT_PADDING - m_boundaries_min_x,
-                                         SVG_DOCUMENT_PADDING - m_boundaries_min_y);
+    const auto offset_point = svg::Point(svg_padding - m_boundaries_min_x,
+                                         svg_padding - m_boundaries_min_y);
 
     for (; !m_draw_commands.empty(); m_draw_commands.pop()) {
         const auto& [z1, z2, shape] = m_draw_commands.top();

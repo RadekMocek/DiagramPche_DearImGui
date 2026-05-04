@@ -27,7 +27,7 @@ void App::Update()
     // .: Complete the SVG export :.
     // Must be called before modals because Export modal starts the exporter (so calling this after modals would be too soon)
     if (m_exporter.IsEnabled()) {
-        if (m_exporter.Save()) {
+        if (m_exporter.Save(m_svg_padding)) {
             if (m_action_after_export_choice == ActionAfterExport_OpenFolder) {
                 ShowFileInFileManager(m_path_export);
             }
@@ -37,7 +37,8 @@ void App::Update()
         }
         else {
             ShowErrorModal(
-                "SVG file could not be created.\nMaybe the specified path contained some non-existing directories or forbidden characters?");
+                "SVG file could not be created.\nMaybe the specified path contained some non-existing directories or forbidden characters?"
+            );
         }
     }
 

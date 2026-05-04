@@ -83,6 +83,11 @@ void App::GUIModal()
         ImGui::EndDisabled();
 
         ImGui::Dummy(SMALL_SKIP);
+        ImGui::SeparatorText("SVG padding");
+        ImGui::InputInt("##SVGPaddingInputInt", &m_svg_padding, 1, 10);
+        m_svg_padding = std::clamp(m_svg_padding, 0, 100);
+
+        ImGui::Dummy(SMALL_SKIP);
         ImGui::SeparatorText("Action after export");
         ImGui::RadioButton("Nothing", &m_action_after_export_choice, ActionAfterExport_DoNothing);
         SameLineWithDummy(SMALL_SKIP);

@@ -1,10 +1,7 @@
 cmake_minimum_required(VERSION 3.25)
 
-set(PROJECT_NAME "DiagramPche_DearImGui")
-set(BINARY_NAME "DiagramPche_DearImGui")
-
 # Project setup
-project("${PROJECT_NAME}")
+project("DiagramPche_DearImGui")
 #set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_BUILD_TYPE Release)
 set(CMAKE_CXX_STANDARD 20)
@@ -41,22 +38,22 @@ file(GLOB_RECURSE SOURCES
         "${PROJECT_SOURCE_DIR}/App/*.cpp"
 )
 
-add_executable("${BINARY_NAME}"
+add_executable("${CMAKE_PROJECT_NAME}"
         "Run.cpp"
         ${SOURCES}
 )
 
 if (MSVC)
     target_compile_definitions("${CMAKE_PROJECT_NAME}" PUBLIC _CRT_SECURE_NO_WARNINGS)
-    #set_target_properties("${CMAKE_PROJECT_NAME}" PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup") # No console
+    set_target_properties("${CMAKE_PROJECT_NAME}" PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup") # No console
 endif ()
 
 if (WIN32)
-    target_link_libraries("${BINARY_NAME}" PRIVATE pdh)
+    target_link_libraries("${CMAKE_PROJECT_NAME}" PRIVATE pdh)
     target_compile_definitions("${CMAKE_PROJECT_NAME}" PUBLIC NOMINMAX)
 endif ()
 
-target_link_libraries("${BINARY_NAME}" PRIVATE
+target_link_libraries("${CMAKE_PROJECT_NAME}" PRIVATE
         glfw
         glad
         imgui
